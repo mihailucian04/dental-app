@@ -1,0 +1,32 @@
+
+
+.example-sidenav-content {
+    display: flex;
+    //height: 90vh;
+    //max-height: 95vh;
+    background-color: #efefef;
+    // align-items: center;
+    justify-content: center;
+}
+  
+// .example-sidenav {
+//     background-color: #fff;
+// }
+
+.active{
+    background-color:rgba(9, 30, 66, 0.25);
+}
+
+.sidenav-item{
+    color: #595959;
+    font-size:20px; 
+}
+
+mat-icon{
+    color: white;
+}
+
+.component-name {
+    margin-left: 10px;
+    font-size: 15px;
+}

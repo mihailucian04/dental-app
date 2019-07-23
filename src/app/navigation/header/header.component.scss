@@ -1,0 +1,37 @@
+a {
+    text-decoration: none;
+    color: white;
+}
+ 
+a:hover, a:active{
+    color: lightgray;
+}
+ 
+.navigation-items{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+mat-toolbar{
+    height: 50px;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+    padding: 0;
+}
+
+.logo {
+    width: 63px; 
+    height:100%; 
+    text-align: center; 
+    vertical-align: middle;
+}
+
+@media(max-width: 959px){
+    mat-toolbar{
+        border-radius: 0px;
+    }
+}
+
+.spacer {
+    flex: 1 1 auto;
+  }

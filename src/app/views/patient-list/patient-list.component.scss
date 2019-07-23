@@ -1,0 +1,11 @@
+table {
+    width: 100%;
+  }
+
+  .app-patient-list {
+      width: 100%;
+  }
+
+  :host {
+    width: 100% !important;
+}

@@ -1,0 +1,76 @@
+
+<app-header></app-header>
+<mat-sidenav-container style="height:100vh;">
+
+    <mat-sidenav #sidenav mode="side" class="example-sidenav" [ngStyle]="{ 'width.em': sidenavWidth, 'transition':'all 0.5s'}" opened="true">
+  
+      <mat-nav-list>
+
+        <mat-list-item (click)="increase()" *ngIf="!expanded">
+            <div style="text-align:center">
+                <fa-icon icon="angle-right" 
+                         [styles]="{ 'color': '#595959', 'margin-left': '5px'}" 
+                         [fixedWidth]="true">
+                </fa-icon>
+            </div>
+        </mat-list-item>
+
+        <mat-list-item (click)="decrease()" *ngIf="expanded">
+                <fa-icon icon="angle-left" 
+                         [styles]="{ 'color': '#595959', 'margin-left': '5px'}"
+                         [fixedWidth]="true"></fa-icon>
+                <div *ngIf="sidenavWidth > 12" class="sidenav-item component-name">
+                        <span>close menu</span>
+                </div>
+        </mat-list-item>
+  
+        <mat-list-item routerLink="dashboard" routerLinkActive="active" [style]="{'text-align':'center'}">
+            <fa-icon icon="tachometer-alt" 
+                     [styles]="{ 'color': '#595959', 'margin-left': '5px'}"
+                     [fixedWidth]="true"></fa-icon>
+          <div fxFlex="10"></div>
+          <div *ngIf="sidenavWidth > 12" class="sidenav-item component-name">
+            <span>Dashboard</span>
+          </div>
+        </mat-list-item>
+  
+        <mat-list-item routerLink="patient-list" routerLinkActive="active">
+            <fa-icon icon="users" 
+                     [styles]="{ 'color': '#595959', 'margin-left': '5px'}"
+                     [fixedWidth]="true"></fa-icon>
+          <div fxFlex="10"></div>
+          <div *ngIf="sidenavWidth > 12" class="sidenav-item component-name">
+            <span>Patients list</span>
+          </div>
+        </mat-list-item>
+  
+        <mat-list-item routerLink="login" routerLinkActive="active">
+            <fa-icon icon="calendar-alt" 
+                     [styles]="{ 'color': '#595959', 'margin-left': '5px'}"
+                     [fixedWidth]="true"></fa-icon>
+          <div fxFlex="10"></div>
+          <div *ngIf="sidenavWidth > 12" class="sidenav-item component-name">
+            <span>Calendar</span>
+          </div>
+        </mat-list-item>
+
+        <mat-list-item routerLink="settings" routerLinkActive="active">
+                <fa-icon icon="cog" 
+                         [styles]="{ 'color': '#595959', 'margin-left': '5px'}"
+                         [fixedWidth]="true"></fa-icon>
+              <div fxFlex="10"></div>
+              <div *ngIf="sidenavWidth > 12" class="sidenav-item component-name">
+                <span>Settings</span>
+              </div>
+            </mat-list-item>
+  
+      </mat-nav-list>
+  
+    </mat-sidenav>
+  
+    <div class="example-sidenav-content" style="padding: 36px 36px !important; height: 100%;">
+      <router-outlet></router-outlet>
+    </div>
+
+</mat-sidenav-container>
+
