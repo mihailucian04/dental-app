@@ -23,19 +23,19 @@ export class PatientListComponent implements OnInit {
     { guid: '5', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
     { guid: '6', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
     { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
-    // { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() }
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() },
+    { guid: '7', name: 'firstname', surname: 'lastname', age: '23', cnp: '123', dob: new Date(), lastConsult: new Date() }
   ];
   displayedColumns: string[] = ['name', 'surname', 'age', 'cnp'];
   dataSource = this.patientList;

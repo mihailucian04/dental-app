@@ -13,7 +13,8 @@ import {MatButtonModule,
         MatListModule,
         MatSidenavModule,
         MatTableModule,
-        MatSnackBarModule } from '@angular/material';
+        MatSnackBarModule,
+        MatGridListModule  } from '@angular/material';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SideNavComponent } from './navigation/side-nav/side-nav.component';
 
@@ -59,7 +60,8 @@ import { SettingsComponent } from './views/settings/settings.component';
     MatListModule,
     MatSidenavModule,
     MatTableModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatGridListModule
   ],
   exports: [
     MatToolbarModule,

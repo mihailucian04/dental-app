@@ -16,7 +16,7 @@ export class SideNavComponent implements OnInit {
   }
 
   public increase() {
-    this.sidenavWidth = 14;
+    this.sidenavWidth = 12;
     this.expanded = true;
     console.log('increase sidenav width');
   }
