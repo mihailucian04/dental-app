@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,6 +34,11 @@ import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { PatientListComponent } from './views/patient-list/patient-list.component';
 import { SettingsComponent } from './views/settings/settings.component';
+import { AuthService } from './services/auth.service';
+
+export function initGapi(authService: AuthService) {
+  return () => authService.initClient();
+}
 
 @NgModule({
   declarations: [
@@ -67,7 +72,9 @@ import { SettingsComponent } from './views/settings/settings.component';
     MatToolbarModule,
     MatIconModule
   ],
-  providers: [],
+  providers: [
+    { provide: APP_INITIALIZER, useFactory: initGapi, deps: [AuthService], multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
