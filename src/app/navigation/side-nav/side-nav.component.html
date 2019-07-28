@@ -1,6 +1,7 @@
 <div style="overflow: hidden;">
   <app-header></app-header>
-  <mat-sidenav-container style="height: calc(100vh - 64px)">
+  <app-login-form *ngIf="!(isLoggedIn$ | async)"></app-login-form>
+  <mat-sidenav-container style="height: calc(100vh - 64px)" *ngIf="(isLoggedIn$ | async)">
 
     <mat-sidenav #sidenav mode="side" class="example-sidenav"
       [ngStyle]="{ 'width.em': sidenavWidth, 'transition':'all 0.5s'}" opened="true">

@@ -1,4 +1,6 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -7,12 +9,19 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 })
 export class SideNavComponent implements OnInit {
 
+  public isLoggedIn$: Observable<boolean>;
+  public loggedIn = false;
   public expanded = false;
   public sidenavWidth = 4;
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
+    this.isLoggedIn$ = this.authService.isLoggedIn;
+
+    this.authService.isLoggedIn.subscribe(status => {
+      this.loggedIn = status;
+    });
   }
 
   public increase() {

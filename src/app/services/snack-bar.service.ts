@@ -17,5 +17,5 @@ export class SnackBarService {
 
    public show(message: string) {
     this.snackBarSerice.open(message, 'Dismiss', this.config);
-}
+   }
 }
