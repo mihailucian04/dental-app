@@ -14,7 +14,11 @@ import {MatButtonModule,
         MatSidenavModule,
         MatTableModule,
         MatSnackBarModule,
-        MatGridListModule  } from '@angular/material';
+        MatGridListModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatTabsModule,    
+        MatProgressSpinnerModule} from '@angular/material';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SideNavComponent } from './navigation/side-nav/side-nav.component';
 
@@ -28,13 +32,27 @@ import { faCoffee,
          faCog,
          faAngleRight,
          faAngleLeft,
-         faTooth } from '@fortawesome/free-solid-svg-icons';
+         faTooth,
+         faUserCircle,
+         faCalendarCheck,
+         faIdCard,
+         faFileImage,
+         faEye,
+         faDownload,
+         faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { PatientListComponent } from './views/patient-list/patient-list.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { AuthService } from './services/auth.service';
+import { ChartsModule } from 'ng2-charts';
+import { PatientDetailsComponent } from './views/patient-details/patient-details.component';
+
+import { OverlayModule } from '@angular/cdk/overlay';
+import { FilePreviewOverlayToolbarComponent } from './views/file-preview-overlay-toolbar/file-preview-overlay-toolbar.component';
+import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
+import { FilePreviewOverlayComponent } from './services/file-preview-overlay.component';
 
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
@@ -48,7 +66,10 @@ export function initGapi(authService: AuthService) {
     LoginFormComponent,
     DashboardComponent,
     PatientListComponent,
-    SettingsComponent
+    SettingsComponent,
+    PatientDetailsComponent,
+    FilePreviewOverlayComponent,
+    FilePreviewOverlayToolbarComponent
   ],
   imports: [
     BrowserModule,
@@ -66,26 +87,33 @@ export function initGapi(authService: AuthService) {
     MatSidenavModule,
     MatTableModule,
     MatSnackBarModule,
-    MatGridListModule
+    MatGridListModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    ChartsModule,
+    OverlayModule
   ],
   exports: [
     MatToolbarModule,
     MatIconModule
   ],
   providers: [
-    { provide: APP_INITIALIZER, useFactory: initGapi, deps: [AuthService], multi: true}
+    { provide: APP_INITIALIZER, useFactory: initGapi, deps: [AuthService], multi: true},
+    FilePreviewOverlayService
+  ],
+  entryComponents: [
+    FilePreviewOverlayComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
-    library.add(faCoffee);
-    library.add(faTachometerAlt);
-    library.add(faUsers);
-    library.add(faCalendarAlt);
-    library.add(faCog);
-    library.add(faAngleRight);
-    library.add(faAngleLeft);
-    library.add(faTooth);
-   }
+  private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
+    faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt];
+
+    constructor() {
+    library.add(...this.icons);
+    }
+
  }

@@ -10,9 +10,11 @@ const SCOPES = 'https://www.googleapis.com/auth/drive';
     providedIn: 'root'
   })
 export class AuthService {
-    googleAuth: gapi.auth2.GoogleAuth;
+    private googleAuth: gapi.auth2.GoogleAuth;
+
     private loggedIn = new BehaviorSubject<boolean>(false);
     private username = new BehaviorSubject<string>('');
+
     constructor() { }
 
     public initClient() {
@@ -25,32 +27,28 @@ export class AuthService {
                     scope: SCOPES,
                 }).then(() => {
                     this.googleAuth = gapi.auth2.getAuthInstance();
+                    const currentUser = this.googleAuth.currentUser.get();
+
+                    if (currentUser && currentUser.isSignedIn()) {
+                        this.loggedIn.next(true);
+                        this.username.next(currentUser.getBasicProfile().getEmail());
+                    }
+
                     resolve();
                 });
             });
         });
     }
 
-    get userName() {
-        return this.username.asObservable();
-    }
-
-    get isLoggedIn() {
-        return this.loggedIn.asObservable();
-    }
-
     public signIn() {
         return this.googleAuth.signIn({
             prompt: 'consent'
         }).then((googleUser: gapi.auth2.GoogleUser) => {
-            // this.appRepository.User.add(googleUser.getBasicProfile());
+
             const basicProfile = googleUser.getBasicProfile();
-
             this.username.next(basicProfile.getEmail());
-
-            basicProfile.getEmail();
             this.loggedIn.next(true);
-            console.log('google profile', basicProfile);
+
         }).catch((error: any) => {
             console.log('error: ', error);
         });
@@ -64,5 +62,13 @@ export class AuthService {
     public signOut() {
         this.loggedIn.next(false);
         this.googleAuth.signOut();
+    }
+
+    get userName() {
+        return this.username.asObservable();
+    }
+
+    get isLoggedIn() {
+        return this.loggedIn.asObservable();
     }
 }

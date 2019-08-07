@@ -5,5 +5,6 @@ export interface Patient {
     age: string;
     cnp: string;
     dob: Date;
-    lastConsult: Date;
+    lastConsult: string;
+    imageUrl: string;
 }

@@ -1,0 +1,17 @@
+:host {
+    width: 100% !important;
+}
+
+::ng-deep .mat-grid-tile .mat-figure {
+    justify-content: flex-start !important;
+}
+
+.icon_div {
+    margin-left: 5px; /* optional */
+    font-size: 23px;
+    font-weight: 300;
+}
+
+.mat-card {
+    border-radius: 0%;
+}
