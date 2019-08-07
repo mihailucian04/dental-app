@@ -1,19 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { 
-    // height: 100%; 
-    background-color: #efefef;
-    margin: 0;
+html,
+body {
+  // height: 100%;
+  background-color: #efefef;
+  margin: 0;
 }
-body { 
-    margin: 0; 
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    //overflow: hidden;
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  //overflow: hidden;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  &.dark-backdrop {
+    background: #000;
+    opacity: 0.85 !important;
+  }
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
