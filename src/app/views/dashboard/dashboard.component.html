@@ -1,5 +1,4 @@
-
-<div style="width: 78vw">
+<!-- <div style="width: 78vw">
         <mat-grid-list cols="4" [gutterSize]="'36px'" > 
                 <mat-grid-tile class="my-grid-tile"
                     *ngFor="let tile of tiles"
@@ -9,4 +8,62 @@
                   {{tile.text}}
                 </mat-grid-tile>
               </mat-grid-list>
+</div> -->
+
+<div style="width: 78vw">
+  <mat-grid-list cols="4" [gutterSize]="'36px'" rowHeight="500px" role="list">
+    <mat-grid-tile [colspan]="3">
+      <mat-card>
+        <mat-card-title>Dashboard</mat-card-title>
+        <mat-card-content flex>
+          <form class="example-form">
+            <mat-grid-list cols="2" role="list" [gutterSize]="'36px'" rowHeight="420px">
+              <mat-grid-tile [colspan]="1" style="box-shadow: none">
+                <mat-card>
+                  <!-- <mat-card-title>First child</mat-card-title> -->
+                  <mat-card-content style="margin-top:60px">
+                    <canvas baseChart 
+                    [datasets]="barChartData" 
+                    [labels]="barChartLabels" 
+                    [options]="barChartOptions"
+                    [plugins]="barChartPlugins" 
+                    [legend]="barChartLegend" 
+                    [chartType]="barChartType"></canvas>
+                  </mat-card-content>
+                </mat-card>
+              </mat-grid-tile>
+              <mat-grid-tile [colspan]="1" style="box-shadow: none">
+                <mat-card>
+                  <!-- <mat-card-title>Second child</mat-card-title> -->
+                  <mat-card-content style="margin-top:60px">
+                    <canvas baseChart
+                    [data]="doughnutChartData"
+                    [labels]="doughnutChartLabels"
+                    [chartType]="doughnutChartType"></canvas>
+                    </mat-card-content>
+                </mat-card>
+              </mat-grid-tile>
+            </mat-grid-list>
+
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile [colspan]="1">
+      <mat-card>
+        <mat-card-title>Dashboard</mat-card-title>
+        <mat-card-content flex>
+          <form class="example-form">
+            <div style="display: block">
+              <!-- <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                    [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+                  </canvas> -->
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+  </mat-grid-list>
 </div>
