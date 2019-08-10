@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Patient } from 'src/app/models/patient.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTableDataSource } from '@angular/material';
 import { FilePreviewOverlayRef } from 'src/app/services/file-preview-overlay-ref';
 import { FilePreviewOverlayService } from 'src/app/services/file-preview-overlay.service';
+import { GoogleDataService } from 'src/app/services/google-data.service';
 
 export interface File {
   name: string;
@@ -79,12 +80,19 @@ export class PatientDetailsComponent implements OnInit {
   displayedColumnsXRays: string[] = ['name', 'uploaded', 'size', 'view', 'download', 'delete'];
   dataSourceXRays = new MatTableDataSource(this.xrays);
 
-  constructor(private route: ActivatedRoute, private previewDialog: FilePreviewOverlayService) { }
+  constructor(private route: ActivatedRoute,
+              private previewDialog: FilePreviewOverlayService,
+              private googleDataService: GoogleDataService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const selectedId = params.get('id');
-      this.patient = JSON.parse(localStorage.getItem(`patient-details${selectedId}`));
+      const patient1 = JSON.parse(localStorage.getItem(`patient-details${selectedId}`));
+      this.googleDataService.getContact(patient1.resourceName).then((response: any) => {
+        this.patient = response;
+        this.cdRef.detectChanges();
+      });
     });
   }
 
