@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { SnackBarService } from '../services/snack-bar.service';
-import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({

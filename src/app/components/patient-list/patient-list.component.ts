@@ -3,9 +3,7 @@ import { Patient } from 'src/app/models/patient.model';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
 import { GoogleDataService } from 'src/app/services/google-data.service';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-patient-list',
