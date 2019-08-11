@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Patient } from '../models/patient.model';
 
 const CLIENT_ID = '948035237809-2ki059veu26dgnqbr2tfqm9b5qbe079m.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyDIQ9RWQwaCtTmkJwXMDxGAPUPieIo5z0Y';
-const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
-const SCOPES = 'https://www.googleapis.com/auth/drive';
+const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
+    'https://www.googleapis.com/discovery/v1/apis/people/v1/rest'];
+const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/contacts';
+
+declare var gapi: any;
 
 @Injectable({
     providedIn: 'root'
-  })
+})
 export class AuthService {
     private googleAuth: gapi.auth2.GoogleAuth;
 
@@ -33,7 +37,6 @@ export class AuthService {
                         this.loggedIn.next(true);
                         this.username.next(currentUser.getBasicProfile().getEmail());
                     }
-
                     resolve();
                 });
             });
