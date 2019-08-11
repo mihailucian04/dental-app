@@ -10,7 +10,7 @@
                         </fa-icon> -->
                         <div style="width: 54px;height: 54px; margin-left:5px;">
                             <img [src]="patient?.imageUrl" alt="Avatar" style="border-radius: 50%; width: 100%">
-                          </div>
+                        </div>
                     </div>
                     <div
                         style="display:flex; margin-left: 10px; flex-direction: column;align-items: start; justify-content: center">
@@ -56,7 +56,9 @@
 </div>
 <mat-card style="height: calc(100vh - 204px)">
     <mat-tab-group>
-        <mat-tab label="Patient file"> Content 2 </mat-tab>
+        <mat-tab label="Dental map">
+           <app-dental-map></app-dental-map>
+        </mat-tab>
         <mat-tab label="Last consults">
             <app-last-consults></app-last-consults>
         </mat-tab>
