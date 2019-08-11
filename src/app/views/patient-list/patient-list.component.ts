@@ -1,37 +1,47 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, NgZone } from '@angular/core';
 import { Patient } from 'src/app/models/patient.model';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { GoogleDataService } from 'src/app/services/google-data.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-patient-list',
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.scss']
 })
-export class PatientListComponent implements OnInit {
+export class PatientListComponent implements OnInit, AfterViewInit {
 
-
-  displayedColumns: string[] = ['avatar', 'surname', 'age', 'lastConsult', 'company', 'update'];
-  dataSource: any;
-  // dataSource = new MatTableDataSource(this.patientList);
+  public displayedColumns: string[] = ['avatar', 'surname', 'age', 'lastConsult', 'company', 'update'];
+  public dataSource = new MatTableDataSource<Patient>();
+  public isLoaded = false;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private router: Router,
-              private authService: AuthService,
-              private cdRef: ChangeDetectorRef,
-              private googleDataService: GoogleDataService) { }
+              private googleDataService: GoogleDataService,
+              private ngZone: NgZone) { }
 
   ngOnInit() {
-    this.googleDataService.getContacts().then((response: any) => {
-      this.dataSource = new MatTableDataSource(response);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-      this.cdRef.detectChanges();
+    this._getPatientList();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  private _getPatientList() {
+    this.ngZone.runOutsideAngular(() => {
+      this.googleDataService.getContacts().then((patients: any) => {
+        this.ngZone.run(() => {
+          this.dataSource.data = patients;
+          this.isLoaded = true;
+        });
+      });
     });
   }
 
@@ -40,8 +50,8 @@ export class PatientListComponent implements OnInit {
   }
 
   navigateTo(row: Patient) {
-    localStorage.setItem(`patient-details${row.guid}`, JSON.stringify(row));
-    this.router.navigate([`/patient-details/${row.guid}`]);
+    // localStorage.setItem(`patient-details${row.guid}`, JSON.stringify(row));
+    this.router.navigate([`/patient-details/${row.resourceName}`]);
   }
 
 }

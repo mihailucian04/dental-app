@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Patient } from 'src/app/models/patient.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -63,14 +63,22 @@ export class PatientDetailsComponent implements OnInit {
   ];
 
   xrays: XRay[] = [
-    { name: 'x-ray_scan1.jpg', uploaded: new Date().toDateString(), size: '185.22 KB',
-    file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } },
-    { name: 'x-ray_scan2.jpg', uploaded: new Date().toDateString(), size: '234.10 KB',
-    file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } },
-    { name: 'x-ray_scan3.jpg', uploaded: new Date().toDateString(), size: '190.78 KB',
-    file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } },
-    { name: 'x-ray_scan4.jpg', uploaded: new Date().toDateString(), size: '180.22 KB',
-    file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } }
+    {
+      name: 'x-ray_scan1.jpg', uploaded: new Date().toDateString(), size: '185.22 KB',
+      file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+    },
+    {
+      name: 'x-ray_scan2.jpg', uploaded: new Date().toDateString(), size: '234.10 KB',
+      file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+    },
+    {
+      name: 'x-ray_scan3.jpg', uploaded: new Date().toDateString(), size: '190.78 KB',
+      file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+    },
+    {
+      name: 'x-ray_scan4.jpg', uploaded: new Date().toDateString(), size: '180.22 KB',
+      file: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+    }
   ];
 
 
@@ -83,22 +91,28 @@ export class PatientDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private previewDialog: FilePreviewOverlayService,
               private googleDataService: GoogleDataService,
-              private cdRef: ChangeDetectorRef) { }
+              private ngZone: NgZone) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      const selectedId = params.get('id');
-      const patient1 = JSON.parse(localStorage.getItem(`patient-details${selectedId}`));
-      this.googleDataService.getContact(patient1.resourceName).then((response: any) => {
-        this.patient = response;
-        this.cdRef.detectChanges();
-      });
-    });
+    this._getPatient();
   }
 
   showPreview(file) {
     const dialogRef: FilePreviewOverlayRef = this.previewDialog.open({
       image: file
+    });
+  }
+
+  private _getPatient() {
+    this.route.paramMap.subscribe(params => {
+      const resourceName = params.get('id');
+      this.ngZone.runOutsideAngular(() => {
+        this.googleDataService.getContact(resourceName).then((patient: Patient) => {
+          this.ngZone.run(() => {
+            this.patient = patient;
+          });
+        });
+      });
     });
   }
 
