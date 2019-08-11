@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DashboardComponent } from './views/dashboard/dashboard.component';
-import { LoginFormComponent } from './login-form/login-form.component';
-import { PatientListComponent } from './views/patient-list/patient-list.component';
-import { SettingsComponent } from './views/settings/settings.component';
 import { AuthGuard } from './auth/auth.guard';
-import { PatientDetailsComponent } from './views/patient-details/patient-details.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { PatientListComponent } from './components/patient-list/patient-list.component';
+import { PatientDetailsComponent } from './components/patient-details/patient-details.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { LoginFormComponent } from './components/login-form/login-form.component';
+
 
 const routes: Routes = [ { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
                          { path: 'patient-list', component: PatientListComponent, canActivate: [AuthGuard] },
