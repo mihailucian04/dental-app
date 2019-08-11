@@ -53,6 +53,7 @@ import { PatientDetailsComponent } from './components/patient-details/patient-de
 import { FilePreviewOverlayToolbarComponent } from './components/file-preview-overlay-toolbar/file-preview-overlay-toolbar.component';
 import { XRaysComponent } from './components/patient-details/x-rays/x-rays.component';
 import { LastConsultsComponent } from './components/patient-details/last-consults/last-consults.component';
+import { DentalMapComponent } from './components/patient-details/dental-map/dental-map.component';
 
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
@@ -71,7 +72,8 @@ export function initGapi(authService: AuthService) {
     FilePreviewOverlayComponent,
     FilePreviewOverlayToolbarComponent,
     XRaysComponent,
-    LastConsultsComponent
+    LastConsultsComponent,
+    DentalMapComponent
   ],
   imports: [
     BrowserModule,
