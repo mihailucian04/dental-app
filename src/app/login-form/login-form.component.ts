@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { SnackBarService } from '../services/snack-bar.service';
 import { AuthService } from '../services/auth.service';
@@ -19,7 +19,8 @@ export class LoginFormComponent implements OnInit {
 
   constructor(private router: Router,
               private snackBarSerice: SnackBarService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private ngZone: NgZone) { }
 
   ngOnInit() {
   }
@@ -33,11 +34,12 @@ export class LoginFormComponent implements OnInit {
   }
 
   public signIn() {
-    this.authService.signIn().then(() => {
-      this.authService.getToken();
-      this.router.navigate(['/dashboard']);
+    this.ngZone.runOutsideAngular(() => {
+      this.authService.signIn().then(() => {
+        this.ngZone.run(() => {
+          this.router.navigate(['/dashboard']);
+        });
+      });
     });
-
-    localStorage.setItem('test1', 'authenticated');
   }
 }
