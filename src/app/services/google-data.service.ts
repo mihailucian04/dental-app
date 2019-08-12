@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Patient } from '../models/patient.model';
+import { Patient, NewPatient } from '../models/patient.model';
 declare var gapi: any;
 
 @Injectable({
@@ -25,7 +25,7 @@ export class GoogleDataService {
 
         return gapi.client.people.people.connections.list({
             resourceName: 'people/me',
-            pageSize: 25,
+            pageSize: 50,
             personFields: 'names,phoneNumbers,photos,birthdays,organizations',
         }).then((response: any) => {
             const connections = response.result.connections;
@@ -48,15 +48,46 @@ export class GoogleDataService {
         }).then((response: any) => {
             const events = response.result.items;
             return events;
-            // if (events.length > 0) {
-            //     for (let i = 0; i < events.length; i++) {
-            //       var event = events[i];
-            //       var when = event.start.dateTime;
-            //       if (!when) {
-            //         when = event.start.date;
-            //       }
-            //     }
-            // }
+        });
+    }
+
+    public addNewPatient(patient: NewPatient) {
+        return gapi.client.request({
+            method: 'POST',
+            path: 'https://people.googleapis.com/v1/people:createContact',
+            dataType: 'jsonp',
+            body: {
+                names: [
+                    {
+                        givenName: patient.firstName,
+                        familyName: patient.lastName
+                    }
+                ],
+                emailAddresses: [
+                    {
+                        value: patient.emailAddress
+                    }
+                ],
+                phoneNumbers: [
+                    {
+                        value: patient.phoneNumber
+                    }
+                ],
+                birthdays: [
+                    {
+                        date: {
+                            day: 11,
+                            month: 7,
+                            year: 1990
+                        }
+                    }
+                ],
+                organizations: [
+                    {
+                        name: patient.company
+                    }
+                ]
+            }
         });
     }
 

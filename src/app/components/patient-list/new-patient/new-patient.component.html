@@ -1,0 +1,59 @@
+<span mat-dialog-title style="color:#3f51b5">Add a new patient</span>
+<div mat-dialog-content>
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column">
+            <fa-icon icon="user-circle" [styles]="{ 'color': '#e6dddc', 'font-size': '40px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [(ngModel)]="data.firstName" placeholder="First name">
+            </mat-form-field>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [(ngModel)]="data.lastName" placeholder="Last name">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column; justify-content: center;">
+            <fa-icon icon="building" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [(ngModel)]="data.company" placeholder="Company">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column; justify-content: center;">
+            <fa-icon icon="phone-alt" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [(ngModel)]="data.phoneNumber" placeholder="Phone number">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column; justify-content: center;">
+            <fa-icon icon="envelope" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [(ngModel)]="data.emailAddress" placeholder="Email address">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions style="margin-bottom: 1px;">
+    <button mat-raised-button color="primary" (click)="savePatient()">Save</button>
+    <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+</div>

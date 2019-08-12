@@ -18,7 +18,9 @@ import {MatButtonModule,
         MatSortModule,
         MatPaginatorModule,
         MatTabsModule,
-        MatProgressSpinnerModule} from '@angular/material';
+        MatProgressSpinnerModule,
+        MatDialogModule,
+        MatTooltipModule} from '@angular/material';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee,
@@ -35,7 +37,11 @@ import { faCoffee,
          faFileImage,
          faEye,
          faDownload,
-         faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+         faTrashAlt,
+         faPlus,
+         faBuilding,
+         faPhoneAlt,
+         faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './services/auth.service';
@@ -58,6 +64,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { NewPatientComponent } from './components/patient-list/new-patient/new-patient.component';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -77,7 +84,8 @@ export function initGapi(authService: AuthService) {
     XRaysComponent,
     LastConsultsComponent,
     DentalMapComponent,
-    CalendarComponent
+    CalendarComponent,
+    NewPatientComponent
   ],
   imports: [
     BrowserModule,
@@ -100,6 +108,8 @@ export function initGapi(authService: AuthService) {
     MatPaginatorModule,
     MatTabsModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
+    MatTooltipModule,
     ChartsModule,
     OverlayModule,
     CalendarModule.forRoot({
@@ -117,13 +127,14 @@ export function initGapi(authService: AuthService) {
     FilePreviewOverlayService
   ],
   entryComponents: [
-    FilePreviewOverlayComponent
+    FilePreviewOverlayComponent,
+    NewPatientComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
-    faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt];
+    faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope];
 
     constructor() {
     library.add(...this.icons);

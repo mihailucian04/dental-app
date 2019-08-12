@@ -10,3 +10,12 @@ export interface Patient {
     imageUrl: string;
     company: string;
 }
+
+export interface NewPatient {
+    firstName: string;
+    lastName: string;
+    company: string;
+    jobTitle: string;
+    phoneNumber: string;
+    emailAddress: string;
+}
