@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-
+import 'flatpickr/dist/flatpickr.css';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +18,9 @@ import {MatButtonModule,
         MatSortModule,
         MatPaginatorModule,
         MatTabsModule,
-        MatProgressSpinnerModule} from '@angular/material';
+        MatProgressSpinnerModule,
+        MatDialogModule,
+        MatTooltipModule} from '@angular/material';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee,
@@ -35,7 +37,11 @@ import { faCoffee,
          faFileImage,
          faEye,
          faDownload,
-         faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+         faTrashAlt,
+         faPlus,
+         faBuilding,
+         faPhoneAlt,
+         faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './services/auth.service';
@@ -54,7 +60,11 @@ import { FilePreviewOverlayToolbarComponent } from './components/file-preview-ov
 import { XRaysComponent } from './components/patient-details/x-rays/x-rays.component';
 import { LastConsultsComponent } from './components/patient-details/last-consults/last-consults.component';
 import { DentalMapComponent } from './components/patient-details/dental-map/dental-map.component';
-
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NewPatientComponent } from './components/patient-list/new-patient/new-patient.component';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -73,7 +83,9 @@ export function initGapi(authService: AuthService) {
     FilePreviewOverlayToolbarComponent,
     XRaysComponent,
     LastConsultsComponent,
-    DentalMapComponent
+    DentalMapComponent,
+    CalendarComponent,
+    NewPatientComponent
   ],
   imports: [
     BrowserModule,
@@ -96,8 +108,15 @@ export function initGapi(authService: AuthService) {
     MatPaginatorModule,
     MatTabsModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
+    MatTooltipModule,
     ChartsModule,
-    OverlayModule
+    OverlayModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
+    FlatpickrModule.forRoot()
   ],
   exports: [
     MatToolbarModule,
@@ -108,13 +127,14 @@ export function initGapi(authService: AuthService) {
     FilePreviewOverlayService
   ],
   entryComponents: [
-    FilePreviewOverlayComponent
+    FilePreviewOverlayComponent,
+    NewPatientComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
-    faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt];
+    faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope];
 
     constructor() {
     library.add(...this.icons);

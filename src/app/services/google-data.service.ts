@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Patient } from '../models/patient.model';
+import { Patient, NewPatient } from '../models/patient.model';
 declare var gapi: any;
 
 @Injectable({
@@ -12,10 +12,8 @@ export class GoogleDataService {
         const ctx = this;
 
         return gapi.client.people.people.get({
-            // tslint:disable-next-line: object-literal-key-quotes
-            'resourceName': `people/${resourceName}`,
-            // tslint:disable-next-line: object-literal-key-quotes
-            'personFields': 'names,phoneNumbers,photos,birthdays,organizations',
+            resourceName: `people/${resourceName}`,
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations',
         }).then((response: any) => {
             const patient = ctx.mapPatient(response.result);
             return patient;
@@ -26,17 +24,70 @@ export class GoogleDataService {
         const ctx = this;
 
         return gapi.client.people.people.connections.list({
-            // tslint:disable-next-line: object-literal-key-quotes
-            'resourceName': 'people/me',
-            // tslint:disable-next-line: object-literal-key-quotes
-            'pageSize': 25,
-            // tslint:disable-next-line: object-literal-key-quotes
-            'personFields': 'names,phoneNumbers,photos,birthdays,organizations',
+            resourceName: 'people/me',
+            pageSize: 50,
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations',
         }).then((response: any) => {
             const connections = response.result.connections;
             const list = ctx._mapPatients(connections);
 
             return list;
+        });
+    }
+
+    public getCalendarEvents() {
+        const ctx = this;
+
+        return gapi.client.calendar.events.list({
+          calendarId: 'primary',
+          timeMin: (new Date()).toISOString(),
+          showDeleted: false,
+          singleEvents: true,
+          maxResults: 20,
+          orderBy: 'startTime'
+        }).then((response: any) => {
+            const events = response.result.items;
+            return events;
+        });
+    }
+
+    public addNewPatient(patient: NewPatient) {
+        return gapi.client.request({
+            method: 'POST',
+            path: 'https://people.googleapis.com/v1/people:createContact',
+            dataType: 'jsonp',
+            body: {
+                names: [
+                    {
+                        givenName: patient.firstName,
+                        familyName: patient.lastName
+                    }
+                ],
+                emailAddresses: [
+                    {
+                        value: patient.emailAddress
+                    }
+                ],
+                phoneNumbers: [
+                    {
+                        value: patient.phoneNumber
+                    }
+                ],
+                birthdays: [
+                    {
+                        date: {
+                            day: 11,
+                            month: 7,
+                            year: 1990
+                        }
+                    }
+                ],
+                organizations: [
+                    {
+                        name: patient.company
+                    }
+                ]
+            }
         });
     }
 
