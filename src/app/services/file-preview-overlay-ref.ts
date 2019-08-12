@@ -8,7 +8,9 @@ import { Subject, Observable } from 'rxjs';
 
 export class FilePreviewOverlayRef {
 
+  // tslint:disable-next-line: variable-name
   private _beforeClose = new Subject<void>();
+  // tslint:disable-next-line: variable-name
   private _afterClosed = new Subject<void>();
 
   componentInstance: FilePreviewOverlayComponent;
@@ -33,6 +35,7 @@ export class FilePreviewOverlayRef {
       this._afterClosed.next();
       this._afterClosed.complete();
 
+      // tslint:disable-next-line: no-non-null-assertion
       this.componentInstance = null!;
     });
 

@@ -30,13 +30,18 @@ const DEFAULT_CONFIG: FilePreviewDialogConfig = {
 })
 export class FilePreviewOverlayService {
 
-    constructor(private injector: Injector, private overlay: Overlay) { }
+    constructor(
+        private injector: Injector,
+        private overlay: Overlay) { }
 
     open(config: FilePreviewDialogConfig = {}) {
+        // Override default configuration
         const dialogConfig = { ...DEFAULT_CONFIG, ...config };
 
-        const overlayRef = this.overlay.create();
+        // Returns an OverlayRef which is a PortalHost
+        const overlayRef = this.createOverlay(dialogConfig);
 
+        // Instantiate remote control
         const dialogRef = new FilePreviewOverlayRef(overlayRef);
 
         const overlayComponent = this.attachDialogContainer(overlayRef, dialogConfig, dialogRef);
@@ -46,6 +51,11 @@ export class FilePreviewOverlayService {
         overlayRef.backdropClick().subscribe(_ => dialogRef.close());
 
         return dialogRef;
+    }
+
+    private createOverlay(config: FilePreviewDialogConfig) {
+        const overlayConfig = this.getOverlayConfig(config);
+        return this.overlay.create(overlayConfig);
     }
 
     private attachDialogContainer(overlayRef: OverlayRef, config: FilePreviewDialogConfig, dialogRef: FilePreviewOverlayRef) {
