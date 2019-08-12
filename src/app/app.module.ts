@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-
+import 'flatpickr/dist/flatpickr.css';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,7 +54,10 @@ import { FilePreviewOverlayToolbarComponent } from './components/file-preview-ov
 import { XRaysComponent } from './components/patient-details/x-rays/x-rays.component';
 import { LastConsultsComponent } from './components/patient-details/last-consults/last-consults.component';
 import { DentalMapComponent } from './components/patient-details/dental-map/dental-map.component';
-
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { FlatpickrModule } from 'angularx-flatpickr';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -73,7 +76,8 @@ export function initGapi(authService: AuthService) {
     FilePreviewOverlayToolbarComponent,
     XRaysComponent,
     LastConsultsComponent,
-    DentalMapComponent
+    DentalMapComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,
@@ -97,7 +101,12 @@ export function initGapi(authService: AuthService) {
     MatTabsModule,
     MatProgressSpinnerModule,
     ChartsModule,
-    OverlayModule
+    OverlayModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
+    FlatpickrModule.forRoot()
   ],
   exports: [
     MatToolbarModule,

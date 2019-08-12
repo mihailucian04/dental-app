@@ -1,0 +1,22 @@
+:host {
+  width: 100% !important;
+  padding: 10px;
+}
+
+::ng-deep .cal-month-view .cal-header .cal-cell {
+  font-weight: 200;
+}
+
+.mat-card {
+    border-radius: 0%;
+}
+
+.control-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.control-header button {
+    margin-right: 8px;
+    border-radius: 0%;
+}

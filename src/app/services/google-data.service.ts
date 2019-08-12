@@ -12,10 +12,8 @@ export class GoogleDataService {
         const ctx = this;
 
         return gapi.client.people.people.get({
-            // tslint:disable-next-line: object-literal-key-quotes
-            'resourceName': `people/${resourceName}`,
-            // tslint:disable-next-line: object-literal-key-quotes
-            'personFields': 'names,phoneNumbers,photos,birthdays,organizations',
+            resourceName: `people/${resourceName}`,
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations',
         }).then((response: any) => {
             const patient = ctx.mapPatient(response.result);
             return patient;
@@ -26,17 +24,39 @@ export class GoogleDataService {
         const ctx = this;
 
         return gapi.client.people.people.connections.list({
-            // tslint:disable-next-line: object-literal-key-quotes
-            'resourceName': 'people/me',
-            // tslint:disable-next-line: object-literal-key-quotes
-            'pageSize': 25,
-            // tslint:disable-next-line: object-literal-key-quotes
-            'personFields': 'names,phoneNumbers,photos,birthdays,organizations',
+            resourceName: 'people/me',
+            pageSize: 25,
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations',
         }).then((response: any) => {
             const connections = response.result.connections;
             const list = ctx._mapPatients(connections);
 
             return list;
+        });
+    }
+
+    public getCalendarEvents() {
+        const ctx = this;
+
+        return gapi.client.calendar.events.list({
+          calendarId: 'primary',
+          timeMin: (new Date()).toISOString(),
+          showDeleted: false,
+          singleEvents: true,
+          maxResults: 20,
+          orderBy: 'startTime'
+        }).then((response: any) => {
+            const events = response.result.items;
+            return events;
+            // if (events.length > 0) {
+            //     for (let i = 0; i < events.length; i++) {
+            //       var event = events[i];
+            //       var when = event.start.dateTime;
+            //       if (!when) {
+            //         when = event.start.date;
+            //       }
+            //     }
+            // }
         });
     }
 
