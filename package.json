@@ -23,6 +23,7 @@
     "@angular/router": "~8.1.2",
     "@fortawesome/angular-fontawesome": "^0.4.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-regular-svg-icons": "^5.10.1",
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@ng-bootstrap/ng-bootstrap": "^5.1.0",
     "@types/gapi": "0.0.39",

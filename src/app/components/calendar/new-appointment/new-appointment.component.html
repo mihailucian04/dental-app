@@ -1,0 +1,68 @@
+<span mat-dialog-title style="color:#3f51b5" *ngIf="addEvent">Add an appointment</span>
+<span mat-dialog-title style="color:#3f51b5" *ngIf="!addEvent">Update an appointment</span>
+<div mat-dialog-content>
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column; justify-content: center;">
+            <fa-icon icon="user-circle" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px;width:100%">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [(ngModel)]="patientName" placeholder="Patient's name" autocomplete="off">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column; justify-content: center;">
+            <fa-icon icon="clock" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px;">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" autocomplete="off" [(ngModel)]="appointmentDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; flex-direction:column;margin-left:10px">
+            <mat-form-field [style.fontSize]="'14px'">
+                <mat-label>From</mat-label>
+                <mat-select [(ngModel)]="fromHour">
+                    <mat-option *ngFor="let fromHour of fromHours" [value]="fromHour.value">
+                        {{fromHour.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; flex-direction:column;margin-left:10px">
+            <mat-form-field [style.fontSize]="'14px'">
+                <mat-label>To</mat-label>
+                <mat-select [(ngModel)]="toHour">
+                    <mat-option *ngFor="let toHour of toHours" [value]="toHour.value">
+                        {{toHour.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column;justify-content: center;">
+            <fa-icon icon="bars" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px;width:100%">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [(ngModel)]="description" placeholder="Appointment details" autocomplete="off">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions style="margin-bottom: 1px; margin-top: 15px;">
+    <button mat-raised-button color="primary" (click)="saveAppointment()">Save</button>
+    <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+</div>

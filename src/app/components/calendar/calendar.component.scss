@@ -7,6 +7,10 @@
   font-weight: 200;
 }
 
+::ng-deep .event-item {
+  margin-bottom: 5px;
+}
+
 .mat-card {
     border-radius: 0%;
 }

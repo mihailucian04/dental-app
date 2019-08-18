@@ -20,7 +20,10 @@ import {MatButtonModule,
         MatTabsModule,
         MatProgressSpinnerModule,
         MatDialogModule,
-        MatTooltipModule} from '@angular/material';
+        MatTooltipModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule} from '@angular/material';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee,
@@ -41,7 +44,12 @@ import { faCoffee,
          faPlus,
          faBuilding,
          faPhoneAlt,
-         faEnvelope } from '@fortawesome/free-solid-svg-icons';
+         faEnvelope,
+         faPencilAlt,
+         faClock,
+         faBars } from '@fortawesome/free-solid-svg-icons';
+
+import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './services/auth.service';
@@ -65,6 +73,9 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NewPatientComponent } from './components/patient-list/new-patient/new-patient.component';
+import { DeleteConfirmationComponent } from './components/calendar/delete-confirmation/delete-confirmation.component';
+import { NewAppointmentComponent } from './components/calendar/new-appointment/new-appointment.component';
+import { DatePipe } from '@angular/common';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -85,7 +96,9 @@ export function initGapi(authService: AuthService) {
     LastConsultsComponent,
     DentalMapComponent,
     CalendarComponent,
-    NewPatientComponent
+    NewPatientComponent,
+    DeleteConfirmationComponent,
+    NewAppointmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -110,11 +123,14 @@ export function initGapi(authService: AuthService) {
     MatProgressSpinnerModule,
     MatDialogModule,
     MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
     ChartsModule,
     OverlayModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
-      useFactory: adapterFactory
+      useFactory: adapterFactory,
     }),
     FlatpickrModule.forRoot()
   ],
@@ -124,17 +140,21 @@ export function initGapi(authService: AuthService) {
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: initGapi, deps: [AuthService], multi: true},
-    FilePreviewOverlayService
+    FilePreviewOverlayService,
+    DatePipe
   ],
   entryComponents: [
     FilePreviewOverlayComponent,
-    NewPatientComponent
+    NewPatientComponent,
+    DeleteConfirmationComponent,
+    NewAppointmentComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
-    faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope];
+    faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope, faPencilAlt,
+    faClock, faBars];
 
     constructor() {
     library.add(...this.icons);

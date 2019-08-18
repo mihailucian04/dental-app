@@ -27,6 +27,10 @@ import {
   CalendarView
 } from 'angular-calendar';
 import { GoogleDataService } from 'src/app/services/google-data.service';
+import { MatDialog } from '@angular/material';
+import { DeleteConfirmationComponent } from './delete-confirmation/delete-confirmation.component';
+import { NewAppointmentComponent } from './new-appointment/new-appointment.component';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 const colors: any = {
   red: {
@@ -65,16 +69,16 @@ export class CalendarComponent implements OnInit {
 
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fa fa-fw fa-pencil"></i>',
+      label: '<i class="fa fa-fw fa-pencil-alt" style="color:#007bff"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.handleEvent('Edited', event);
       }
     },
     {
+      // label: '<fa-icon icon="building" [styles]="{ \'color\': \'#e6dddc\', \'font-size\': \'30px\'}" [fixedWidth]="true">',
       label: '<i class="fa fa-fw fa-times"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
-        this.handleEvent('Deleted', event);
+        this.deleteEvent(event);
       }
     }
   ];
@@ -125,11 +129,14 @@ export class CalendarComponent implements OnInit {
   activeDayIsOpen = false;
 
   ngOnInit(): void {
+    this._getCalendarEvents();
+  }
+
+  private _getCalendarEvents() {
     this.ngZone.runOutsideAngular(() => {
       this.googleDataService.getCalendarEvents().then((response) => {
         this.ngZone.run(() => {
           this.events = this.extractCalendarResponse(response);
-          console.log(response);
         });
       });
     });
@@ -137,7 +144,9 @@ export class CalendarComponent implements OnInit {
 
   constructor(private modal: NgbModal,
               private googleDataService: GoogleDataService,
-              private ngZone: NgZone) {}
+              private ngZone: NgZone,
+              public dialog: MatDialog,
+              private snackBarService: SnackBarService) {}
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -158,6 +167,16 @@ export class CalendarComponent implements OnInit {
     newStart,
     newEnd
   }: CalendarEventTimesChangedEvent): void {
+
+    this.ngZone.runOutsideAngular(() => {
+      this.googleDataService.updateCalendarEventHours(newStart.toISOString(), newEnd.toISOString(), event.id.toString()).then(() => {
+        this.ngZone.run(() => {
+          this._getCalendarEvents();
+          this.snackBarService.show('Event successfully updated!');
+        });
+      });
+    });
+
     this.events = this.events.map(iEvent => {
       if (iEvent === event) {
         return {
@@ -168,33 +187,44 @@ export class CalendarComponent implements OnInit {
       }
       return iEvent;
     });
-    this.handleEvent('Dropped or resized', event);
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+
+    if (action === 'Clicked' || action === 'Edited') {
+      const dialogRef = this.dialog.open(NewAppointmentComponent, {
+        data: {
+          intention: 'update',
+          event
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this._getCalendarEvents();
+      });
+    }
   }
 
   addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true
-        }
+    const dialogRef = this.dialog.open(NewAppointmentComponent, {
+      data: {
+        intention: 'add'
       }
-    ];
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this._getCalendarEvents();
+    });
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter(event => event !== eventToDelete);
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent, {
+      data: eventToDelete
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this._getCalendarEvents();
+    });
   }
 
   setView(view: CalendarView) {
@@ -212,12 +242,15 @@ export class CalendarComponent implements OnInit {
         id: event.id,
         start: new Date(event.start.dateTime),
         end: new Date(event.end.dateTime),
-        title: event.summary + ' ' + event.description,
+        title: event.summary + ' - ' + event.description,
         color: colors.red,
+        actions: this.actions,
+        cssClass: 'event-item',
+        draggable: true,
       };
       eventList.push(mappedEvent);
     }
+    console.log('Event list', eventList);
     return eventList;
   }
-
 }
