@@ -76,6 +76,7 @@ import { NewPatientComponent } from './components/patient-list/new-patient/new-p
 import { DeleteConfirmationComponent } from './components/calendar/delete-confirmation/delete-confirmation.component';
 import { NewAppointmentComponent } from './components/calendar/new-appointment/new-appointment.component';
 import { DatePipe } from '@angular/common';
+import {FlexLayoutModule} from '@angular/flex-layout';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -128,6 +129,7 @@ export function initGapi(authService: AuthService) {
     MatSelectModule,
     ChartsModule,
     OverlayModule,
+    FlexLayoutModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
