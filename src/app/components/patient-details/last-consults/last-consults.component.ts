@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { Consult } from 'src/app/models/consult.model';
 
-export interface Consult {
-  date: string;
-  details: string;
-}
+
 
 @Component({
   selector: 'app-last-consults',
