@@ -3,4 +3,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+.healty-tooth {
+  color: #3f51b5;
+  font-size: 40px;
+}
+
+.missing-tooth {
+  color: #a5b1c2;
+  font-size: 40px;
+}
+
+.extracted-nerve-tooth {
+  color: #0fb9b1;
+  font-size: 40px;
+}
+
+.fake-tooth {
+  color: #e1b12c;
+  font-size: 40px;
 }

@@ -1,232 +1,100 @@
-<div style="display: flex; align-items: center; justify-content: center;margin-top:20px">
-    <div fxLayout="column wrap" fxLayoutAlign="start center">
-        <div fxLayout="row wrap">
+<div style="overflow-y: hidden;" style="margin-top:50px;">
+    <div style="display: flex; align-items: center; justify-content: center;margin-top:20px">
+        <div fxLayout="column wrap" fxLayoutAlign="start center">
             <div fxLayout="row wrap">
                 <div fxLayout="column wrap" fxLayoutAlign="center center">
-                    <span>Upper Left</span>
-                    <div fxLayout="row wrap" style="margin-top:15px">
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>16</span>
+                    <div fxLayout="row wap">
+                        <div fxLayout="column wrap" fxLayoutAlign="center center">
+                            <span>Upper Left</span>
+                            <div fxLayout="row wrap" style="margin-top:15px">
+                                <div class="tooth-container" *ngFor="let tooth of upperLeftSide"
+                                    (click)="showToothDetails(tooth)">
+                                    <fa-icon icon="tooth" [ngClass]="tooth.state" [fixedWidth]="true" rotate="180">
+                                    </fa-icon>
+                                    <span style="margin-top:5px;">{{tooth.number}}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>15</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>14</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>13</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>12</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>11</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>10</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>9</span>
+                    </div>
+                    <div fxLayout="row wap" style="margin-top:25px">
+                        <div fxLayout="column wrap" fxLayoutAlign="center center">
+                            <div fxLayout="row wrap" style="margin-bottom:15px">
+                                <div class="tooth-container" *ngFor="let tooth of lowerLeftSide"
+                                    (click)="showToothDetails(tooth)">
+                                    <span style="margin-bottom:5px;">{{tooth.number}}</span>
+                                    <fa-icon icon="tooth" [ngClass]="tooth.state" [fixedWidth]="true">
+                                    </fa-icon>
+                                </div>
+                            </div>
+                            <span>Lower Left</span>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div fxLayout="row wrap" style="margin-left:30px;">
-                <div fxLayout="column wrap" fxLayoutAlign="center center">
-                    <span>Upper Rigth</span>
-                    <div fxLayout="row wrap" style="margin-top:15px">
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>8</span>
+                <div fxLayout="column wrap" fxLayoutAlign="center center" style="margin-left:40px">
+                    <div fxLayout="row wap">
+                        <div fxLayout="column wrap" fxLayoutAlign="center center">
+                            <span>Upper Rigth</span>
+                            <div fxLayout="row wrap" style="margin-top:15px">
+                                <div class="tooth-container" *ngFor="let tooth of upperRightSide"
+                                    (click)="showToothDetails(tooth)">
+                                    <fa-icon icon="tooth" [ngClass]="tooth.state" [fixedWidth]="true" rotate="180">
+                                    </fa-icon>
+                                    <span style="margin-top:5px;">{{tooth.number}}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>7</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>6</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>5</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>4</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>3</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>2</span>
-                        </div>
-                        <div class="tooth-container">
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true" rotate="180">
-                            </fa-icon>
-                            <span>1</span>
+                    </div>
+                    <div fxLayout="row wap" style="margin-top:25px">
+                        <div fxLayout="column wrap" fxLayoutAlign="center center">
+                            <div fxLayout="row wrap" style="margin-bottom:15px">
+                                <div class="tooth-container" *ngFor="let tooth of lowerRightSide"
+                                    (click)="showToothDetails(tooth)">
+                                    <span style="margin-bottom:5px;">{{tooth.number}}</span>
+                                    <fa-icon icon="tooth" [ngClass]="tooth.state" [fixedWidth]="true">
+                                    </fa-icon>
+                                </div>
+                            </div>
+                            <span>Lower Right</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div fxLayout="row wrap" style="margin-top: 20px">
-            <div fxLayout="row wrap">
-                <div fxLayout="column wrap" fxLayoutAlign="center center">
-                    <div fxLayout="row wrap" style="margin-bottom:15px">
-                        <div class="tooth-container">
-                            <span>17</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-
-                        <div class="tooth-container">
-                            <span>18</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>19</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>20</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>21</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>22</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>23</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>24</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
+                <div fxLayout="column wrap" fxLayoutAlign="center flex-start" style="margin-left:80px;">
+                    <div fxLayout="row wrap" fxLayoutAlign="center center">
+                        <div style="height: 10px;width:20px;background-color:#3f51b5"></div>
+                        <span style="margin-left:10px">Healty tooth</span>
                     </div>
-                    <span>Lower Left</span>
-                </div>
-            </div>
-
-            <div fxLayout="row wrap" style="margin-left:30px;">
-                <div fxLayout="column wrap" fxLayoutAlign="center center">
-                    <div fxLayout="row wrap" style="margin-bottom:15px">
-                        <div class="tooth-container">
-                            <span>25</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>26</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>27</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>28</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>29</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>30</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>31</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
-                        <div class="tooth-container">
-                            <span>32</span>
-                            <fa-icon icon="tooth" [styles]="{ 'color': '#3f51b5', 'font-size': '40px'}"
-                                [fixedWidth]="true">
-                            </fa-icon>
-                        </div>
+                    <div fxLayout="row wrap" fxLayoutAlign="center center" style="margin-top:5px">
+                        <div style="height: 10px;width:20px;background-color:#0fb9b1"></div>
+                        <span style="margin-left:10px">Extracted nerve</span>
                     </div>
-                    <span>Lower Right</span>
+                    <div fxLayout="row wrap" fxLayoutAlign="center center" style="margin-top:5px">
+                        <div style="height: 10px;width:20px;background-color:#e1b12c"></div>
+                        <span style="margin-left:10px">Fake tooth</span>
+                    </div>
+                    <div fxLayout="row wrap" fxLayoutAlign="center center" style="margin-top:5px">
+                        <div style="height: 10px;width:20px;background-color:#a5b1c2"></div>
+                        <span style="margin-left:10px">Missing tooth</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- <div style="overflow: auto; height: 100%;">
+        <table mat-table [dataSource]="dataSourceConsults" matSort style="width: 100%">
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+            </ng-container>
+            <ng-container matColumnDef="details">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Details </th>
+                <td mat-cell *matCellDef="let element"> {{element.details}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsConsults; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsConsults;" class="element-row"
+                (click)="navigateTo(row)"></tr>
+        </table>
+    </div> -->
+
 </div>
