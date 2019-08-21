@@ -23,7 +23,9 @@ import {MatButtonModule,
         MatTooltipModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatSelectModule} from '@angular/material';
+        MatSelectModule,
+        MatCheckboxModule,
+        MatRadioModule} from '@angular/material';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee,
@@ -77,6 +79,7 @@ import { DeleteConfirmationComponent } from './components/calendar/delete-confir
 import { NewAppointmentComponent } from './components/calendar/new-appointment/new-appointment.component';
 import { DatePipe } from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import { ToothDetailsComponent } from './components/patient-details/dental-map/tooth-details/tooth-details.component';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -100,6 +103,7 @@ export function initGapi(authService: AuthService) {
     NewPatientComponent,
     DeleteConfirmationComponent,
     NewAppointmentComponent,
+    ToothDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -127,9 +131,11 @@ export function initGapi(authService: AuthService) {
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatCheckboxModule,
     ChartsModule,
     OverlayModule,
     FlexLayoutModule,
+    MatRadioModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
@@ -149,7 +155,8 @@ export function initGapi(authService: AuthService) {
     FilePreviewOverlayComponent,
     NewPatientComponent,
     DeleteConfirmationComponent,
-    NewAppointmentComponent
+    NewAppointmentComponent,
+    ToothDetailsComponent
   ],
   bootstrap: [AppComponent]
 })
