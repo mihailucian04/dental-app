@@ -1,9 +1,5 @@
-.tooth-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.example-full-width {
+  width: 100%;
 }
 
 .healty-tooth {
@@ -24,4 +20,8 @@
 .fake-tooth {
   color: #e1b12c;
   font-size: 40px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
 }

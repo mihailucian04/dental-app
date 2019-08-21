@@ -11,6 +11,14 @@
   margin-bottom: 5px;
 }
 
+::ng-deep .cal-week-view .cal-time {
+  font-weight: 200;
+}
+
+::ng-deep .cal-day-view .cal-time {
+  font-weight: 200;
+}
+
 .mat-card {
     border-radius: 0%;
 }
