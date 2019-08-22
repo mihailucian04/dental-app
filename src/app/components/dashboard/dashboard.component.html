@@ -1,69 +1,90 @@
-<!-- <div style="width: 78vw">
-        <mat-grid-list cols="4" [gutterSize]="'36px'" > 
-                <mat-grid-tile class="my-grid-tile"
-                    *ngFor="let tile of tiles"
-                    [colspan]="tile.cols"
-                    [rowspan]="tile.rows"
-                    [style.background]="tile.color">
-                  {{tile.text}}
-                </mat-grid-tile>
-              </mat-grid-list>
-</div> -->
-
-<div style="width: 78vw">
-  <mat-grid-list cols="4" [gutterSize]="'36px'" rowHeight="500px" role="list">
-    <mat-grid-tile [colspan]="3">
+<div style="width: 90vw">
+  <mat-grid-list cols="4" [gutterSize]="'25px'" rowHeight="350px" role="list">
+    <mat-grid-tile [colspan]="3" [rowspan]="1">
       <mat-card>
-        <mat-card-title>Dashboard</mat-card-title>
-        <mat-card-content flex>
-          <form class="example-form">
-            <mat-grid-list cols="2" role="list" [gutterSize]="'36px'" rowHeight="420px">
-              <mat-grid-tile [colspan]="1" style="box-shadow: none">
-                <mat-card>
-                  <!-- <mat-card-title>First child</mat-card-title> -->
-                  <mat-card-content style="margin-top:60px">
-                    <canvas baseChart 
-                    [datasets]="barChartData" 
-                    [labels]="barChartLabels" 
-                    [options]="barChartOptions"
-                    [plugins]="barChartPlugins" 
-                    [legend]="barChartLegend" 
-                    [chartType]="barChartType"></canvas>
-                  </mat-card-content>
-                </mat-card>
-              </mat-grid-tile>
-              <mat-grid-tile [colspan]="1" style="box-shadow: none">
-                <mat-card>
-                  <!-- <mat-card-title>Second child</mat-card-title> -->
-                  <mat-card-content style="margin-top:60px">
-                    <canvas baseChart
-                    [data]="doughnutChartData"
-                    [labels]="doughnutChartLabels"
-                    [chartType]="doughnutChartType"></canvas>
-                    </mat-card-content>
-                </mat-card>
-              </mat-grid-tile>
-            </mat-grid-list>
-
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </mat-grid-tile>
-
-    <mat-grid-tile [colspan]="1">
-      <mat-card>
-        <mat-card-title>Dashboard</mat-card-title>
-        <mat-card-content flex>
-          <form class="example-form">
-            <div style="display: block">
-              <!-- <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-                    [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
-                  </canvas> -->
+        <mat-card-title style="font-size:20px;font-weight:200;">Dashboard</mat-card-title>
+        <mat-card-content style="width: 100%;height:100%;" fxLayoutAlign="center center">
+          <div fxLayout="row wrap" fxLayoutAlign="start center" style="margin-top:10px;width: 100%">
+            <div fxLayout="column wrap" fxLayoutAlign="center center">
+              <canvas baseChart width="450" height="250" [datasets]="lineChartData" [labels]="lineChartLabels"
+                [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+                [chartType]="lineChartType" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
             </div>
+
+            <div fxLayout="column wrap" fxLayoutAlign="center center" style="margin-left:50px;">
+              <canvas baseChart width="450" height="250" [datasets]="barChartData" [labels]="barChartLabels"
+                [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                [chartType]="barChartType">
+              </canvas>
+            </div>
+
+            <div fxLayout="column wrap" fxLayoutAlign="center center">
+
+            </div>
+          </div>
+          <form class="example-form">
           </form>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
 
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+      <mat-card>
+        <mat-card-title style="font-size:20px;font-weight:200;">Today's events</mat-card-title>
+        <mat-card-content flex>
+          <div class="timeline-body">
+            <div class="timeline">
+              <div class="timeline-item" style="padding-bottom:15px;" *ngFor="let appointment of appointments">
+                <div class="timeline-item-content">
+                  <div style="opacity: .5">{{appointment.time}}</div>
+                  <span>{{appointment.patientName}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile [colspan]="1" [rowspan]="1">
+      <mat-card style="padding: 0">
+        <mat-card-content flex style="width: 100%;height:100%;" fxLayoutAlign="center center">
+          <div fxLayout="column wrap" fxLayoutAlign="center center">
+            <span style="margin-bottom:30px;font-size: 22px;font-weight: 100">Storage status</span>
+            <div fxLayout="row wrap" fxLayoutAlign="center center" style="width: 100%;height:100%;">
+              <canvas baseChart width="400" height="200" [data]="doughnutChartData" [labels]="doughnutChartLabels"
+                [chartType]="doughnutChartType" [options]="doughnutChartOptions" [colors]="doughnutChartColors">
+              </canvas>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile [colspan]="2" [rowspan]="1">
+      <mat-card style="padding:0;">
+        <mat-card-content flex style="width: 100%;height: 100%;">
+          <div fxLayout="row wrap" fxLayoutAlign="center center" style="width: 100%;height: 100%;">
+            <div style="width: 50%;height:100%;background-color:#3f51b5" fxLayout="column wrap"
+              fxLayoutAlign="center center">
+              <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Dental coverage points</span>
+              <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
+                <span style="color: #e4e6eb;font-size: 30px;margin-right: 5px;">178</span>
+                <span style="color: #e4e6eb;font-size: 50px;margin-right: 5px;">/</span>
+                <span style="color: #e4e6eb;font-size: 50px">500</span>
+              </div>
+            </div>
+            <div style="width: 50%;height:100%;background-color:#298763" fxLayout="column wrap"
+              fxLayoutAlign="center center">
+              <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Registered patients</span>
+              <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
+                <span style="color: #e4e6eb;font-size: 50px;margin-right: 5px;">230</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
   </mat-grid-list>
 </div>
