@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Patient } from 'src/app/models/patient.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { GoogleDataService } from 'src/app/services/google-data.service';
+import { ContactsService } from 'src/app/services/contacts.service';
 
 @Component({
   selector: 'app-patient-details',
@@ -12,7 +12,7 @@ export class PatientDetailsComponent implements OnInit {
   patient: Patient;
 
   constructor(private route: ActivatedRoute,
-              private googleDataService: GoogleDataService,
+              private contactsService: ContactsService,
               private ngZone: NgZone) { }
 
   ngOnInit() {
@@ -23,7 +23,7 @@ export class PatientDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const resourceName = params.get('id');
       this.ngZone.runOutsideAngular(() => {
-        this.googleDataService.getContact(resourceName).then((patient: Patient) => {
+        this.contactsService.getContact(resourceName).then((patient: Patient) => {
           this.ngZone.run(() => {
             this.patient = patient;
           });

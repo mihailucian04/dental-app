@@ -3,8 +3,8 @@ import { Patient, NewPatient } from 'src/app/models/patient.model';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { GoogleDataService } from 'src/app/services/google-data.service';
 import { NewPatientComponent } from './new-patient/new-patient.component';
+import { ContactsService } from 'src/app/services/contacts.service';
 
 export interface DialogData {
   animal: string;
@@ -27,7 +27,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private router: Router,
-              private googleDataService: GoogleDataService,
+              private contactsService: ContactsService,
               private ngZone: NgZone,
               public dialog: MatDialog) { }
 
@@ -40,7 +40,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
   private _getPatientList() {
     this.ngZone.runOutsideAngular(() => {
-      this.googleDataService.getContacts().then((patients: Patient[]) => {
+      this.contactsService.getContacts().then((patients: Patient[]) => {
         this.ngZone.run(() => {
           this.dataSource = new MatTableDataSource<Patient>();
           this.dataSource.data = patients;
@@ -62,7 +62,6 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(NewPatientComponent, {
-      // width: '250px',
       data: this.newPatient
     });
 

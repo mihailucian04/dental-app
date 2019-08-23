@@ -26,11 +26,11 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView
 } from 'angular-calendar';
-import { GoogleDataService } from 'src/app/services/google-data.service';
 import { MatDialog } from '@angular/material';
 import { DeleteConfirmationComponent } from './delete-confirmation/delete-confirmation.component';
 import { NewAppointmentComponent } from './new-appointment/new-appointment.component';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { CalendarService } from 'src/app/services/calendar.service';
 
 const colors: any = {
   red: {
@@ -134,7 +134,7 @@ export class CalendarComponent implements OnInit {
 
   private _getCalendarEvents() {
     this.ngZone.runOutsideAngular(() => {
-      this.googleDataService.getCalendarEvents().then((response) => {
+      this.calendarService.getCalendarEvents().then((response) => {
         this.ngZone.run(() => {
           this.events = this.extractCalendarResponse(response);
         });
@@ -143,7 +143,7 @@ export class CalendarComponent implements OnInit {
   }
 
   constructor(private modal: NgbModal,
-              private googleDataService: GoogleDataService,
+              private calendarService: CalendarService,
               private ngZone: NgZone,
               public dialog: MatDialog,
               private snackBarService: SnackBarService) {}
@@ -169,7 +169,7 @@ export class CalendarComponent implements OnInit {
   }: CalendarEventTimesChangedEvent): void {
 
     this.ngZone.runOutsideAngular(() => {
-      this.googleDataService.updateCalendarEventHours(newStart.toISOString(), newEnd.toISOString(), event.id.toString()).then(() => {
+      this.calendarService.updateCalendarEventHours(newStart.toISOString(), newEnd.toISOString(), event.id.toString()).then(() => {
         this.ngZone.run(() => {
           this._getCalendarEvents();
           this.snackBarService.show('Event successfully updated!');

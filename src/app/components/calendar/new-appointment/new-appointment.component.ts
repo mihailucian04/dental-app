@@ -1,8 +1,8 @@
 import { Component, Inject, NgZone } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { GoogleDataService } from 'src/app/services/google-data.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { DatePipe } from '@angular/common';
+import { CalendarService } from 'src/app/services/calendar.service';
 
 export interface HourOption {
   value: string;
@@ -63,7 +63,7 @@ export class NewAppointmentComponent {
   constructor(
     public dialogRef: MatDialogRef<NewAppointmentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private googleDataService: GoogleDataService,
+    private calendarService: CalendarService,
     private ngZone: NgZone,
     private snackBarService: SnackBarService,
     private datePipe: DatePipe) {
@@ -91,7 +91,7 @@ export class NewAppointmentComponent {
 
     if (this.addEvent) {
       this.ngZone.runOutsideAngular(() => {
-        this.googleDataService.addCalendarEvent(this.patientName,
+        this.calendarService.addCalendarEvent(this.patientName,
           this.googleDateFrom.toISOString(),
           this.googleDateTo.toISOString(),
           this.description).then(() => {
@@ -103,7 +103,7 @@ export class NewAppointmentComponent {
       });
     } else {
       this.ngZone.runOutsideAngular(() => {
-        this.googleDataService.updateCalendarEventDetails(this.patientName,
+        this.calendarService.updateCalendarEventDetails(this.patientName,
           this.description,
           this.googleDateFrom.toISOString(),
           this.googleDateTo.toISOString(),
