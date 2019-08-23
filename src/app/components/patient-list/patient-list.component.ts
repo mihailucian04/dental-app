@@ -40,7 +40,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
   private _getPatientList() {
     this.ngZone.runOutsideAngular(() => {
-      this.googleDataService.getContacts().then((patients: any) => {
+      this.googleDataService.getContacts().then((patients: Patient[]) => {
         this.ngZone.run(() => {
           this.dataSource = new MatTableDataSource<Patient>();
           this.dataSource.data = patients;
