@@ -15,7 +15,7 @@ const routes: Routes = [ { path: 'dashboard', component: DashboardComponent, can
                          { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
                          { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
                          { path: 'login', component: LoginFormComponent },
-                         { path: '**', component: LoginFormComponent } ];
+                         { path: '**', component: DashboardComponent, canActivate: [AuthGuard] } ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
