@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import { FilePreviewOverlayRef } from 'src/app/services/file-preview-overlay-ref';
+import { FilePreviewOverlayRef } from 'src/app/components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay-ref';
 import { FilePreviewOverlayService } from 'src/app/services/file-preview-overlay.service';
 export interface File {
   name: string;

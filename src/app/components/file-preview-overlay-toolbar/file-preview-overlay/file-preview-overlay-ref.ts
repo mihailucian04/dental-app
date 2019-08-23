@@ -2,9 +2,9 @@ import { OverlayRef } from '@angular/cdk/overlay';
 
 
 import { filter, take } from 'rxjs/operators';
-
-import { FilePreviewOverlayComponent } from './file-preview-overlay.component';
 import { Subject, Observable } from 'rxjs';
+// tslint:disable-next-line: max-line-length
+import { FilePreviewOverlayComponent } from './file-preview-overlay.component';
 
 export class FilePreviewOverlayRef {
 

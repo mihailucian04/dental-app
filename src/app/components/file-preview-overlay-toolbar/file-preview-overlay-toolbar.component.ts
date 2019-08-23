@@ -1,6 +1,6 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { FilePreviewOverlayRef } from 'src/app/services/file-preview-overlay-ref';
+import { FilePreviewOverlayRef } from 'src/app/components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay-ref';
 
 @Component({
   selector: 'app-tm-file-preview-overlay-toolbar',
