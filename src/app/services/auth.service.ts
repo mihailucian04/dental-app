@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Patient } from '../models/patient.model';
+import { DriveService } from './drive.service';
 
 const CLIENT_ID = '948035237809-2ki059veu26dgnqbr2tfqm9b5qbe079m.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyDIQ9RWQwaCtTmkJwXMDxGAPUPieIo5z0Y';
@@ -20,7 +21,7 @@ export class AuthService {
     private loggedIn = new BehaviorSubject<boolean>(false);
     private username = new BehaviorSubject<string>('');
 
-    constructor() { }
+    constructor(private driveService: DriveService) { }
 
     public initClient() {
         return new Promise((resolve) => {
@@ -37,6 +38,8 @@ export class AuthService {
                     if (currentUser && currentUser.isSignedIn()) {
                         this.loggedIn.next(true);
                         this.username.next(currentUser.getBasicProfile().getEmail());
+
+                        this.driveService.initDriveStorage();
                     }
                     resolve();
                 });
