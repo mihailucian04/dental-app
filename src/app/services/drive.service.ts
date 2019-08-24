@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DriveData } from '../models/data.model';
 import { ContactsService } from './contacts.service';
 import { Patient } from '../models/patient.model';
+import { DEFAULT_DENTAL_MAP } from '../models/tooth.model';
 declare var gapi: any;
 
 export enum MymeType {
@@ -43,7 +44,8 @@ export class DriveService {
                             if (patients.length !== 0) {
                                 for (const patient of patients) {
                                     const mappedPatient = {
-                                        patientId: patient.resourceName
+                                        patientId: patient.resourceName,
+                                        dentalMap: DEFAULT_DENTAL_MAP
                                     };
                                     mappedData.patients.push(mappedPatient);
 

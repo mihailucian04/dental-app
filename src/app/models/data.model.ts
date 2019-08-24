@@ -1,3 +1,5 @@
+import { Tooth } from './tooth.model';
+
 export interface DriveData {
     dashboardData: DashboardData;
     patients: Patients[];
@@ -14,4 +16,6 @@ export interface EMCPoints {
 
 export interface Patients {
     patientId: string;
+    dentalMap: Tooth[];
 }
+
