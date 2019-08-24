@@ -27,7 +27,6 @@ export class ContactsService {
             personFields: 'names,phoneNumbers,photos,birthdays,organizations',
         }).then((response: any) => {
             const connections = response.result.connections;
-            console.log(connections);
             const list = ctx._mapPatients(connections);
 
             return list;
