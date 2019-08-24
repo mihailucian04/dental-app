@@ -1,9 +1,10 @@
 import { Injectable, Injector, ComponentRef } from '@angular/core';
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
-import { FilePreviewOverlayRef } from './file-preview-overlay-ref';
-import { FilePreviewOverlayComponent } from './file-preview-overlay.component';
-import { FILE_PREVIEW_DIALOG_DATA } from './file-preview-overlay.tokens';
+import { FilePreviewOverlayRef } from '../components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay-ref';
+import { FILE_PREVIEW_DIALOG_DATA } from '../components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay.tokens';
+// tslint:disable-next-line: max-line-length
+import { FilePreviewOverlayComponent } from '../components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay.component';
 
 
 export interface Image {

@@ -1,8 +1,8 @@
 import { Component, Inject, NgZone } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NewPatient } from 'src/app/models/patient.model';
-import { GoogleDataService } from 'src/app/services/google-data.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { ContactsService } from 'src/app/services/contacts.service';
 
 @Component({
   selector: 'app-new-patient',
@@ -14,13 +14,13 @@ export class NewPatientComponent {
   constructor(
     public dialogRef: MatDialogRef<NewPatientComponent>,
     @Inject(MAT_DIALOG_DATA) public data: NewPatient,
-    private googleDataService: GoogleDataService,
+    private contactsService: ContactsService,
     private ngZone: NgZone,
     private snackBarService: SnackBarService) {}
 
   public savePatient() {
     this.ngZone.runOutsideAngular(() => {
-      this.googleDataService.addNewPatient(this.data).then(() => {
+      this.contactsService.addNewPatient(this.data).then(() => {
         this.ngZone.run(() => {
           this.snackBarService.show('Patient successfully added!');
           this.dialogRef.close();

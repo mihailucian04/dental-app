@@ -58,7 +58,6 @@ import { AuthService } from './services/auth.service';
 import { ChartsModule } from 'ng2-charts';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
-import { FilePreviewOverlayComponent } from './services/file-preview-overlay.component';
 import { HeaderComponent } from './components/navigation/header/header.component';
 import { SideNavComponent } from './components/navigation/side-nav/side-nav.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
@@ -80,6 +79,7 @@ import { NewAppointmentComponent } from './components/calendar/new-appointment/n
 import { DatePipe } from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { ToothDetailsComponent } from './components/patient-details/dental-map/tooth-details/tooth-details.component';
+import { FilePreviewOverlayComponent } from './components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay.component';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
