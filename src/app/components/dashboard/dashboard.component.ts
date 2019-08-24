@@ -1,8 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, Color, BaseChartDirective, MultiDataSet } from 'ng2-charts';
 import * as pluginAnnotations from 'chartjs-plugin-datalabels';
 import * as Chart from 'chart.js';
+import { DriveData } from 'src/app/models/data.model';
+import { Patient } from 'src/app/models/patient.model';
+import { DriveService } from 'src/app/services/drive.service';
+import { ContactsService } from 'src/app/services/contacts.service';
 
 export interface Appointment {
   time: string;
@@ -89,6 +93,8 @@ export class DashboardComponent implements OnInit {
   public barChartLegend = true;
   public barChartPlugins = [];
 
+  private driveData = {} as DriveData;
+
   public barChartData: ChartDataSets[] = [
     { data: [65, 59, 80, 81, 56, 55, 40], label: 'Females', stack: 'a' },
     { data: [28, 48, 40, 19, 86, 27, 90], label: 'Males', stack: 'a' }
@@ -133,9 +139,94 @@ export class DashboardComponent implements OnInit {
     { time: '18:00 - 18:30', patientName: 'Eifion, Anna' }
   ];
 
-  constructor() { }
+  constructor(private driveService: DriveService,
+              private contactsService: ContactsService,
+              private ngZone: NgZone) {
 
-  ngOnInit() {
+    // this.driveData = {
+    //   DashboardData: {
+    //     EMCPoints: {
+    //       points: 155,
+    //       maxPoints: 500
+    //     }
+    //   }
+    // };
+
+    // this.googleDataService.listFiles();
+
+
+    // this.googleDataService.exportFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg');
+
+    // this.googleDataService.updateFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg', JSON.stringify(this.driveData));
+    // this.driveService.getDriveFile('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg');
   }
 
+  ngOnInit() {
+    // this._constructFirstDummyDataFile();
+
+    this.ngZone.runOutsideAngular(() => {
+      const param = 'name contains \'First\'';
+      // this.googleDataService.listFilesByParam(param).then(response => {
+      //   this.ngZone.run(() => {
+      //     console.log(response);
+      //   });
+      // });
+
+      // this.driveService.createDriveFile().then((response) => {
+      //   this.ngZone.run(() => {
+      //     console.log(response);
+      //   });
+      // });
+    });
+    // this._getDashBoardData();
+    // this.ngZone.runOutsideAngular(() => {
+    //   this.googleDataService.createDriveFolder().then(response => {
+    //     this.ngZone.run(() => {
+    //       console.log(response);
+    //     });
+    //   });
+    // });
+  }
+
+  private _getDashBoardData() {
+    this.ngZone.runOutsideAngular(() => {
+      this.driveService.exportFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg').then((response: string) => {
+        this.ngZone.run(() => {
+          const modifiedResponse = response.substr(1);
+          this.driveData = JSON.parse(modifiedResponse);
+          console.log(this.driveData);
+        });
+      });
+    });
+  }
+
+  private _constructFirstDummyDataFile() {
+    this.driveData.patients = [];
+    this.ngZone.runOutsideAngular(() => {
+      this.contactsService.getContacts().then((response: Patient[]) => {
+        this.ngZone.run(() => {
+          const drivePatients = [];
+          for (const patient of response) {
+            const drivePatient = {
+              patientId: patient.resourceName
+            };
+
+            drivePatients.push(drivePatient);
+          }
+
+          this.driveData = {
+            dashboardData: {
+              emcPoints: {
+                points: 120,
+                maxPoints: 500
+              }
+            },
+            patients: drivePatients
+          };
+          this.driveService.updateFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg', JSON.stringify(this.driveData));
+          console.log(this.driveData);
+        });
+      });
+    });
+  }
 }
