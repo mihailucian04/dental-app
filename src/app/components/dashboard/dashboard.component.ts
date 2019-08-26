@@ -103,9 +103,10 @@ export class DashboardComponent implements OnInit {
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
   public doughnutChartLabels: Label[] = ['', ''];
-  public doughnutChartData: MultiDataSet = [
-    [150, 450],
-  ];
+  public doughnutChartData: MultiDataSet = [ ];
+  //   [150, 450],
+  // ];
+
   public doughnutChartColors = [
     {
       backgroundColor: [
@@ -120,8 +121,11 @@ export class DashboardComponent implements OnInit {
       display: false
     },
     tooltips: {
-      enabled: false,
-      displayColors: false
+      enabled: true,
+      displayColors: true
+    },
+    labels: {
+      display: false
     }
   };
 
@@ -142,23 +146,6 @@ export class DashboardComponent implements OnInit {
   constructor(private driveService: DriveService,
               private contactsService: ContactsService,
               private ngZone: NgZone) {
-
-    // this.driveData = {
-    //   DashboardData: {
-    //     EMCPoints: {
-    //       points: 155,
-    //       maxPoints: 500
-    //     }
-    //   }
-    // };
-
-    // this.googleDataService.listFiles();
-
-
-    // this.googleDataService.exportFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg');
-
-    // this.googleDataService.updateFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg', JSON.stringify(this.driveData));
-    // this.driveService.getDriveFile('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg');
   }
 
   ngOnInit() {
@@ -166,6 +153,17 @@ export class DashboardComponent implements OnInit {
 
     this.ngZone.runOutsideAngular(() => {
       const param = 'name contains \'First\'';
+
+      this.driveService.getDriveInfo().then(response => {
+        this.ngZone.run(() => {
+          const driveResult = response.result;
+
+          const usedSpace = parseInt(driveResult.storageQuota.usageInDrive, 10) / 1000000000;
+          const maxSpace = parseInt(driveResult.storageQuota.limit, 10) / 1000000000;
+          this.doughnutChartData = [ [ usedSpace, maxSpace] ];
+        });
+      });
+
       // this.googleDataService.listFilesByParam(param).then(response => {
       //   this.ngZone.run(() => {
       //     console.log(response);
