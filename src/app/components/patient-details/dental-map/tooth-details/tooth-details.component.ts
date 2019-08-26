@@ -1,8 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Tooth, ToothState } from 'src/app/models/tooth.model';
-
-
+import { Tooth } from 'src/app/models/tooth.model';
 
 @Component({
   selector: 'app-tooth-details',
@@ -11,15 +9,16 @@ import { Tooth, ToothState } from 'src/app/models/tooth.model';
 })
 export class ToothDetailsComponent {
 
-  public tooth: Tooth;
+  private dialogTooth: Tooth;
+  private initialTooth = {} as Tooth;
 
   constructor(public dialogRef: MatDialogRef<ToothDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Tooth) {
-                this.tooth = data;
+                this.dialogTooth = JSON.parse(JSON.stringify(data));
                }
 
   public saveToothDetails() {
-    console.log(this.tooth.operationDetails);
+    this.dialogRef.close(this.dialogTooth);
   }
 
   public closeDialog() {
