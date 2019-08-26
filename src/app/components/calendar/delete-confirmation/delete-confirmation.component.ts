@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, NgZone } from '@angular/core';
+import { Component, Inject, NgZone } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { CalendarService } from 'src/app/services/calendar.service';
