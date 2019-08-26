@@ -20,6 +20,7 @@ export const DEFAULT_DENTAL_MAP: Tooth[] = [
     {number: 6, state: ToothState.Healty, operationDetails: '' },
     {number: 7, state: ToothState.Healty, operationDetails: '' },
     {number: 8, state: ToothState.Healty, operationDetails: '' },
+
     {number: 9, state: ToothState.Healty, operationDetails: '' },
     {number: 10, state: ToothState.Healty, operationDetails: '' },
     {number: 11, state: ToothState.Healty, operationDetails: '' },
@@ -37,6 +38,7 @@ export const DEFAULT_DENTAL_MAP: Tooth[] = [
     {number: 22, state: ToothState.Healty, operationDetails: '' },
     {number: 23, state: ToothState.Healty, operationDetails: '' },
     {number: 24, state: ToothState.Healty, operationDetails: '' },
+
     {number: 25, state: ToothState.Healty, operationDetails: '' },
     {number: 26, state: ToothState.Healty, operationDetails: '' },
     {number: 27, state: ToothState.Healty, operationDetails: '' },

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DriveData } from '../models/data.model';
+import { DriveData, PatientMap } from '../models/data.model';
 import { ContactsService } from './contacts.service';
 import { Patient } from '../models/patient.model';
-import { DEFAULT_DENTAL_MAP } from '../models/tooth.model';
+
 declare var gapi: any;
 
 export enum MymeType {
@@ -37,25 +37,109 @@ export class DriveService {
 
                     this.createDriveFile('medapp.mappings', folderResult.id).then(fileResponse => {
                         const fileResult = fileResponse.result;
-                        const batch = gapi.client.newBatch();
+                        const batchFolder = gapi.client.newBatch();
 
                         const mappedData = DEFAULT_MAPPINGS;
                         this.contactsService.getContacts().then((patients: Patient[]) => {
                             if (patients.length !== 0) {
                                 for (const patient of patients) {
-                                    const mappedPatient = {
-                                        patientId: patient.resourceName,
-                                        dentalMap: DEFAULT_DENTAL_MAP
-                                    };
-                                    mappedData.patients.push(mappedPatient);
-
-                                    const request = this.createDriveFolderBatch(patient.resourceName, folderResult.id);
-                                    batch.add(request);
+                                    const requestFolder = this.createDriveFileBatch(patient.resourceName, folderResult.id, MymeType.folder);
+                                    batchFolder.add(requestFolder);
                                 }
 
-                                batch.then(() => {
-                                    this.updateFileContent(fileResult.id, JSON.stringify(mappedData)).then(updateFileResponse => {
-                                        console.log('Data mapings and folder hierarchy created');
+                                batchFolder.then(batchFolderResponse => {
+                                    const batchFolderResult = batchFolderResponse.result;
+                                    const batchMappingsFlie = gapi.client.newBatch();
+                                    const batchConsultsFile = gapi.client.newBatch();
+                                    const batchXRayFolder = gapi.client.newBatch();
+
+                                    const mappedPatients: PatientMap[] = [];
+
+                                    Object.keys(batchFolderResult).map(index => {
+                                        const folder = batchFolderResult[index].result;
+                                        const folderId = folder.id;
+
+                                        const mappedPatient = {
+                                            patientId: folder.title,
+                                            patientFolderId: folder.id
+                                        };
+
+                                        const requestMappingsFile =
+                                            this.createDriveFileBatch('patient.mappings', folderId, MymeType.document);
+
+                                        const requestConsultFile =
+                                            this.createDriveFileBatch('consult.mappings', folderId, MymeType.document);
+
+                                        const requestXRayFolder = this.createDriveFileBatch('X-Rays', folderId, MymeType.folder);
+
+                                        batchConsultsFile.add(requestConsultFile);
+                                        batchMappingsFlie.add(requestMappingsFile);
+                                        batchXRayFolder.add(requestXRayFolder);
+
+                                        mappedPatients.push(mappedPatient);
+                                    });
+
+                                    batchMappingsFlie.then((batchFileResponse) => {
+                                        console.log('BatchFileResponse', batchFileResponse);
+                                        const batchFileResult = batchFileResponse.result;
+
+                                        Object.keys(batchFileResult).map(index => {
+                                            const patientFile = batchFileResult[index].result;
+                                            const patientFileId = patientFile.id;
+
+                                            const currentMappedPatient = mappedPatients
+                                                .filter(obj => obj.patientFolderId === patientFile.parents[0].id)[0];
+
+                                            const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
+                                            currentMappedPatient.dentalMapFileId = patientFileId;
+
+                                            mappedPatients[currentMappedIndex] = currentMappedPatient;
+                                        });
+
+                                        mappedData.patients = mappedPatients;
+
+                                        batchConsultsFile.then((batchConsultResponse) => {
+                                            const consultFileResult = batchConsultResponse.result;
+
+                                            Object.keys(consultFileResult).map(index => {
+                                                const consultFile = consultFileResult[index].result;
+                                                const consultFileId = consultFile.id;
+
+                                                const currentMappedPatient = mappedPatients
+                                                    .filter(obj => obj.patientFolderId === consultFile.parents[0].id)[0];
+
+                                                const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
+                                                currentMappedPatient.consultFileId = consultFileId;
+
+                                                mappedPatients[currentMappedIndex] = currentMappedPatient;
+                                            });
+
+                                            mappedData.patients = mappedPatients;
+
+                                            batchXRayFolder.then((batchXRayFolderResponse) => {
+                                                const xRaysFolderResult = batchXRayFolderResponse.result;
+
+                                                Object.keys(xRaysFolderResult).map(index => {
+                                                    const xRayFolder = xRaysFolderResult[index].result;
+                                                    const xRayFolderId = xRayFolder.id;
+
+                                                    const currentMappedPatient = mappedPatients
+                                                        .filter(obj => obj.patientFolderId === xRayFolder.parents[0].id)[0];
+
+                                                    const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
+                                                    currentMappedPatient.xRayFolderId = xRayFolderId;
+
+                                                    mappedPatients[currentMappedIndex] = currentMappedPatient;
+                                                });
+
+                                                mappedData.patients = mappedPatients;
+
+                                                this.updateFileContent(fileResult.id, JSON.stringify(mappedData))
+                                                    .then(updateFileResponse => {
+                                                        console.log('Data mapings and folder hierarchy created');
+                                                    });
+                                            });
+                                        });
                                     });
                                 });
                             }
@@ -69,7 +153,7 @@ export class DriveService {
                     this.exportFileContent(mappinsResult.id).then(contentResponse => {
                         let driveData = {} as DriveData;
                         driveData = JSON.parse(contentResponse.substr(1));
-                        console.log(driveData);
+
                         localStorage.setItem('dashboardData', JSON.stringify(driveData.dashboardData));
                         localStorage.setItem('patientsListData', JSON.stringify(driveData.patients));
                     });
@@ -99,12 +183,38 @@ export class DriveService {
         });
     }
 
-    public getDriveFile(fileId: string) {
+    public listFolderChildren(folderId: string) {
+        return gapi.client.request({
+            path: `drive/v2/files/${folderId}/children`,
+            method: 'GET'
+        });
+    }
+
+    public downloadFileTest(fileId: string, token: string) {
+        return gapi.client.request({
+            path: `drive/v3/files/${fileId}?alt=media`,
+            headers: [
+                { Authorization: `Bearer ${token}` }
+            ]
+        });
+    }
+
+    public getFileBatch(fileId: string, fields?: string) {
         return gapi.client.drive.files.get({
             fileId,
-            fields: 'id,name,mimeType,webContentLink',
+            fields
+        });
+    }
+
+    public getDriveFile(fileId: string, fields?: string) {
+        if (!fields) {
+            fields = '*';
+        }
+        return gapi.client.drive.files.get({
+            fileId,
+            fields,
         }).then(response => {
-            console.log(response);
+            return response;
         });
     }
 
@@ -117,6 +227,17 @@ export class DriveService {
         });
     }
 
+    public updateFileContentBatch(fileId: string, content: string) {
+        return gapi.client.request({
+            path: 'upload/drive/v3/files/' + fileId,
+            method: 'PATCH',
+            params: {
+                uploadType: 'media'
+            },
+            body: content
+        });
+    }
+
     public updateFileContent(fileId: string, content: string) {
         return gapi.client.request({
             path: '/upload/drive/v3/files/' + fileId,
@@ -126,14 +247,14 @@ export class DriveService {
             },
             body: content
         }).then((response) => {
-            console.log(response);
+            return response;
         });
     }
 
-    public createDriveFolderBatch(folderName: string, parentId: string) {
-        const body  = {
-            title: folderName,
-            mimeType: MymeType.folder,
+    public createDriveFileBatch(fileName: string, parentId: string, mimeType: string) {
+        const body = {
+            title: fileName,
+            mimeType,
             parents: [
                 {
                     id: parentId
@@ -177,6 +298,29 @@ export class DriveService {
         });
     }
 
+    public uploadFileTest(boundary: string, body: string) {
+        return gapi.client.request({
+            path: '/upload/drive/v2/files',
+            method: 'POST',
+            params: { uploadType: 'multipart' },
+            headers: {
+                'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+            },
+            body
+        });
+    }
+
+    public createPermissions(fileId: string) {
+        return gapi.client.request({
+            path: `drive/v3/files/${fileId}/permissions`,
+            method: 'POST',
+            body: {
+                role: 'reader',
+                type: 'anyone'
+            }
+        });
+    }
+
     public createDriveFile(fileName: string, parentId: string) {
         return gapi.client.request({
             path: '/drive/v2/files',
@@ -192,6 +336,12 @@ export class DriveService {
             }
         }).then(response => {
             return response;
+        });
+    }
+
+    public deleteDriveFile(fileId: string) {
+        return gapi.client.drive.files.delete({
+            fileId
         });
     }
 }
