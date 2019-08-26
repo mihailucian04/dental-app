@@ -1,0 +1,33 @@
+<div fxLayout="row wrap" mat-dialog-title>
+        <fa-icon icon="notes-medical" [styles]="{'color': '#3f51b5', 'font-size': '40px'}" [fixedWidth]="true">
+        </fa-icon>
+        <span mat-dialog-title style="color:#3f51b5;margin-left:5px;">Add new consult</span>
+    </div>
+<div mat-dialog-content>
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column; justify-content: center;">
+            <fa-icon icon="calendar-alt" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            </fa-icon>
+        </div>
+        <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%">
+            <mat-form-field [style.fontSize]="'14px'">
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="consultDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+    <div fxLayout="row wrap" style="margin-top:25px;">
+            <div fxLayout="column wrap" style="width:100%">
+                <mat-form-field [style.fontSize]="'14px'" class="example-full-width">
+                    <textarea matInput rows="8" style="line-height: 20px" [(ngModel)]="newConsult.details"
+                        placeholder="Consult details">
+                    </textarea>
+                </mat-form-field>
+            </div>
+    </div>
+</div>
+<div mat-dialog-actions style="margin-bottom: 1px;">
+    <button mat-raised-button color="primary" (click)="saveConsult()">Save</button>
+    <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+</div>
