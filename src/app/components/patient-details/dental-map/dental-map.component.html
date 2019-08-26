@@ -1,4 +1,8 @@
-<div style="overflow-y: hidden;" style="margin-top:50px;">
+<div [hidden]="isLoaded" style="text-align: -webkit-center;margin-top:10vh;height: 200px">
+    <mat-spinner [diameter]="70"></mat-spinner>
+</div>
+
+<div style="overflow-y: hidden;" style="margin-top:50px;" [hidden]="!isLoaded">
     <div style="display: flex; align-items: center; justify-content: center;margin-top:20px">
         <div fxLayout="column wrap" fxLayoutAlign="start center">
             <div fxLayout="row wrap">
@@ -79,22 +83,4 @@
             </div>
         </div>
     </div>
-
-    <!-- <div style="overflow: auto; height: 100%;">
-        <table mat-table [dataSource]="dataSourceConsults" matSort style="width: 100%">
-            <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
-            </ng-container>
-            <ng-container matColumnDef="details">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Details </th>
-                <td mat-cell *matCellDef="let element"> {{element.details}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsConsults; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsConsults;" class="element-row"
-                (click)="navigateTo(row)"></tr>
-        </table>
-    </div> -->
-
 </div>

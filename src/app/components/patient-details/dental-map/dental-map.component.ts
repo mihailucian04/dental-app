@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatTableDataSource } from '@angular/material';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { ToothDetailsComponent } from './tooth-details/tooth-details.component';
-import { Tooth, ToothState } from 'src/app/models/tooth.model';
+import { Tooth, DEFAULT_DENTAL_MAP } from 'src/app/models/tooth.model';
 import { ActivatedRoute } from '@angular/router';
-import { Patient } from 'src/app/models/patient.model';
-import { Patients } from 'src/app/models/data.model';
+import { PatientMap } from 'src/app/models/data.model';
+import { DriveService } from 'src/app/services/drive.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 
 @Component({
@@ -19,9 +20,17 @@ export class DentalMapComponent implements OnInit {
   public lowerLeftSide: Tooth[] = [];
   public lowerRightSide: Tooth[] = [];
 
+  private resourceName: string;
+  private mappingsFileId: string;
+
+  public isLoaded = false;
+
   constructor(public dialog: MatDialog,
-              private route: ActivatedRoute) {
-   }
+              private route: ActivatedRoute,
+              private ngZone: NgZone,
+              private driveService: DriveService,
+              private snackBarService: SnackBarService) {
+  }
 
   ngOnInit() {
     this._initialiseMapView();
@@ -34,23 +43,88 @@ export class DentalMapComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('closed');
+      if (result) {
+        if (result.number >= 1 && result.number <= 8) {
+          const index = this.upperRightSide.indexOf(tooth);
+          this.upperRightSide[index] = result;
+        } else if (result.number >= 9 && result.number <= 16) {
+          const index = this.upperLeftSide.indexOf(tooth);
+          this.upperLeftSide[index] = result;
+        } else if (result.number >= 16 && result.number <= 24) {
+          const index = this.lowerLeftSide.indexOf(tooth);
+          this.lowerLeftSide[index] = result;
+        } else if (result.number >= 16 && result.number <= 24) {
+          const index = this.lowerRightSide.indexOf(tooth);
+          this.lowerRightSide[index] = result;
+        }
+
+        const updatedToothArray = [
+          ...this.upperRightSide,
+          ...this.upperLeftSide,
+          ...this.lowerLeftSide,
+          ...this.lowerRightSide
+        ];
+
+        const sortedToothArray = updatedToothArray.sort((obj1, obj2) => obj1.number - obj2.number);
+
+        this._updateDriveData(sortedToothArray);
+      }
+
     });
   }
 
   private _initialiseMapView() {
     this.route.paramMap.subscribe(params => {
-      const resourceName = params.get('id');
+      this.resourceName = params.get('id');
       const patientListString = localStorage.getItem('patientsListData');
-      const patientList = JSON.parse(patientListString) as Patients[];
+      const patientList = JSON.parse(patientListString) as PatientMap[];
 
-      const patient = patientList.filter(obj => obj.patientId === resourceName)[0];
+      const patient = patientList.filter(obj => obj.patientId === this.resourceName)[0];
+      this.mappingsFileId = patient.dentalMapFileId;
 
-      this.upperRightSide = patient.dentalMap.slice(0, 8).reverse();
-      this.upperLeftSide = patient.dentalMap.slice(8, 16);
-      this.lowerLeftSide = patient.dentalMap.slice(16, 24);
-      this.lowerRightSide = patient.dentalMap.slice(24, 32);
+      this.ngZone.runOutsideAngular(() => {
+        this.driveService.exportFileContent(patient.dentalMapFileId).then(response => {
+          this.ngZone.run(() => {
+            const result = response.substr(1);
 
+            if (result !== '') {
+              this._splitToothArray(JSON.parse(result));
+            } else {
+              this._createDefaultMappings(patient);
+            }
+
+          });
+        });
+      });
     });
+  }
+
+  private _updateDriveData(toothArray) {
+    this.ngZone.runOutsideAngular(() => {
+      this.driveService.updateFileContent(this.mappingsFileId, JSON.stringify(toothArray)).then(() => {
+        this.ngZone.run(() => {
+          this.snackBarService.show('Drive data updated!');
+        });
+      });
+    });
+  }
+
+  private _createDefaultMappings(patient: PatientMap) {
+    this.ngZone.runOutsideAngular(() => {
+      this.driveService.updateFileContent(patient.dentalMapFileId, JSON.stringify(DEFAULT_DENTAL_MAP)).then(() => {
+        this.ngZone.run(() => {
+          this._splitToothArray(DEFAULT_DENTAL_MAP);
+        });
+      });
+    });
+  }
+
+  private _splitToothArray(toothArray) {
+    this.upperRightSide = toothArray.slice(0, 8).reverse();
+    this.upperLeftSide = toothArray.slice(8, 16).reverse();
+    this.lowerLeftSide = toothArray.slice(16, 24);
+    this.lowerRightSide = toothArray.slice(24, 32);
+
+    this.isLoaded = true;
   }
 }
