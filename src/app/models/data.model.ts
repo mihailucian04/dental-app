@@ -1,6 +1,9 @@
+import { Tooth } from './tooth.model';
+import { Consult } from './consult.model';
+
 export interface DriveData {
     dashboardData: DashboardData;
-    patients: Patients[];
+    patients: PatientMap[];
 }
 
 export interface DashboardData {
@@ -12,6 +15,15 @@ export interface EMCPoints {
     maxPoints: number;
 }
 
-export interface Patients {
+export interface PatientMap {
     patientId: string;
+    patientFolderId: string;
+    xRayFolderId?: string;
+    dentalMapFileId?: string;
+    consultFileId?: string;
+}
+
+export interface PatientMappings {
+    dentalMap: Tooth[];
+    lastConsults: Consult[];
 }

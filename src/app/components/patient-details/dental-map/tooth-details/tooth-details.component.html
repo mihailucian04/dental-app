@@ -1,12 +1,12 @@
 <div fxLayout="row wrap" mat-dialog-title>
-    <fa-icon icon="tooth" [ngClass]="tooth.state" [fixedWidth]="true">
+    <fa-icon icon="tooth" [ngClass]="dialogTooth.state" [fixedWidth]="true">
     </fa-icon>
-    <span mat-dialog-title style="color:#3f51b5;margin-left:5px;">Tooth no. {{tooth.number}} details</span>
+    <span mat-dialog-title style="color:#3f51b5;margin-left:5px;">Tooth no. {{dialogTooth.number}} details</span>
 </div>
 
 <div mat-dialog-content style="padding-top:5px;">
     <div fxLayout="row wrap">
-        <mat-radio-group aria-label="Select an option" [(ngModel)]="tooth.state">
+        <mat-radio-group aria-label="Select an option" [(ngModel)]="dialogTooth.state">
             <mat-radio-button value="healty-tooth">Healty</mat-radio-button>
             <mat-radio-button value="extracted-nerve-tooth">Nerve extracted</mat-radio-button>
             <mat-radio-button value="fake-tooth">Fake</mat-radio-button>
@@ -17,7 +17,7 @@
     <div fxLayout="row wrap" style="margin-top:25px;">
         <div fxLayout="column wrap" style="width:100%">
             <mat-form-field [style.fontSize]="'14px'" class="example-full-width">
-                <textarea matInput rows="8" [(ngModel)]="tooth.operationDetails" style="line-height: 20px"
+                <textarea matInput rows="8" [(ngModel)]="dialogTooth.operationDetails" style="line-height: 20px"
                     placeholder="Tooth operation details">
                 </textarea>
             </mat-form-field>
