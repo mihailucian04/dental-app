@@ -49,7 +49,11 @@ import { faCoffee,
          faEnvelope,
          faPencilAlt,
          faClock,
-         faBars } from '@fortawesome/free-solid-svg-icons';
+         faBars,
+         faFolderOpen,
+         faNotesMedical,
+         faUpload,
+         faImages } from '@fortawesome/free-solid-svg-icons';
 
 import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
 
@@ -80,6 +84,8 @@ import { DatePipe } from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { ToothDetailsComponent } from './components/patient-details/dental-map/tooth-details/tooth-details.component';
 import { FilePreviewOverlayComponent } from './components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay.component';
+import { NewConsultComponent } from './components/patient-details/last-consults/new-consult/new-consult.component';
+import { DeleteXrayComponent } from './components/patient-details/x-rays/delete-xray/delete-xray.component';
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -104,6 +110,8 @@ export function initGapi(authService: AuthService) {
     DeleteConfirmationComponent,
     NewAppointmentComponent,
     ToothDetailsComponent,
+    NewConsultComponent,
+    DeleteXrayComponent,
   ],
   imports: [
     BrowserModule,
@@ -156,14 +164,16 @@ export function initGapi(authService: AuthService) {
     NewPatientComponent,
     DeleteConfirmationComponent,
     NewAppointmentComponent,
-    ToothDetailsComponent
+    ToothDetailsComponent,
+    NewConsultComponent,
+    DeleteXrayComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
     faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope, faPencilAlt,
-    faClock, faBars];
+    faClock, faBars, faFolderOpen, faNotesMedical, faUpload, faImages];
 
     constructor() {
     library.add(...this.icons);
