@@ -344,4 +344,18 @@ export class DriveService {
             fileId
         });
     }
+
+    public getDriveInfo() {
+        return gapi.client.drive.about.get({
+            includeSubscribed: true,
+            fields: '*'
+        });
+    }
+
+    public listDrives() {
+        return gapi.client.request({
+            path: `drive/v3/drives`,
+            method: 'GET'
+        });
+    }
 }

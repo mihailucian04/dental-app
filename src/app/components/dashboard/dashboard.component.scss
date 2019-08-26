@@ -32,19 +32,20 @@ mat-grid-tile {
 
 .timeline-item {
   position: relative;
-    padding-bottom: 1px;
-    border-color: #dddee0;
+  padding-bottom: 1px;
+  border-color: #dddee0;
 }
 
 .timeline-item ::before {
   display: table;
-    content: " ";
+  content: " ";
 }
 .timeline-item:after {
-  top:0;
+  top: 0;
 }
 
-.timeline .timeline-item:after, .timeline:after {
+.timeline .timeline-item:after,
+.timeline:after {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -56,5 +57,37 @@ mat-grid-tile {
   border-style: solid;
   border-width: 2px;
   border-radius: 50%;
-  content: '';
-} 
+  content: "";
+}
+
+.emc-points {
+  width: 50%;
+  height: 100%;
+  background-color: #3f51b5;
+}
+
+.emc-option-points {
+  height: 10%;
+  padding-top: 15px;
+  padding-right: 15px;
+}
+
+.registered-patients {
+  width: 50%;
+  height:100%;
+  background-color:#298763
+}
+
+.emc-points:hover .icon-visibility {
+  display: block;
+}
+
+.registered-patients:hover .icon-visibility {
+  display: block;
+}
+
+.icon-visibility {
+  display: none;
+}
+
+

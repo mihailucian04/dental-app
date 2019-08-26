@@ -62,22 +62,47 @@
       <mat-card style="padding:0;">
         <mat-card-content flex style="width: 100%;height: 100%;">
           <div fxLayout="row wrap" fxLayoutAlign="center center" style="width: 100%;height: 100%;">
-            <div style="width: 50%;height:100%;background-color:#3f51b5" fxLayout="column wrap"
-              fxLayoutAlign="center center">
-              <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Dental coverage points</span>
-              <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
-                <span style="color: #e4e6eb;font-size: 30px;margin-right: 5px;">178</span>
-                <span style="color: #e4e6eb;font-size: 50px;margin-right: 5px;">/</span>
-                <span style="color: #e4e6eb;font-size: 50px">500</span>
+            
+            <div fxLayout="column wrap" class="emc-points">
+              
+              <div fxLayout="row wrap" fxLayoutAlign="flex-end" class="emc-option-points">
+                  <fa-icon icon="ellipsis-v"
+                           class="icon-visibility"
+                           [styles]="{ 'color': '#e4e6eb', 'margin-left': '5px', 
+                                       'font-size': '20px', 'cursor': 'pointer'}" 
+                           [fixedWidth]="true">
+                  </fa-icon>
               </div>
-            </div>
-            <div style="width: 50%;height:100%;background-color:#298763" fxLayout="column wrap"
-              fxLayoutAlign="center center">
-              <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Registered patients</span>
-              <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
-                <span style="color: #e4e6eb;font-size: 50px;margin-right: 5px;">230</span>
+              
+              <div fxLayout="column wrap" fxLayoutAlign="center center" style="height:80%">
+                  <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Dental coverage points</span>
+                  <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
+                    <span style="color: #e4e6eb;font-size: 30px;margin-right: 5px;">178</span>
+                    <span style="color: #e4e6eb;font-size: 50px;margin-right: 5px;">/</span>
+                    <span style="color: #e4e6eb;font-size: 50px">500</span>
+                  </div>
               </div>
+              
             </div>
+            
+            <div class="registered-patients" fxLayout="column wrap">
+                <div fxLayout="row wrap" fxLayoutAlign="flex-end" class="emc-option-points">
+                    <!-- <fa-icon icon="ellipsis-v"
+                             class="icon-visibility"
+                             [styles]="{ 'color': '#e4e6eb', 'margin-left': '5px', 
+                                         'font-size': '20px', 'cursor': 'pointer'}" 
+                             [fixedWidth]="true">
+                    </fa-icon> -->
+                </div>
+
+                <div fxLayout="column wrap" fxLayoutAlign="center center" style="height:80%">
+                    <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Registered patients</span>
+                    <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
+                      <span style="color: #e4e6eb;font-size: 50px;margin-right: 5px;">230</span>
+                    </div>
+                </div>
+            </div>
+
           </div>
         </mat-card-content>
       </mat-card>
