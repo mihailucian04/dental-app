@@ -60,7 +60,6 @@ import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './services/auth.service';
-import { ChartsModule } from 'ng2-charts';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { HeaderComponent } from './components/navigation/header/header.component';
@@ -87,6 +86,11 @@ import { ToothDetailsComponent } from './components/patient-details/dental-map/t
 import { FilePreviewOverlayComponent } from './components/file-preview-overlay-toolbar/file-preview-overlay/file-preview-overlay.component';
 import { NewConsultComponent } from './components/patient-details/last-consults/new-consult/new-consult.component';
 import { DeleteXrayComponent } from './components/patient-details/x-rays/delete-xray/delete-xray.component';
+
+import { ChartsModule } from 'ng2-charts';
+import { EmcOptionsComponent } from './components/dashboard/emc-options/emc-options.component';
+import { PatientFilesComponent } from './components/patient-details/patient-files/patient-files.component';
+
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
 }
@@ -113,6 +117,8 @@ export function initGapi(authService: AuthService) {
     ToothDetailsComponent,
     NewConsultComponent,
     DeleteXrayComponent,
+    EmcOptionsComponent,
+    PatientFilesComponent,
   ],
   imports: [
     BrowserModule,
@@ -141,7 +147,6 @@ export function initGapi(authService: AuthService) {
     MatNativeDateModule,
     MatSelectModule,
     MatCheckboxModule,
-    ChartsModule,
     OverlayModule,
     FlexLayoutModule,
     MatRadioModule,
@@ -149,7 +154,8 @@ export function initGapi(authService: AuthService) {
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
-    FlatpickrModule.forRoot()
+    FlatpickrModule.forRoot(),
+    ChartsModule
   ],
   exports: [
     MatToolbarModule,
@@ -167,7 +173,8 @@ export function initGapi(authService: AuthService) {
     NewAppointmentComponent,
     ToothDetailsComponent,
     NewConsultComponent,
-    DeleteXrayComponent
+    DeleteXrayComponent,
+    EmcOptionsComponent
   ],
   bootstrap: [AppComponent]
 })
