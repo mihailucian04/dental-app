@@ -22,6 +22,21 @@ export class CalendarService {
         });
     }
 
+    public getCalendarEventsRange(timeMinValue: Date, timeMaxValue: Date) {
+        const timeMin = timeMinValue.toISOString();
+        const timeMax = timeMaxValue.toISOString();
+
+        return gapi.client.calendar.events.list({
+            calendarId: 'primary',
+            timeMin,
+            timeMax,
+            showDeleted: false,
+            singleEvents: true,
+            maxResults: 20,
+            orderBy: 'startTime'
+        });
+    }
+
     public addCalendarEvent(summary: string, startTime: string, endTime: string, description: string) {
         const resource = {
             summary,
