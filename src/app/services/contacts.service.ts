@@ -11,9 +11,10 @@ export class ContactsService {
 
         return gapi.client.people.people.get({
             resourceName: `people/${resourceName}`,
-            personFields: 'names,phoneNumbers,photos,birthdays,organizations',
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses',
         }).then((response: any) => {
-            const patient = ctx.mapPatient(response.result);
+            // console.log(response);
+            const patient = ctx._extractPersonResponse(response.result);
             return patient;
         });
     }
@@ -24,7 +25,7 @@ export class ContactsService {
         return gapi.client.people.people.connections.list({
             resourceName: 'people/me',
             pageSize: 50,
-            personFields: 'names,phoneNumbers,photos,birthdays,organizations',
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses',
         }).then((response: any) => {
             const connections = response.result.connections;
             const list = ctx._mapPatients(connections);
@@ -73,40 +74,31 @@ export class ContactsService {
         });
     }
 
-    private mapPatient(patient: any): Patient {
-        const mappedPatient: Patient = {
-            resourceName: patient.resourceName.split('/')[1],
-            guid: '',
-            name: patient.names[0].givenName,
-            surname: patient.names[0].familyName,
-            company: patient.organizations[0].name,
-            age: this._getAge(patient.birthdays[0].text).toString(),
-            cnp: '',
-            dob: patient.birthdays[0].text,
-            lastConsult: '-',
-            imageUrl: patient.photos[0].url
-        };
-        return mappedPatient;
-    }
 
     private _mapPatients(persons: any): Patient[] {
         const patientList: Patient[] = [];
         for (const person of persons) {
-            const patient: Patient = {
-                resourceName: person.resourceName.split('/')[1],
-                guid: persons.indexOf(person),
-                name: person.names[0].givenName,
-                surname: person.names[0].familyName,
-                company: person.organizations[0].name,
-                age: this._getAge(person.birthdays[0].text).toString(),
-                cnp: '',
-                dob: person.birthdays[0].text,
-                lastConsult: '-',
-                imageUrl: person.photos[0].url
-            };
+            const patient = this._extractPersonResponse(person);
             patientList.push(patient);
         }
         return patientList;
+    }
+
+    private _extractPersonResponse(response) {
+        const person: Patient = {
+            resourceName: response.resourceName.split('/')[1],
+            name: response.names[0].givenName,
+            surname: response.names[0].familyName,
+            company: response.organizations[0].name,
+            age: this._getAge(response.birthdays[0].text).toString(),
+            dob: response.birthdays[0].text,
+            lastConsult: '-',
+            imageUrl: response.photos[0].url,
+            email: response.emailAddresses[0].value,
+            phoneNumber: response.phoneNumbers[0].value
+        };
+
+        return person;
     }
 
     private _getAge(dob: string): number {
