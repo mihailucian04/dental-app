@@ -6,6 +6,10 @@
     justify-content: flex-start !important;
 }
 
+::ng-deep .mat-tab-body {
+    height: 100%;
+}
+
 .icon_div {
     margin-left: 5px; /* optional */
     font-size: 23px;
