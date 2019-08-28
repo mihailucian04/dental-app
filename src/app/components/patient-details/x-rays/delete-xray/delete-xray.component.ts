@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, NgZone } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { DriveService } from 'src/app/services/drive.service';
 
 @Component({
@@ -10,15 +9,19 @@ import { DriveService } from 'src/app/services/drive.service';
 })
 export class DeleteXrayComponent {
 
+  public type = '';
+
   constructor(
     public dialogRef: MatDialogRef<DeleteXrayComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private ngZone: NgZone,
-    private driveService: DriveService) { }
+    private driveService: DriveService) {
+      this.type = data.type;
+     }
 
   public deleteFile() {
     this.ngZone.runOutsideAngular(() => {
-      this.driveService.deleteDriveFile(this.data).then(() => {
+      this.driveService.deleteDriveFile(this.data.fileId).then(() => {
         this.ngZone.run(() => {
           this.dialogRef.close('deleted');
         });

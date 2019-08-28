@@ -10,7 +10,7 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 declare var gapi: any;
 
-export interface File {
+export interface FileDrive {
   name: string;
   url: string;
 }
@@ -20,7 +20,7 @@ export interface XRay {
   uploaded: string;
   size: string;
   webContentLink: string;
-  file: File;
+  file: FileDrive;
 }
 
 @Component({
@@ -120,7 +120,7 @@ export class XRaysComponent implements OnInit {
 
   public openDeleteDialog(fileId: string) {
     const dialogRef = this.dialog.open(DeleteXrayComponent, {
-      data: fileId
+      data: {fileId, type: 'x-ray'}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -157,33 +157,36 @@ export class XRaysComponent implements OnInit {
         this.driveService.listFolderChildren(this.xRaysFolderId).then((response) => {
           this.ngZone.run(() => {
             const xrayItems = response.result.items;
-            const xrayRequestBatch = gapi.client.newBatch();
 
-            // const fields = 'id,name,createdTime,size,webContentLink';
-            const fields = '*';
-            for (const xrayItem of xrayItems) {
-              const xrayRequest = this.driveService.getFileBatch(xrayItem.id, fields);
-              xrayRequestBatch.add(xrayRequest);
-            }
-            xrayRequestBatch.then(xrayBatchResponse => {
-              const xrayBatchResult = xrayBatchResponse.result;
-              this.dataSourceXRays = new MatTableDataSource<XRay>();
+            if (xrayItems.length > 0) {
+              const xrayRequestBatch = gapi.client.newBatch();
 
-              Object.keys(xrayBatchResult).map(index => {
+              // const fields = 'id,name,createdTime,size,webContentLink';
+              const fields = '*';
+              for (const xrayItem of xrayItems) {
+                const xrayRequest = this.driveService.getFileBatch(xrayItem.id, fields);
+                xrayRequestBatch.add(xrayRequest);
+              }
+              xrayRequestBatch.then(xrayBatchResponse => {
+                const xrayBatchResult = xrayBatchResponse.result;
+                this.dataSourceXRays = new MatTableDataSource<XRay>();
 
-                const xrayfile = xrayBatchResult[index].result as any;
-                const fileSize = parseInt(xrayfile.size, 10) / 1000;
+                Object.keys(xrayBatchResult).map(index => {
 
-                const xray = {
-                  name: xrayfile.name, uploaded: new Date(xrayfile.createdTime).toDateString(), fileId: xrayfile.id,
-                  size: fileSize.toString() + ' KB', webContentLink: xrayfile.webContentLink,
-                  file: { name: xrayfile.name, url: `https://drive.google.com/uc?export=view&id=${xrayfile.id}` }
-                };
+                  const xrayfile = xrayBatchResult[index].result as any;
+                  const fileSize = parseInt(xrayfile.size, 10) / 1000;
 
-                this.xrays.push(xray);
+                  const xray = {
+                    name: xrayfile.name, uploaded: new Date(xrayfile.createdTime).toDateString(), fileId: xrayfile.id,
+                    size: fileSize.toString() + ' KB', webContentLink: xrayfile.webContentLink,
+                    file: { name: xrayfile.name, url: `https://drive.google.com/uc?export=view&id=${xrayfile.id}` }
+                  };
+
+                  this.xrays.push(xray);
+                });
+                this.dataSourceXRays.data = this.xrays;
               });
-              this.dataSourceXRays.data = this.xrays;
-            });
+            }
           });
         });
       });

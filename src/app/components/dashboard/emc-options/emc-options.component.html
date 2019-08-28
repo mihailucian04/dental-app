@@ -1,0 +1,19 @@
+<span mat-dialog-title style="color:#3f51b5">Edit EMC points</span>
+<div mat-dialog-content>
+    <div style="display: flex; flex-direction:row; width: 100%">
+        <mat-form-field class="example-full-width" style="width: 100%">
+            <input matInput placeholder="Current EMC points" [(ngModel)]="newEmcPoints.points">
+        </mat-form-field>
+    </div>
+
+    <div style="display: flex; flex-direction:row;width: 100%">
+        <mat-form-field class="example-full-width" style="width: 100%">
+            <input matInput placeholder="Target EMC points" [(ngModel)]="newEmcPoints.maxPoints">
+        </mat-form-field>
+    </div>
+</div>
+
+<div mat-dialog-actions style="margin-bottom: 1px; margin-top: 15px;">
+    <button mat-raised-button color="primary" (click)="saveEmcOptions()">Save</button>
+    <button mat-raised-button color="primary" (click)="closeEmcPoints()">Cancel</button>
+</div>

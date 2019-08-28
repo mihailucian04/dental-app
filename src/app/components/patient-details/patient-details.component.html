@@ -4,10 +4,6 @@
             <mat-grid-tile [colspan]="1">
                 <div style="display: flex; flex-direction: row; align-items: center; vertical-align: middle;">
                     <div style="display: flex;">
-                        <!-- <fa-icon icon="user-circle"
-                            [styles]="{ 'color': '#3f51b5', 'margin-left': '5px', 'font-size': '55px'}"
-                            [fixedWidth]="true">
-                        </fa-icon> -->
                         <div style="width: 54px;height: 54px; margin-left:5px;">
                             <img [src]="patient?.imageUrl" alt="Avatar" style="border-radius: 50%; width: 100%">
                         </div>
@@ -16,7 +12,7 @@
                         style="display:flex; margin-left: 10px; flex-direction: column;align-items: start; justify-content: center">
                         <span style="font-size: 20px;font-weight: 300;">{{patient?.surname}},
                             {{patient?.name}}</span>
-                        <span>{{patient?.company}}</span>
+                        <span style="font-weight: 100;margin-top:5px;">{{patient?.company}}</span>
                     </div>
                 </div>
             </mat-grid-tile>
@@ -31,7 +27,7 @@
                     <div
                         style="display:flex; margin-left: 5px; flex-direction: column;align-items: start; justify-content: center">
                         <span style="font-size: 20px;font-weight: 300;">Last consult</span>
-                        <span>{{patient?.lastConsult}}</span>
+                        <span style="font-weight: 200;margin-top:5px;">{{patient?.lastConsult}}</span>
                     </div>
                 </div>
             </mat-grid-tile>
@@ -46,8 +42,8 @@
                     <div
                         style="display:flex; margin-left: 10px; flex-direction: column;align-items: start; justify-content: center">
                         <span style="font-size: 20px;font-weight: 300;">Contact info</span>
-                        <span>mboian@isoftwaresystems.com</span>
-                        <span>0756 090 118</span>
+                        <span style="margin-top: 5px;font-weight: 200;">{{patient?.email}}</span>
+                        <span style="margin-top: 7px;font-weight: 200;">{{patient?.phoneNumber}}</span>
                     </div>
                 </div>
             </mat-grid-tile>
@@ -57,10 +53,13 @@
 <mat-card style="height: calc(100vh - 204px)">
     <mat-tab-group>
         <mat-tab label="Dental map">
-           <app-dental-map></app-dental-map>
+            <app-dental-map></app-dental-map>
         </mat-tab>
         <mat-tab label="Last consults">
             <app-last-consults></app-last-consults>
+        </mat-tab>
+        <mat-tab label="Patient files">
+            <app-patient-files></app-patient-files>
         </mat-tab>
         <mat-tab label="X-rays">
             <app-x-rays></app-x-rays>

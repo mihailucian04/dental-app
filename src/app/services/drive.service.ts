@@ -52,6 +52,7 @@ export class DriveService {
                                     const batchMappingsFlie = gapi.client.newBatch();
                                     const batchConsultsFile = gapi.client.newBatch();
                                     const batchXRayFolder = gapi.client.newBatch();
+                                    const batchPatientFileFolder = gapi.client.newBatch();
 
                                     const mappedPatients: PatientMap[] = [];
 
@@ -72,9 +73,13 @@ export class DriveService {
 
                                         const requestXRayFolder = this.createDriveFileBatch('X-Rays', folderId, MymeType.folder);
 
+                                        const requestPatientFileFolder =
+                                            this.createDriveFileBatch('Patient-Files', folderId, MymeType.folder)
+
                                         batchConsultsFile.add(requestConsultFile);
                                         batchMappingsFlie.add(requestMappingsFile);
                                         batchXRayFolder.add(requestXRayFolder);
+                                        batchPatientFileFolder.add(requestPatientFileFolder);
 
                                         mappedPatients.push(mappedPatient);
                                     });
@@ -134,10 +139,27 @@ export class DriveService {
 
                                                 mappedData.patients = mappedPatients;
 
-                                                this.updateFileContent(fileResult.id, JSON.stringify(mappedData))
-                                                    .then(updateFileResponse => {
-                                                        console.log('Data mapings and folder hierarchy created');
+                                                batchPatientFileFolder.then((batchPatientFileFolderResponse) => {
+                                                    const patientFileFolderResult = batchPatientFileFolderResponse.result;
+
+                                                    Object.keys(patientFileFolderResult).map(index => {
+                                                        const consultFileFolder = patientFileFolderResult[index].result;
+                                                        const consultFileFolderId = consultFileFolder.id;
+
+                                                        const currentMappedPatient = mappedPatients
+                                                            .filter(obj => obj.patientFolderId === consultFileFolder.parents[0].id)[0];
+
+                                                        const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
+                                                        currentMappedPatient.patientFileFolderId = consultFileFolderId;
+
+                                                        mappedPatients[currentMappedIndex] = currentMappedPatient;
                                                     });
+
+                                                    this.updateFileContent(fileResult.id, JSON.stringify(mappedData))
+                                                        .then(updateFileResponse => {
+                                                            console.log('Data mapings and folder hierarchy created');
+                                                        });
+                                                });
                                             });
                                         });
                                     });
@@ -154,6 +176,7 @@ export class DriveService {
                         let driveData = {} as DriveData;
                         driveData = JSON.parse(contentResponse.substr(1));
 
+                        localStorage.setItem('mappingsFileId', JSON.stringify(mappinsResult.id));
                         localStorage.setItem('dashboardData', JSON.stringify(driveData.dashboardData));
                         localStorage.setItem('patientsListData', JSON.stringify(driveData.patients));
                     });

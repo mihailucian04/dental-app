@@ -8,6 +8,8 @@ export interface DriveData {
 
 export interface DashboardData {
     emcPoints: EMCPoints;
+    lineChartData?: ChartDataModel[];
+    barChartData?: ChartDataModel[];
 }
 
 export interface EMCPoints {
@@ -21,6 +23,14 @@ export interface PatientMap {
     xRayFolderId?: string;
     dentalMapFileId?: string;
     consultFileId?: string;
+    patientFileFolderId?: string;
+    blankPatientFileId?: string;
+}
+
+export interface ChartDataModel {
+    data: number[];
+    label: string;
+    stack?: string;
 }
 
 export interface PatientMappings {

@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
-import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
-import { Label, Color, BaseChartDirective, MultiDataSet } from 'ng2-charts';
-import * as pluginAnnotations from 'chartjs-plugin-datalabels';
-import * as Chart from 'chart.js';
-import { DriveData } from 'src/app/models/data.model';
+import { DriveData, DashboardData, ChartDataModel } from 'src/app/models/data.model';
 import { Patient } from 'src/app/models/patient.model';
 import { DriveService } from 'src/app/services/drive.service';
 import { ContactsService } from 'src/app/services/contacts.service';
-
-export interface Appointment {
-  time: string;
-  patientName: string;
-}
+import { Label, MultiDataSet, Color, BaseChartDirective } from 'ng2-charts';
+import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
+import { MatDialog } from '@angular/material';
+import { EmcOptionsComponent } from './emc-options/emc-options.component';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { CalendarService } from 'src/app/services/calendar.service';
+import { DEFAULT_APPOINTMENTS, Appointment } from 'src/app/models/appointment.model';
 
 export interface Tile {
   color: string;
@@ -26,50 +24,37 @@ export interface Tile {
 })
 export class DashboardComponent implements OnInit {
 
-  public lineChartData: ChartDataSets[] = [
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Incomes' },
-  ];
+  public appointments = DEFAULT_APPOINTMENTS;
 
-  public lineChartLabels: Label[] = ['January', 'February', 'March', 'April', 'May', 'June'];
-  public lineChartOptions: (ChartOptions & { annotation: any }) = {
-    responsive: true,
-    scales: {
-      // We use this empty structure as a placeholder for dynamic theming.
-      xAxes: [{}],
-      yAxes: [
-        {
-          id: 'y-axis-0',
-          position: 'left',
-        },
-        // {
-        //   id: 'y-axis-1',
-        //   position: 'right',
-        //   gridLines: {
-        //     color: 'rgba(255,0,0,0.3)',
-        //   },
-        //   ticks: {
-        //     fontColor: 'red',
-        //   }
-        // }
+  public doughnutChartLabels: Label[] = ['Used (MB)', 'Available (MB)'];
+  public doughnutChartData: MultiDataSet = [];
+  public doughnutChartType: ChartType = 'doughnut';
+  public doughnutChartColors = [
+    {
+      backgroundColor: [
+        'rgba(192, 57, 43, 1)',
+        'rgba(39, 174, 96, 1)',
       ]
-    },
-    annotation: {
-      annotations: [
-        {
-          type: 'line',
-          mode: 'vertical',
-          scaleID: 'x-axis-0',
-          value: 'March',
-          borderColor: 'orange',
-          borderWidth: 2,
-          label: {
-            enabled: true,
-            fontColor: 'orange',
-            content: 'LineAnno'
-          }
-        },
-      ],
-    },
+    }
+  ];
+  public doughnutChartOptions: any = {
+    legend: {
+      display: false
+    }
+  };
+
+  public lineChartData: any = [
+    { data: [], label: '' },
+    { data: [], label: '' },
+  ];
+  public lineChartLabels: Label[] = [];
+  public lineChartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 2000,
+      animateScale: true
+    }
   };
   public lineChartColors: Color[] = [
     { // grey
@@ -80,151 +65,217 @@ export class DashboardComponent implements OnInit {
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     },
+    { // dark grey
+      backgroundColor: 'rgba(77,83,96,0.2)',
+      borderColor: 'rgba(77,83,96,1)',
+      pointBackgroundColor: 'rgba(77,83,96,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(77,83,96,1)'
+    },
   ];
   public lineChartLegend = true;
   public lineChartType = 'line';
-  public lineChartPlugins = [pluginAnnotations];
+  public lineChartPlugins = [];
 
   public barChartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 2000,
+      animateScale: true
+    }
   };
-  public barChartLabels: Label[] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+  public barChartLabels: Label[] = [];
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartPlugins = [];
-
-  private driveData = {} as DriveData;
-
-  public barChartData: ChartDataSets[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Females', stack: 'a' },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Males', stack: 'a' }
+  public barChartColors = [
+    { backgroundColor: '#778ca3' },
+    { backgroundColor: '#f7b731' },
   ];
 
-  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
-
-  public doughnutChartLabels: Label[] = ['', ''];
-  public doughnutChartData: MultiDataSet = [ ];
-  //   [150, 450],
-  // ];
-
-  public doughnutChartColors = [
-    {
-      backgroundColor: [
-        'rgba(192, 57, 43, 1)',
-        'rgba(39, 174, 96, 1)',
-      ]
-    }
+  public barChartData: any = [
+    { data: [], label: '', },
+    { data: [], label: '' }
   ];
-  public doughnutChartType: ChartType = 'doughnut';
-  public doughnutChartOptions = {
-    legend: {
-      display: false
+
+  public monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+
+  public dashBoardData: DashboardData = {
+    emcPoints: {
+      maxPoints: 0,
+      points: 0
     },
-    tooltips: {
-      enabled: true,
-      displayColors: true
-    },
-    labels: {
-      display: false
-    }
+    lineChartData: [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Current Year' },
+    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Last Year' }],
+    barChartData: [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Last year', stack: 'a' },
+    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Current year', stack: 'a' }]
   };
 
-  public appointments: Appointment[] = [
-    { time: '7:00 - 7:30', patientName: 'Marko, Lizzy' },
-    { time: '7:30 - 8:00', patientName: 'Karin, Andraste' },
-    { time: '8:00 - 9:00', patientName: 'Lucina, Christiaan' },
-    { time: '9:00 - 10:30', patientName: 'Ahti, Divya' },
-    { time: '11:00 - 12:30', patientName: 'Raylene, Juliya' },
-    { time: '12:30 - 14:00', patientName: 'Dalia, Mandla' },
-    { time: '14:30 - 15:00', patientName: 'Marjani, Moyra' },
-    { time: '15:00 - 16:00', patientName: 'Romana, Phaenna' },
-    { time: '16:00 - 17:00', patientName: 'Vilmantas, Rafael' },
-    { time: '17:00 - 18:00', patientName: 'Ioudas, Sjakie' },
-    { time: '18:00 - 18:30', patientName: 'Eifion, Anna' }
-  ];
+  public registeredPatients: number;
+  public isLoaded = false;
+  public mappingsFileId: string;
 
-  constructor(private driveService: DriveService,
-              private contactsService: ContactsService,
-              private ngZone: NgZone) {
+  constructor(
+    private driveService: DriveService,
+    private snackBarService: SnackBarService,
+    public dialog: MatDialog,
+    private ngZone: NgZone,
+    private calendarService: CalendarService) {
   }
 
   ngOnInit() {
-    // this._constructFirstDummyDataFile();
+    const labels: string[] = [];
+    const today = new Date();
+    for (let i = 6; i > 0; i -= 1) {
+      const day = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const month = this.monthNames[day.getMonth()];
+      labels.push(month);
+    }
+
+    this.lineChartLabels = labels;
+    this.barChartLabels = labels;
 
     this.ngZone.runOutsideAngular(() => {
-      const param = 'name contains \'First\'';
 
       this.driveService.getDriveInfo().then(response => {
         this.ngZone.run(() => {
           const driveResult = response.result;
 
-          const usedSpace = parseInt(driveResult.storageQuota.usageInDrive, 10) / 1000000000;
-          const maxSpace = parseInt(driveResult.storageQuota.limit, 10) / 1000000000;
-          this.doughnutChartData = [ [ usedSpace, maxSpace] ];
+          const usedSpace = parseFloat((parseInt(driveResult.storageQuota.usageInDrive, 10) / 1000000).toFixed(2));
+          const maxSpace = parseFloat((parseInt(driveResult.storageQuota.limit, 10) / 1000000).toFixed(2));
+          this.doughnutChartData = [[usedSpace, maxSpace]];
+
+
+          const dashBoardDataString = localStorage.getItem('dashboardData');
+          this.dashBoardData = JSON.parse(dashBoardDataString);
+
+          this.lineChartData = [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Current Year' },
+          { data: [28, 48, 40, 19, 86, 27, 90], label: 'Last Year' }];
+
+          this.barChartData = [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Last year', stack: 'a' },
+          { data: [28, 48, 40, 19, 86, 27, 90], label: 'Current year', stack: 'a' }];
+
+          const patientListString = localStorage.getItem('patientsListData');
+          this.registeredPatients = (JSON.parse(patientListString)).length;
+
+          const mappingsId = localStorage.getItem('mappingsFileId');
+          this.mappingsFileId = mappingsId.substring(1, mappingsId.length - 1);
+
+          const minHour = new Date();
+          minHour.setHours(8, 0, 0);
+
+          const maxHour = new Date();
+          maxHour.setHours(20, 0, 0);
+
+          this.ngZone.runOutsideAngular(() => {
+            this.calendarService.getCalendarEventsRange(minHour, maxHour).then(eventsResponse => {
+              this.ngZone.run(() => {
+                const apps = this._extractEventsAppointments(eventsResponse.result.items);
+
+                for (const app of apps) {
+                  const currentApp = this.appointments.filter(obj => obj.time === app.time)[0];
+                  const index = this.appointments.indexOf(currentApp);
+
+                  this.appointments[index] = app;
+                }
+              });
+            });
+          });
+          this.isLoaded = true;
         });
       });
 
-      // this.googleDataService.listFilesByParam(param).then(response => {
-      //   this.ngZone.run(() => {
-      //     console.log(response);
-      //   });
-      // });
-
-      // this.driveService.createDriveFile().then((response) => {
-      //   this.ngZone.run(() => {
-      //     console.log(response);
-      //   });
-      // });
     });
-    // this._getDashBoardData();
-    // this.ngZone.runOutsideAngular(() => {
-    //   this.googleDataService.createDriveFolder().then(response => {
-    //     this.ngZone.run(() => {
-    //       console.log(response);
-    //     });
-    //   });
-    // });
   }
 
-  private _getDashBoardData() {
-    this.ngZone.runOutsideAngular(() => {
-      this.driveService.exportFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg').then((response: string) => {
-        this.ngZone.run(() => {
-          const modifiedResponse = response.substr(1);
-          this.driveData = JSON.parse(modifiedResponse);
-          console.log(this.driveData);
+  public optionsClick() {
+    const dialogRef = this.dialog.open(EmcOptionsComponent, {
+      width: '300px',
+      data: this.dashBoardData.emcPoints
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.dashBoardData.emcPoints = result;
+        this.dashBoardData.lineChartData = this._extractChartValues(this.lineChartData);
+        this.dashBoardData.barChartData = this._extractChartValues(this.barChartData, 'a');
+
+        localStorage.setItem('dashboardData', JSON.stringify(this.dashBoardData));
+        const patientList = JSON.parse(localStorage.getItem('patientsListData'));
+
+        const driveData: DriveData = {
+          dashboardData: this.dashBoardData,
+          patients: patientList,
+        };
+
+        this.ngZone.runOutsideAngular(() => {
+          this.driveService.updateFileContent(this.mappingsFileId, JSON.stringify(driveData)).then(() => {
+            this.ngZone.run(() => {
+              this.snackBarService.show('Drive data successfully updated!');
+            });
+          });
         });
-      });
+      }
     });
   }
 
-  private _constructFirstDummyDataFile() {
-    this.driveData.patients = [];
-    this.ngZone.runOutsideAngular(() => {
-      this.contactsService.getContacts().then((response: Patient[]) => {
-        this.ngZone.run(() => {
-          const drivePatients = [];
-          for (const patient of response) {
-            const drivePatient = {
-              patientId: patient.resourceName
-            };
+  private _extractEventsAppointments(results: any) {
+    const appointments: Appointment[] = [];
+    for (const result of results) {
+      let displayedIntervalfrom = '';
+      let displayedIntervalTo = '';
 
-            drivePatients.push(drivePatient);
-          }
+      const from = new Date(result.start.dateTime);
+      const fromminutes = from.getMinutes();
+      const fromhours = from.getHours();
 
-          this.driveData = {
-            dashboardData: {
-              emcPoints: {
-                points: 120,
-                maxPoints: 500
-              }
-            },
-            patients: drivePatients
-          };
-          this.driveService.updateFileContent('1Gwtx2cLll11raVNpI-xi8QB50cjLs5J1f6b2XGd_tDg', JSON.stringify(this.driveData));
-          console.log(this.driveData);
-        });
-      });
-    });
+      const to = new Date(result.end.dateTime);
+      const tominutes = to.getMinutes();
+      const tohours = to.getHours();
+
+      if (fromminutes === 0) {
+        displayedIntervalfrom = `${fromhours.toString()}:${fromminutes.toString()}0`;
+      } else {
+        displayedIntervalfrom = `${fromhours.toString()}:${fromminutes.toString()}`;
+      }
+
+      if (tominutes === 0) {
+        displayedIntervalTo = `${tohours.toString()}:${tominutes.toString()}0`;
+      } else {
+        displayedIntervalTo = `${tohours.toString()}:${tominutes.toString()}`;
+      }
+
+      const appointment = {
+        time: `${displayedIntervalfrom} - ${displayedIntervalTo}`,
+        patientName: result.summary,
+        cssClass: 'timeline-item'
+      };
+      appointments.push(appointment);
+    }
+    return appointments;
+  }
+
+  private _extractChartValues(chartValues: any, stack?: string) {
+    const extractedValues: ChartDataModel[] = [];
+    for (const chartItem of chartValues) {
+      if (stack) {
+        const chartBarDataModel = {
+          data: chartItem.data,
+          label: chartItem.label,
+          stack
+        };
+        extractedValues.push(chartBarDataModel);
+      } else {
+        const chartLineDataModel = {
+          data: chartItem.data,
+          label: chartItem.label,
+        };
+        extractedValues.push(chartLineDataModel);
+      }
+    }
+    return extractedValues;
   }
 }
