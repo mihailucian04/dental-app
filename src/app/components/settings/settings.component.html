@@ -1,3 +1,46 @@
-<div style="background-color: #213e6b; height: 100%; width: 100%;">
-asdadsad
-</div>
+<mat-card style="height: 100%">
+    <span>Settings panel</span>
+
+    <table mat-table [dataSource]="dataSourceStatistics" matSort style="width: 100%">
+
+        <ng-container matColumnDef="month">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Month </th>
+            <td mat-cell *matCellDef="let element"> {{element.month}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastYearIncome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Last year income </th>
+            <td mat-cell *matCellDef="let element"> {{element.lastYearIncome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="thisYearIncome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> This year income </th>
+            <td mat-cell *matCellDef="let element"> {{element.thisYearIncome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastYearPatients">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Last year patients </th>
+            <td mat-cell *matCellDef="let element"> {{element.lastYearPatients}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="thisYearPatients">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> This year patients </th>
+            <td mat-cell *matCellDef="let element"> {{element.thisYearPatients}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="accent" (click)="openEditDialog(element)">
+                    <fa-icon icon="edit" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true">
+                    </fa-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsStatistics; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsStatistics;" class="element-row"></tr>
+
+    </table>
+
+</mat-card>
