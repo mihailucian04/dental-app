@@ -1,0 +1,49 @@
+<span mat-dialog-title style="color:#3f51b5">Edit {{currentDashboardData.month}} statistics</span>
+<div mat-dialog-content>
+    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:column">
+            <span>Income statistics</span>
+
+            <div style="display: flex; flex-direction:row;margin-top:15px;">
+                <mat-form-field [style.fontSize]="'14px'">
+                    <input matInput type="number" [(ngModel)]="currentDashboardData.lastYearIncome" placeholder="Last year income">
+                </mat-form-field>
+
+                <!--TEMP solution-->
+                <mat-form-field [style.fontSize]="'14px'" style="margin-left:20px;" *ngIf="!readOnlyEditCurrentYear">
+                    <input matInput type="number" [(ngModel)]="currentDashboardData.thisYearIncome" placeholder="This year income">
+                </mat-form-field>
+                <mat-form-field [style.fontSize]="'14px'" style="margin-left:20px;" *ngIf="readOnlyEditCurrentYear">
+                    <input matInput [(ngModel)]="currentDashboardData.thisYearIncome" placeholder="This year income"
+                        disabled>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction:row;margin-top: 15px;">
+        <div style="display: flex; flex-direction:column">
+            <span>Patients statistics</span>
+
+            <div style="display: flex; flex-direction:row;margin-top:15px;">
+                <mat-form-field [style.fontSize]="'14px'">
+                    <input matInput type="number" [(ngModel)]="currentDashboardData.lastYearPatients"
+                        placeholder="Last year patients">
+                </mat-form-field>
+
+                <!--TEMP solution-->
+                <mat-form-field [style.fontSize]="'14px'" style="margin-left:20px;" *ngIf="!readOnlyEditCurrentYear">
+                    <input matInput type="number" [(ngModel)]="currentDashboardData.thisYearPatients" placeholder="This year income">
+                </mat-form-field>
+                <mat-form-field [style.fontSize]="'14px'" style="margin-left:20px;" *ngIf="readOnlyEditCurrentYear">
+                    <input matInput [(ngModel)]="currentDashboardData.thisYearPatients" placeholder="This year income"
+                        disabled>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions style="margin-bottom: 1px;">
+    <button mat-raised-button style="border-radius:0" color="primary" (click)="saveData()">Save</button>
+    <button mat-raised-button style="border-radius:0" color="primary" (click)="closeDialog()">Cancel</button>
+</div>

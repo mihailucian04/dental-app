@@ -53,7 +53,7 @@ export class DentalMapComponent implements OnInit {
         } else if (result.number >= 16 && result.number <= 24) {
           const index = this.lowerLeftSide.indexOf(tooth);
           this.lowerLeftSide[index] = result;
-        } else if (result.number >= 16 && result.number <= 24) {
+        } else if (result.number >= 24 && result.number <= 32) {
           const index = this.lowerRightSide.indexOf(tooth);
           this.lowerRightSide[index] = result;
         }
@@ -71,6 +71,10 @@ export class DentalMapComponent implements OnInit {
       }
 
     });
+  }
+
+  public openBlanDentalMap() {
+    window.open('https://drive.google.com/file/d/1W8m3q6IRvr1FIspS64-lDdiVhEvWlYez/view?usp=drivesdk');
   }
 
   private _initialiseMapView() {

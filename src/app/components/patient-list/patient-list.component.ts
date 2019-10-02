@@ -18,7 +18,7 @@ export interface DialogData {
 })
 export class PatientListComponent implements OnInit, AfterViewInit {
 
-  public displayedColumns: string[] = ['avatar', 'surname', 'age', 'lastConsult', 'company', 'update'];
+  public displayedColumns: string[] = ['avatar', 'surname', 'age', 'lastConsult', 'company', 'phone'];
   public dataSource: any;
   public isLoaded = false;
   public newPatient: NewPatient = { firstName: '', lastName: '', phoneNumber: '', emailAddress: '', company: '', jobTitle: 'patient' };
