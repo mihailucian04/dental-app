@@ -18,6 +18,7 @@
         <mat-list-item (click)="decrease()" *ngIf="expanded">
           <fa-icon icon="angle-left" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true">
           </fa-icon>
+          <div fxFlex="10"></div>
           <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
             <span>close menu</span>
           </div>
@@ -41,7 +42,9 @@
         </mat-list-item>
 
         <mat-list-item routerLink="calendar" routerLinkActive="active">
-          <fa-icon icon="calendar-alt" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true">
+          <fa-icon icon="calendar-alt" 
+                   [styles]="{ 'color': '#595959', 'margin-left': '5px'}" 
+                   [fixedWidth]="true">
           </fa-icon>
           <div fxFlex="10"></div>
           <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
@@ -58,10 +61,9 @@
         </mat-list-item>
 
       </mat-nav-list>
-
     </mat-sidenav>
 
-    <div class="example-sidenav-content" style="overflow: unset">
+    <div class="example-sidenav-content" style="overflow: unset;height: 100%;">
       <router-outlet></router-outlet>
     </div>
 

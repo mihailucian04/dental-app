@@ -54,7 +54,8 @@ import { faCoffee,
          faNotesMedical,
          faUpload,
          faImages,
-         faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+         faEllipsisV,
+         faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
 
@@ -90,6 +91,7 @@ import { DeleteXrayComponent } from './components/patient-details/x-rays/delete-
 import { ChartsModule } from 'ng2-charts';
 import { EmcOptionsComponent } from './components/dashboard/emc-options/emc-options.component';
 import { PatientFilesComponent } from './components/patient-details/patient-files/patient-files.component';
+import { EditValueComponent } from './components/settings/edit-value/edit-value.component';
 
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
@@ -119,6 +121,7 @@ export function initGapi(authService: AuthService) {
     DeleteXrayComponent,
     EmcOptionsComponent,
     PatientFilesComponent,
+    EditValueComponent,
   ],
   imports: [
     BrowserModule,
@@ -174,14 +177,15 @@ export function initGapi(authService: AuthService) {
     ToothDetailsComponent,
     NewConsultComponent,
     DeleteXrayComponent,
-    EmcOptionsComponent
+    EmcOptionsComponent,
+    EditValueComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
     faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope, faPencilAlt,
-    faClock, faBars, faFolderOpen, faNotesMedical, faUpload, faImages, faEllipsisV];
+    faClock, faBars, faFolderOpen, faNotesMedical, faUpload, faImages, faEllipsisV, faEdit];
 
     constructor() {
     library.add(...this.icons);

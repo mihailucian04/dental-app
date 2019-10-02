@@ -114,6 +114,8 @@ export class DashboardComponent implements OnInit {
     { data: [28, 48, 40, 19, 86, 27, 90], label: 'Current year', stack: 'a' }]
   };
 
+  public monthLabels: string[] = [];
+
   public registeredPatients: number;
   public isLoaded = false;
   public mappingsFileId: string;
@@ -132,11 +134,11 @@ export class DashboardComponent implements OnInit {
     for (let i = 6; i > 0; i -= 1) {
       const day = new Date(today.getFullYear(), today.getMonth() - i, 1);
       const month = this.monthNames[day.getMonth()];
-      labels.push(month);
+      this.monthLabels.push(month);
     }
 
-    this.lineChartLabels = labels;
-    this.barChartLabels = labels;
+    this.lineChartLabels = this.monthLabels;
+    this.barChartLabels = this.monthLabels;
 
     this.ngZone.runOutsideAngular(() => {
 
@@ -146,17 +148,17 @@ export class DashboardComponent implements OnInit {
 
           const usedSpace = parseFloat((parseInt(driveResult.storageQuota.usageInDrive, 10) / 1000000).toFixed(2));
           const maxSpace = parseFloat((parseInt(driveResult.storageQuota.limit, 10) / 1000000).toFixed(2));
-          this.doughnutChartData = [[usedSpace, maxSpace]];
+          this.doughnutChartData = [[usedSpace * 5000, maxSpace]];
 
 
           const dashBoardDataString = localStorage.getItem('dashboardData');
           this.dashBoardData = JSON.parse(dashBoardDataString);
 
-          this.lineChartData = [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Current Year' },
-          { data: [28, 48, 40, 19, 86, 27, 90], label: 'Last Year' }];
-
-          this.barChartData = [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Last year', stack: 'a' },
-          { data: [28, 48, 40, 19, 86, 27, 90], label: 'Current year', stack: 'a' }];
+          this.lineChartData = this._extractChartValues(this.dashBoardData.lineChartData);
+          this.barChartData = this._extractChartValues(this.dashBoardData.barChartData, 'a');
+          // this.lineChartData = [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Current Year' },
+          // { data: [28, 48, 40, 19, 86, 27, 90], label: 'Last Year' }];
+         // this.barChartData = this._extractChartValues(this.dashBoardData.barChartData);
 
           const patientListString = localStorage.getItem('patientsListData');
           this.registeredPatients = (JSON.parse(patientListString)).length;
@@ -258,24 +260,33 @@ export class DashboardComponent implements OnInit {
     return appointments;
   }
 
-  private _extractChartValues(chartValues: any, stack?: string) {
+  private _extractChartValues(chartValues: any, stack?: string, months?: any) {
     const extractedValues: ChartDataModel[] = [];
     for (const chartItem of chartValues) {
       if (stack) {
         const chartBarDataModel = {
-          data: chartItem.data,
+          data: this._extractDataForMonths(chartItem.data),
           label: chartItem.label,
           stack
         };
         extractedValues.push(chartBarDataModel);
       } else {
         const chartLineDataModel = {
-          data: chartItem.data,
+          data: this._extractDataForMonths(chartItem.data),
           label: chartItem.label,
         };
         extractedValues.push(chartLineDataModel);
       }
     }
     return extractedValues;
+  }
+
+  private _extractDataForMonths(chartdata) {
+    const currentChartData: number[] = [];
+    for (const month of this.monthLabels) {
+      const monthIndex = this.monthNames.indexOf(month);
+      currentChartData.push(chartdata[monthIndex]);
+    }
+    return currentChartData;
   }
 }
