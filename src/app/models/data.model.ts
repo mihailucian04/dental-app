@@ -25,6 +25,7 @@ export interface PatientMap {
     consultFileId?: string;
     patientFileFolderId?: string;
     blankPatientFileId?: string;
+    blankDentalFileId?: string;
 }
 
 export interface ChartDataModel {

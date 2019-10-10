@@ -92,6 +92,7 @@ import { ChartsModule } from 'ng2-charts';
 import { EmcOptionsComponent } from './components/dashboard/emc-options/emc-options.component';
 import { PatientFilesComponent } from './components/patient-details/patient-files/patient-files.component';
 import { EditValueComponent } from './components/settings/edit-value/edit-value.component';
+import { HttpClientModule } from '@angular/common/http';
 
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
@@ -158,7 +159,8 @@ export function initGapi(authService: AuthService) {
       useFactory: adapterFactory,
     }),
     FlatpickrModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    HttpClientModule
   ],
   exports: [
     MatToolbarModule,

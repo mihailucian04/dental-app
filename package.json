@@ -39,6 +39,7 @@
     "ng2-charts": "^2.3.0",
     "ngx-page-scroll": "^5.0.1",
     "rxjs": "~6.5.2",
+    "three-dots": "^0.1.2",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
   },

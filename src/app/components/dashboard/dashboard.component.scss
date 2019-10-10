@@ -4,13 +4,36 @@ mat-grid-tile {
 
 :host {
   width: 100%;
-  padding: 36px 36px;
-  //height: calc(100% - 128px) !important;
+  margin: 36px 36px;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 .mat-card {
   width: calc(100%);
   height: calc(100%);
   border-radius: 0%;
+}
+
+.dashboard-chart {
+  width: 50%;
+  height: 280px;
+}
+
+.dashboard-tile-title {
+  font-size:20px;
+  font-weight:200;
+  margin-bottom:0;
+}
+
+.dashboard-storage-status {
+  margin-bottom:30px;
+  font-size: 22px;
+  font-weight: 100;
 }
 
 .timeline-body {

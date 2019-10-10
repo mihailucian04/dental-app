@@ -1,32 +1,49 @@
-<span mat-dialog-title style="color:#3f51b5" *ngIf="addEvent">Add an appointment</span>
-<span mat-dialog-title style="color:#3f51b5" *ngIf="!addEvent">Update an appointment</span>
+<span mat-dialog-title 
+      class="dialog-title" 
+      *ngIf="addEvent">Add an appointment</span>
+
+<span mat-dialog-title 
+      class="dialog-title" 
+      *ngIf="!addEvent">Update an appointment</span>
+
 <div mat-dialog-content>
-    <div style="display: flex; flex-direction:row">
-        <div style="display: flex; flex-direction:column; justify-content: center;">
-            <fa-icon icon="user-circle" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+    <div fxLayout="row">
+        <div fxLayout="column" fxLayoutAlign="center">
+            <fa-icon icon="user-circle" 
+                     [styles]="dialogIconStyles" 
+                     [fixedWidth]="true">
             </fa-icon>
         </div>
-        <div style="display: flex; flex-direction:column;margin-left:10px;width:100%">
+        <div class="dialog-input">
             <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [(ngModel)]="patientName" placeholder="Patient's name" autocomplete="off">
+                <input matInput 
+                       [(ngModel)]="patientName" 
+                       placeholder="Patient's name" 
+                       autocomplete="off">
             </mat-form-field>
         </div>
     </div>
 
-    <div style="display: flex; flex-direction:row">
-        <div style="display: flex; flex-direction:column; justify-content: center;">
-            <fa-icon icon="clock" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+    <div fxLayout="row">
+        <div fxLayout="column" fxLayoutAlign="center">
+            <fa-icon icon="clock" 
+                     [styles]="dialogIconStyles"
+                     [fixedWidth]="true">
             </fa-icon>
         </div>
-        <div style="display: flex; flex-direction:column;margin-left:10px;">
+        <div class="dialog-input">
             <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date" autocomplete="off" [(ngModel)]="appointmentDate">
+                <input matInput 
+                       [matDatepicker]="picker" 
+                       placeholder="Choose a date" 
+                       autocomplete="off" 
+                       [(ngModel)]="appointmentDate">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
         </div>
 
-        <div style="display: flex; flex-direction:column;margin-left:10px">
+        <div class="dialog-interval-input">
             <mat-form-field [style.fontSize]="'14px'">
                 <mat-label>From</mat-label>
                 <mat-select [(ngModel)]="fromHour">
@@ -37,7 +54,7 @@
             </mat-form-field>
         </div>
 
-        <div style="display: flex; flex-direction:column;margin-left:10px">
+        <div class="dialog-interval-input">
             <mat-form-field [style.fontSize]="'14px'">
                 <mat-label>To</mat-label>
                 <mat-select [(ngModel)]="toHour">
@@ -49,20 +66,25 @@
         </div>
     </div>
 
-    <div style="display: flex; flex-direction:row">
-        <div style="display: flex; flex-direction:column;justify-content: center;">
-            <fa-icon icon="bars" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+    <div fxLayout="row">
+        <div fxLayout="column" fxLayoutAlign="center">
+            <fa-icon icon="bars" 
+                     [styles]="dialogIconStyles" 
+                     [fixedWidth]="true">
             </fa-icon>
         </div>
-        <div style="display: flex; flex-direction:column;margin-left:10px;width:100%">
+        <div class="dialog-input">
             <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [(ngModel)]="description" placeholder="Appointment details" autocomplete="off">
+                <input matInput 
+                       [(ngModel)]="description" 
+                       placeholder="Appointment details" 
+                       autocomplete="off">
             </mat-form-field>
         </div>
     </div>
 </div>
 
-<div mat-dialog-actions style="margin-bottom: 1px; margin-top: 15px;">
+<div mat-dialog-actions class="dialog-menu">
     <button mat-raised-button color="primary" (click)="saveAppointment()">Save</button>
     <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
 </div>
