@@ -43,9 +43,12 @@ export class PatientListComponent implements OnInit, AfterViewInit {
       this.contactsService.getContacts().then((patients: Patient[]) => {
         this.ngZone.run(() => {
           this.dataSource = new MatTableDataSource<Patient>();
-          this.dataSource.data = patients;
+          const patient2: Patient[] = patients;
+          patient2.push(...patients);
+          this.dataSource.data = patient2;
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
+
           this.isLoaded = true;
         });
       });

@@ -250,7 +250,6 @@ export class CalendarComponent implements OnInit {
       };
       eventList.push(mappedEvent);
     }
-    console.log('Event list', eventList);
     return eventList;
   }
 }
