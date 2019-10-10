@@ -43,7 +43,6 @@ export class SettingsComponent implements OnInit {
   }
 
   public openEditDialog(row: any) {
-    console.log(row);
     const dialogRef = this.dialog.open(EditValueComponent, {
       data: row
     });

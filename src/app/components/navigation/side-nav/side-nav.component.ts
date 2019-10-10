@@ -1,16 +1,19 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
 import { AuthService } from 'src/app/services/auth.service';
+import { onSideNavChange, animateText } from 'src/app/animations/animations';
+import { SidenavService } from 'src/app/services/sidenav.service';
 
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss']
+  styleUrls: ['./side-nav.component.scss'],
+  animations: [onSideNavChange, animateText]
 })
 export class SideNavComponent implements OnInit {
 
-  public isLoggedIn$: Observable<boolean>;
-  public loggedIn = false;
+  public sideNavState = false;
+  public linkText = false;
+
   public expanded = false;
   public sidenavWidth = 4;
 
@@ -19,14 +22,18 @@ export class SideNavComponent implements OnInit {
     'margin-left': '5px'
   };
 
-  constructor(private authService: AuthService) { }
+  constructor(private sidenavService: SidenavService) { }
 
   ngOnInit() {
-    this.isLoggedIn$ = this.authService.isLoggedIn;
+  }
 
-    this.authService.isLoggedIn.subscribe(status => {
-      this.loggedIn = status;
-    });
+  public onSinenavToggle() {
+    this.sideNavState = !this.sideNavState;
+    setTimeout(() => {
+      this.linkText = this.sideNavState;
+    }, 200);
+
+    this.sidenavService.sideNavState$.next(this.sideNavState);
   }
 
   public increase() {
