@@ -10,13 +10,13 @@
 
         <mat-list-item (click)="increase()" *ngIf="!expanded">
           <div style="text-align:center;">
-            <fa-icon icon="angle-right" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true">
+            <fa-icon icon="angle-right" [styles]="menuIconStyles" [fixedWidth]="true">
             </fa-icon>
           </div>
         </mat-list-item>
 
         <mat-list-item (click)="decrease()" *ngIf="expanded">
-          <fa-icon icon="angle-left" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true">
+          <fa-icon icon="angle-left" [styles]="menuIconStyles" [fixedWidth]="true">
           </fa-icon>
           <div fxFlex="10"></div>
           <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
@@ -25,7 +25,7 @@
         </mat-list-item>
 
         <mat-list-item routerLink="dashboard" routerLinkActive="active" [style]="{'text-align':'center'}">
-          <fa-icon icon="tachometer-alt" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true">
+          <fa-icon icon="tachometer-alt" [styles]="menuIconStyles" [fixedWidth]="true">
           </fa-icon>
           <div fxFlex="10"></div>
           <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
@@ -34,7 +34,7 @@
         </mat-list-item>
 
         <mat-list-item routerLink="patient-list" routerLinkActive="active">
-          <fa-icon icon="users" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true"></fa-icon>
+          <fa-icon icon="users" [styles]="menuIconStyles" [fixedWidth]="true"></fa-icon>
           <div fxFlex="10"></div>
           <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
             <span>Patients list</span>
@@ -43,7 +43,7 @@
 
         <mat-list-item routerLink="calendar" routerLinkActive="active">
           <fa-icon icon="calendar-alt" 
-                   [styles]="{ 'color': '#595959', 'margin-left': '5px'}" 
+                   [styles]="menuIconStyles" 
                    [fixedWidth]="true">
           </fa-icon>
           <div fxFlex="10"></div>
@@ -53,7 +53,7 @@
         </mat-list-item>
 
         <mat-list-item routerLink="settings" routerLinkActive="active">
-          <fa-icon icon="cog" [styles]="{ 'color': '#595959', 'margin-left': '5px'}" [fixedWidth]="true"></fa-icon>
+          <fa-icon icon="cog" [styles]="menuIconStyles" [fixedWidth]="true"></fa-icon>
           <div fxFlex="10"></div>
           <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
             <span>Settings</span>

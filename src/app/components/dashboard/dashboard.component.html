@@ -1,30 +1,39 @@
-<div [hidden]="isLoaded" style="text-align: -webkit-center;margin-top:30vh;">
-    <mat-spinner [diameter]="70"></mat-spinner>
-  </div>
+<div *ngIf="!isLoaded" class="spinner">
+  <mat-spinner [diameter]="70"></mat-spinner>
+</div>
 
-<div style="width: 90vw" [hidden]="!isLoaded">
+<div style="width: 90vw" *ngIf="isLoaded">
   <mat-grid-list cols="4" [gutterSize]="'25px'" rowHeight="350px" role="list">
     <mat-grid-tile [colspan]="3" [rowspan]="1">
       <mat-card>
-        <mat-card-title style="font-size:20px;font-weight:200;margin-bottom:0">Dashboard</mat-card-title>
+        <mat-card-title class="dashboard-tile-title">Dashboard</mat-card-title>
+
         <mat-card-content flex style="width: 100%;height:100%;" fxLayoutAlign="center center">
-          <div fxLayout="row wrap" fxLayoutAlign="start center" style="margin-top:10px;width: 100%;height: 280px">
-            <div style="width: 50%;height: 280px">
-              <div fxLayout="column wrap" fxLayoutAlign="center center">
-                <canvas baseChart height="280px" [datasets]="lineChartData" [labels]="lineChartLabels"
-                  [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
-                  [chartType]="lineChartType" [plugins]="lineChartPlugins">
-                </canvas>
-              </div>
+          <div fxLayout="row wrap" fxLayoutAlign="start center" style="width: 100%;">
+            <div class="dashboard-chart">
+              <canvas baseChart 
+                      height="280px" 
+                      [datasets]="lineChartData" 
+                      [labels]="lineChartLabels"
+                      [options]="lineChartOptions" 
+                      [colors]="lineChartColors" 
+                      [legend]="lineChartLegend"
+                      [chartType]="lineChartType" 
+                      [plugins]="lineChartPlugins">
+              </canvas>
             </div>
 
-            <div style="width: 50%;height: 280px">
-              <div fxLayout="column wrap" fxLayoutAlign="center center" style="margin-left:50px;">
-                <canvas baseChart height="280px" [datasets]="barChartData" [labels]="barChartLabels"
-                  [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
-                  [chartType]="barChartType" [colors]="barChartColors">
-                </canvas>
-              </div>
+            <div class="dashboard-chart">
+              <canvas baseChart 
+                      height="280px" 
+                      [datasets]="barChartData" 
+                      [labels]="barChartLabels"
+                      [options]="barChartOptions" 
+                      [plugins]="barChartPlugins" 
+                      [legend]="barChartLegend"
+                      [chartType]="barChartType" 
+                      [colors]="barChartColors">
+              </canvas>
             </div>
           </div>
           <form class="example-form">
@@ -35,11 +44,12 @@
 
     <mat-grid-tile [colspan]="1" [rowspan]="2">
       <mat-card>
-        <mat-card-title style="font-size:20px;font-weight:200;">Today's appointments</mat-card-title>
+        <mat-card-title class="dashboard-tile-title">Today's appointments</mat-card-title>
         <mat-card-content flex style="height: 650px;overflow-y:auto">
           <div class="timeline-body">
             <div class="timeline">
-              <div  [ngClass]="appointment.cssClass" style="padding-bottom:15px;" *ngFor="let appointment of appointments">
+              <div [ngClass]="appointment.cssClass" style="padding-bottom:15px;"
+                *ngFor="let appointment of appointments">
                 <div class="timeline-item-content">
                   <div style="opacity: .5">{{appointment.time}}</div>
                   <span>{{appointment.patientName}}</span>
@@ -55,10 +65,17 @@
       <mat-card style="padding: 0">
         <mat-card-content flex style="width: 100%;height:100%;" fxLayoutAlign="center center">
           <div fxLayout="column wrap" fxLayoutAlign="center center">
-            <span style="margin-bottom:30px;font-size: 22px;font-weight: 100">Google storage status</span>
+            <span class="dashboard-storage-status">Google storage status</span>
+            
             <div fxLayout="row wrap" fxLayoutAlign="center center" style="width: 100%;height:100%;">
-              <canvas baseChart width="400" height="200" [data]="doughnutChartData" [labels]="doughnutChartLabels"
-                [chartType]="doughnutChartType" [colors]="doughnutChartColors" [options]="doughnutChartOptions">
+              <canvas baseChart 
+                      width="400" 
+                      height="200" 
+                      [data]="doughnutChartData" 
+                      [labels]="doughnutChartLabels"
+                      [chartType]="doughnutChartType" 
+                      [colors]="doughnutChartColors" 
+                      [options]="doughnutChartOptions">
               </canvas>
             </div>
           </div>
@@ -89,7 +106,8 @@
               <div fxLayout="column wrap" fxLayoutAlign="center center" style="height:80%">
                 <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Dental EMC points</span>
                 <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
-                  <span style="color: #e4e6eb;font-size: 30px;margin-right: 5px;">{{dashBoardData?.emcPoints.points}}</span>
+                  <span
+                    style="color: #e4e6eb;font-size: 30px;margin-right: 5px;">{{dashBoardData?.emcPoints.points}}</span>
                   <span style="color: #e4e6eb;font-size: 50px;margin-right: 5px;">/</span>
                   <span style="color: #e4e6eb;font-size: 50px">{{dashBoardData?.emcPoints.maxPoints}}</span>
                 </div>
@@ -98,15 +116,8 @@
             </div>
 
             <div class="registered-patients" fxLayout="column wrap">
-              <div fxLayout="row wrap" fxLayoutAlign="flex-end" class="emc-option-points">
-                <!-- <fa-icon icon="ellipsis-v"
-                             class="icon-visibility"
-                             [styles]="{ 'color': '#e4e6eb', 'margin-left': '5px', 
-                                         'font-size': '20px', 'cursor': 'pointer'}" 
-                             [fixedWidth]="true">
-                    </fa-icon> -->
-              </div>
-
+                <div fxLayout="row wrap" fxLayoutAlign="flex-end" class="emc-option-points">
+                </div>
               <div fxLayout="column wrap" fxLayoutAlign="center center" style="height:80%">
                 <span style="font-size: 20px;color: #e4e6eb;font-weight: 100">Registered patients</span>
                 <div fxLayout="row wrap" fxLayoutAlign="center center" style="padding-top: 10px;font-weight: 100;">
