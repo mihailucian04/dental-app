@@ -1,71 +1,52 @@
-<div style="overflow: hidden;">
-  <app-header></app-header>
-  <app-login-form *ngIf="!(isLoggedIn$ | async)"></app-login-form>
-  <mat-sidenav-container style="height: calc(100vh - 64px)" *ngIf="(isLoggedIn$ | async)">
+<div [@onSideNavChange]="sideNavState ? 'open' : 'close'">
 
-    <mat-sidenav #sidenav mode="side" class="example-sidenav"
-      [ngStyle]="{ 'width.em': sidenavWidth, 'transition':'all 0.5s'}" opened="true">
+  <mat-nav-list>
 
-      <mat-nav-list>
+    <mat-list-item (click)="onSinenavToggle()" [style]="{'text-align':'center'}">
+      <fa-icon icon="angle-right" [styles]="menuIconStyles" [fixedWidth]="true" *ngIf="!sideNavState">
+      </fa-icon>
+      <fa-icon icon="angle-left" [styles]="menuIconStyles" [fixedWidth]="true" *ngIf="sideNavState">
+      </fa-icon>
+      <div fxFlex="10"></div>
+      <div [@animateText]="linkText ? 'show' : 'hide'" class="sidenav-item component-name">
+        <span>close menu</span>
+      </div>
+    </mat-list-item>
 
-        <mat-list-item (click)="increase()" *ngIf="!expanded">
-          <div style="text-align:center;">
-            <fa-icon icon="angle-right" [styles]="menuIconStyles" [fixedWidth]="true">
-            </fa-icon>
-          </div>
-        </mat-list-item>
+    <mat-list-item routerLink="dashboard" routerLinkActive="active" [style]="{'text-align':'center'}">
+      <fa-icon icon="tachometer-alt" [styles]="menuIconStyles" [fixedWidth]="true">
+      </fa-icon>
+      <div fxFlex="10"></div>
+      <div [@animateText]="linkText ? 'show' : 'hide'" class="sidenav-item component-name">
+        <span>Dashboard</span>
+      </div>
+    </mat-list-item>
 
-        <mat-list-item (click)="decrease()" *ngIf="expanded">
-          <fa-icon icon="angle-left" [styles]="menuIconStyles" [fixedWidth]="true">
-          </fa-icon>
-          <div fxFlex="10"></div>
-          <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
-            <span>close menu</span>
-          </div>
-        </mat-list-item>
+    <mat-list-item routerLink="patient-list" routerLinkActive="active">
+      <fa-icon icon="users" [styles]="menuIconStyles" [fixedWidth]="true"></fa-icon>
+      <div fxFlex="10"></div>
+      <div [@animateText]="linkText ? 'show' : 'hide'" class="sidenav-item component-name">
+        <span>Patients list</span>
+      </div>
+    </mat-list-item>
 
-        <mat-list-item routerLink="dashboard" routerLinkActive="active" [style]="{'text-align':'center'}">
-          <fa-icon icon="tachometer-alt" [styles]="menuIconStyles" [fixedWidth]="true">
-          </fa-icon>
-          <div fxFlex="10"></div>
-          <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
-            <span>Dashboard</span>
-          </div>
-        </mat-list-item>
+    <mat-list-item routerLink="calendar" routerLinkActive="active">
+      <fa-icon icon="calendar-alt" [styles]="menuIconStyles" [fixedWidth]="true">
+      </fa-icon>
+      <div fxFlex="10"></div>
+      <div [@animateText]="linkText ? 'show' : 'hide'" class="sidenav-item component-name">
+        <span>Calendar</span>
+      </div>
+    </mat-list-item>
 
-        <mat-list-item routerLink="patient-list" routerLinkActive="active">
-          <fa-icon icon="users" [styles]="menuIconStyles" [fixedWidth]="true"></fa-icon>
-          <div fxFlex="10"></div>
-          <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
-            <span>Patients list</span>
-          </div>
-        </mat-list-item>
+    <mat-list-item routerLink="settings" routerLinkActive="active">
+      <fa-icon icon="cog" [styles]="menuIconStyles" [fixedWidth]="true"></fa-icon>
+      <div fxFlex="10"></div>
+      <div [@animateText]="linkText ? 'show' : 'hide'" class="sidenav-item component-name">
+        <span>Settings</span>
+      </div>
+    </mat-list-item>
 
-        <mat-list-item routerLink="calendar" routerLinkActive="active">
-          <fa-icon icon="calendar-alt" 
-                   [styles]="menuIconStyles" 
-                   [fixedWidth]="true">
-          </fa-icon>
-          <div fxFlex="10"></div>
-          <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
-            <span>Calendar</span>
-          </div>
-        </mat-list-item>
+  </mat-nav-list>
 
-        <mat-list-item routerLink="settings" routerLinkActive="active">
-          <fa-icon icon="cog" [styles]="menuIconStyles" [fixedWidth]="true"></fa-icon>
-          <div fxFlex="10"></div>
-          <div *ngIf="sidenavWidth > 10" class="sidenav-item component-name">
-            <span>Settings</span>
-          </div>
-        </mat-list-item>
-
-      </mat-nav-list>
-    </mat-sidenav>
-
-    <div class="example-sidenav-content" style="overflow: unset;height: 100%;">
-      <router-outlet></router-outlet>
-    </div>
-
-  </mat-sidenav-container>
 </div>
