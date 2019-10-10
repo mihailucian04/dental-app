@@ -14,6 +14,11 @@ export class SideNavComponent implements OnInit {
   public expanded = false;
   public sidenavWidth = 4;
 
+  public menuIconStyles: any = {
+    color: '#595959',
+    'margin-left': '5px'
+  };
+
   constructor(private authService: AuthService) { }
 
   ngOnInit() {

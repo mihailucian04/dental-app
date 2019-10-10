@@ -58,6 +58,11 @@ export class NewAppointmentComponent {
   private googleDateTo: Date;
   private eventId: string;
 
+  public dialogIconStyles: any = {
+    color: '#e6dddc',
+    'font-size': '30px',
+  };
+
   private addEvent = true;
 
   constructor(

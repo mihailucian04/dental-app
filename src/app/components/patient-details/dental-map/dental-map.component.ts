@@ -97,6 +97,7 @@ export class DentalMapComponent implements OnInit {
               this._createDefaultMappings(patient);
             }
 
+            this.isLoaded = true;
           });
         });
       });
@@ -128,7 +129,5 @@ export class DentalMapComponent implements OnInit {
     this.upperLeftSide = toothArray.slice(8, 16).reverse();
     this.lowerLeftSide = toothArray.slice(16, 24);
     this.lowerRightSide = toothArray.slice(24, 32);
-
-    this.isLoaded = true;
   }
 }
