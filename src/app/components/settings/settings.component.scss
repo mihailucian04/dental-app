@@ -6,3 +6,9 @@
 .mat-card {
     border-radius: 0;
 }
+
+.table-container {
+    width: 100%;
+    height: calc(100vh - 136px);
+    overflow: auto
+}
