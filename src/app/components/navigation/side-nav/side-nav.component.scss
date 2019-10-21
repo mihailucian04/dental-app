@@ -2,11 +2,24 @@
 
 .example-sidenav-content {
     display: flex;
-    //height: 90vh;
-    //max-height: 95vh;
-    //background-color: #efefef;
-    // align-items: center;
-    // justify-content: center;
+}
+
+.user-info {
+    height: 100px !important;
+}
+
+.jim {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+.profile-image {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 ::ng-deep .mat-drawer-content {
