@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { MatTableDataSource, MatDialog } from '@angular/material';
-import { DashboardData } from 'src/app/models/data.model';
+import { DashboardData, MONTH_NAMES } from 'src/app/models/data.model';
 import { EditValueComponent } from './edit-value/edit-value.component';
 import { DriveService } from 'src/app/services/drive.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
@@ -19,9 +19,6 @@ export interface DashBoardTableEntry {
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-
-  public monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'];
 
   public displayedColumnsStatistics: string[] = ['month', 'lastYearIncome', 'thisYearIncome',
     'lastYearPatients', 'thisYearPatients', 'edit'];
@@ -63,8 +60,8 @@ export class SettingsComponent implements OnInit {
     const dashboardString = localStorage.getItem('dashboardData');
     this.dashBoardData = JSON.parse(dashboardString);
 
-    for (const month of this.monthNames) {
-      const index = this.monthNames.indexOf(month);
+    for (const month of MONTH_NAMES) {
+      const index = MONTH_NAMES.indexOf(month);
       const dashBoardEntry = {
         month,
         lastYearIncome: this.dashBoardData.lineChartData[1].data[index],
