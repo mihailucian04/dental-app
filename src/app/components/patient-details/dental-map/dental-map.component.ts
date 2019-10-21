@@ -7,7 +7,6 @@ import { PatientMap } from 'src/app/models/data.model';
 import { DriveService } from 'src/app/services/drive.service';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 
-
 @Component({
   selector: 'app-dental-map',
   templateUrl: './dental-map.component.html',
@@ -22,6 +21,7 @@ export class DentalMapComponent implements OnInit {
 
   private resourceName: string;
   private mappingsFileId: string;
+  private blankDentalFile: any;
 
   public isLoaded = false;
 
@@ -74,7 +74,7 @@ export class DentalMapComponent implements OnInit {
   }
 
   public openBlanDentalMap() {
-    window.open('https://drive.google.com/file/d/1W8m3q6IRvr1FIspS64-lDdiVhEvWlYez/view?usp=drivesdk');
+    window.open(this.blankDentalFile.webViewLink);
   }
 
   private _initialiseMapView() {
@@ -84,20 +84,24 @@ export class DentalMapComponent implements OnInit {
       const patientList = JSON.parse(patientListString) as PatientMap[];
 
       const patient = patientList.filter(obj => obj.patientId === this.resourceName)[0];
+
       this.mappingsFileId = patient.dentalMapFileId;
 
       this.ngZone.runOutsideAngular(() => {
         this.driveService.exportFileContent(patient.dentalMapFileId).then(response => {
-          this.ngZone.run(() => {
             const result = response.substr(1);
+            this.driveService.getDriveFile(patient.blankDentalFileId).then((blankFileResponse) => {
+              this.ngZone.run(() => {
+              this.blankDentalFile = blankFileResponse.result;
 
-            if (result !== '') {
-              this._splitToothArray(JSON.parse(result));
-            } else {
-              this._createDefaultMappings(patient);
-            }
+              if (result !== '') {
+                this._splitToothArray(JSON.parse(result));
+              } else {
+                this._createDefaultMappings(patient);
+              }
 
-            this.isLoaded = true;
+              this.isLoaded = true;
+            });
           });
         });
       });

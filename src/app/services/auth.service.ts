@@ -4,6 +4,7 @@ import { Patient } from '../models/patient.model';
 import { DriveService } from './drive.service';
 import { tcs } from '../models/tcs';
 import { SnackBarService } from './snack-bar.service';
+import { UserInfo } from '../models/data.model';
 
 const CLIENT_ID = '948035237809-2ki059veu26dgnqbr2tfqm9b5qbe079m.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyDIQ9RWQwaCtTmkJwXMDxGAPUPieIo5z0Y';
@@ -50,6 +51,7 @@ export class AuthService {
                                 this.driveService.setLocalStorageData().then(() => {
                                     this.loggedIn.next(true);
                                     this.username.next(currentUser.getBasicProfile().getEmail());
+                                    resolve();
                                 });
                             }
                         });

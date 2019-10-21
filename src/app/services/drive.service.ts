@@ -1,43 +1,10 @@
 import { Injectable } from '@angular/core';
-import { DriveData, PatientMap } from '../models/data.model';
+import { DriveData, PatientMap, DEFAULT_MAPPINGS, MymeType, UserInfo } from '../models/data.model';
 import { ContactsService } from './contacts.service';
 import { Patient } from '../models/patient.model';
-import { resolve, reject } from 'q';
 import { HttpClient } from '@angular/common/http';
 
 declare var gapi: any;
-
-export enum MymeType {
-    document = 'application/vnd.google-apps.document',
-    folder = 'application/vnd.google-apps.folder',
-    plainText = 'text/plain'
-}
-
-const DEFAULT_MAPPINGS: DriveData = {
-    dashboardData: {
-        emcPoints: {
-            maxPoints: 500,
-            points: 150,
-        },
-        lineChartData: [{
-            data: [45, 50, 80, 81, 60, 55, 65, 77, 68, 38, 22, 65],
-            label: 'Current Year'
-        }, {
-            data: [30, 65, 40, 19, 86, 27, 90, 30, 60, 38, 22, 15],
-            label: 'Last Year'
-        }],
-        barChartData: [{
-            data: [65, 59, 80, 81, 56, 55, 40, 30, 45, 55, 42, 35],
-            label: 'Last Year',
-            stack: 'a'
-        }, {
-            data: [28, 73, 40, 19, 86, 27, 90, 22, 35, 48, 33, 20],
-            label: 'Current Year',
-            stack: 'a'
-        }]
-    },
-    patients: []
-};
 
 @Injectable({
     providedIn: 'root'
@@ -70,6 +37,19 @@ export class DriveService {
                 localStorage.setItem('mappingsFileId', JSON.stringify(mappinsResult.id));
                 localStorage.setItem('dashboardData', JSON.stringify(driveData.dashboardData));
                 localStorage.setItem('patientsListData', JSON.stringify(driveData.patients));
+
+                const googleAuth = gapi.auth2.getAuthInstance();
+                const currentUser = googleAuth.currentUser.get().getBasicProfile();
+
+                const userInfo: UserInfo = {
+                    id: currentUser.getId(),
+                    fullName: currentUser.getName(),
+                    givenName: currentUser.getGivenName(),
+                    familyName: currentUser.getFamilyName(),
+                    imageUrl: currentUser.getImageUrl(),
+                    email: currentUser.getEmail()
+                };
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
             });
         });
     }

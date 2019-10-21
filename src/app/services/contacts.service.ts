@@ -25,8 +25,9 @@ export class ContactsService {
         return gapi.client.people.people.connections.list({
             resourceName: 'people/me',
             pageSize: 50,
-            personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses',
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses,relations',
         }).then((response: any) => {
+            console.log(response);
             const connections = response.result.connections;
             const list = ctx._mapPatients(connections);
 

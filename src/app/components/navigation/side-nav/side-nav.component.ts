@@ -2,6 +2,7 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { onSideNavChange, animateText } from 'src/app/animations/animations';
 import { SidenavService } from 'src/app/services/sidenav.service';
+import { UserInfo } from 'src/app/models/data.model';
 
 @Component({
   selector: 'app-side-nav',
@@ -17,6 +18,8 @@ export class SideNavComponent implements OnInit {
   public expanded = false;
   public sidenavWidth = 4;
 
+  public userInfo: UserInfo;
+
   public menuIconStyles: any = {
     color: '#595959',
     'margin-left': '5px'
@@ -25,6 +28,7 @@ export class SideNavComponent implements OnInit {
   constructor(private sidenavService: SidenavService) { }
 
   ngOnInit() {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
   }
 
   public onSinenavToggle() {

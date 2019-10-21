@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
-import { DriveData, DashboardData, ChartDataModel } from 'src/app/models/data.model';
-import { Patient } from 'src/app/models/patient.model';
+import { DriveData, DashboardData, ChartDataModel, MONTH_NAMES, DEFAULT_MAPPINGS } from 'src/app/models/data.model';
 import { DriveService } from 'src/app/services/drive.service';
-import { ContactsService } from 'src/app/services/contacts.service';
 import { Label, MultiDataSet, Color, BaseChartDirective } from 'ng2-charts';
 import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
 import { MatDialog } from '@angular/material';
@@ -100,19 +98,7 @@ export class DashboardComponent implements OnInit {
     { data: [], label: '' }
   ];
 
-  public monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'];
-
-  public dashBoardData: DashboardData = {
-    emcPoints: {
-      maxPoints: 0,
-      points: 0
-    },
-    lineChartData: [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Current Year' },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Last Year' }],
-    barChartData: [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Last year', stack: 'a' },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Current year', stack: 'a' }]
-  };
+  public dashBoardData: DashboardData = DEFAULT_MAPPINGS.dashboardData;
 
   public monthLabels: string[] = [];
 
@@ -133,7 +119,7 @@ export class DashboardComponent implements OnInit {
     const today = new Date();
     for (let i = 6; i > 0; i -= 1) {
       const day = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      const month = this.monthNames[day.getMonth()];
+      const month = MONTH_NAMES[day.getMonth()];
       this.monthLabels.push(month);
     }
 
@@ -156,9 +142,6 @@ export class DashboardComponent implements OnInit {
 
           this.lineChartData = this._extractChartValues(this.dashBoardData.lineChartData);
           this.barChartData = this._extractChartValues(this.dashBoardData.barChartData, 'a');
-          // this.lineChartData = [{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Current Year' },
-          // { data: [28, 48, 40, 19, 86, 27, 90], label: 'Last Year' }];
-         // this.barChartData = this._extractChartValues(this.dashBoardData.barChartData);
 
           const patientListString = localStorage.getItem('patientsListData');
           this.registeredPatients = (JSON.parse(patientListString)).length;
@@ -284,7 +267,7 @@ export class DashboardComponent implements OnInit {
   private _extractDataForMonths(chartdata) {
     const currentChartData: number[] = [];
     for (const month of this.monthLabels) {
-      const monthIndex = this.monthNames.indexOf(month);
+      const monthIndex = MONTH_NAMES.indexOf(month);
       currentChartData.push(chartdata[monthIndex]);
     }
     return currentChartData;
