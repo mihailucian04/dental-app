@@ -14,7 +14,7 @@
     </mat-list-item>
 
     <mat-list-item (click)="onSinenavToggle()" [style]="{'text-align':'center'}" *ngIf="!sideNavState">
-      <img class="jim" [src]="userInfo.imageUrl" alt="Avatar">
+      <img class="jim" [src]="userInfo?.imageUrl" alt="Avatar">
         <!-- <div fxFlex="8"></div>
         <div [@animateText]="linkText ? 'show' : 'hide'" class="sidenav-item component-name">
           <span>Dr. {{userInfo.fullName}}</span>

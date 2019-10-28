@@ -63,7 +63,7 @@ export class NewAppointmentComponent {
     'font-size': '30px',
   };
 
-  private addEvent = true;
+  public addEvent = true;
 
   constructor(
     public dialogRef: MatDialogRef<NewAppointmentComponent>,
