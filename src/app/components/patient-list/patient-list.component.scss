@@ -10,6 +10,8 @@ table {
     width: 100% !important;
 }
 
+[hidden] { display: none !important;}
+
 .mat-column-avatar {
   flex: 0 0 80px !important;
   color: #3f51b5;
@@ -29,6 +31,14 @@ table {
 .example-container {
   height: calc(100vh - 193px);
   overflow: auto;
+}
+
+.edit-action {
+  color: #878787;
+}
+
+.edit-action:hover {
+  color: #4d4d4d;
 }
 
 .spinner {
