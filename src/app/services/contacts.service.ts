@@ -13,9 +13,26 @@ export class ContactsService {
             resourceName: `people/${resourceName}`,
             personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses',
         }).then((response: any) => {
-            // console.log(response);
             const patient = ctx._extractPersonResponse(response.result);
             return patient;
+        });
+    }
+
+    public getContact1(resourceName: string) {
+        return gapi.client.people.people.get({
+            resourceName: `people/${resourceName}`,
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses',
+        });
+    }
+
+    public getContactsBatch(resourceNames) {
+        return gapi.client.request({
+            method: 'GET',
+            path: 'https://people.googleapis.com/v1/people:batchGet',
+            params: {
+                resourceNames,
+                personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses'
+            }
         });
     }
 
@@ -32,6 +49,61 @@ export class ContactsService {
             const list = ctx._mapPatients(connections);
 
             return list;
+        });
+    }
+
+    public listContactGroups() {
+        return gapi.client.request({
+            method: 'GET',
+            path: 'https://people.googleapis.com/v1/contactGroups'
+        });
+    }
+
+    public checkIfPatientsGroupExists() {
+        return new Promise((resolve) => {
+            gapi.client.request({
+                method: 'GET',
+                path: 'https://people.googleapis.com/v1/contactGroups'
+            }).then(response => {
+                const contactGroups = response.result.contactGroups;
+
+                for (const contactGroup of contactGroups) {
+                    if (contactGroup.name === 'Patients') {
+                        resolve(true);
+                        break;
+                    }
+                }
+                resolve(false);
+            });
+        });
+    }
+
+    public createPatientsGroup() {
+        return gapi.client.request({
+            method: 'POST',
+            path: 'https://people.googleapis.com/v1/contactGroups',
+            body: {
+                contactGroup: {
+                    name: 'Patients'
+                }
+            }
+        });
+    }
+
+    public getPatients(resourceName: string) {
+        return gapi.client.request({
+            method: 'GET',
+            path: `https://people.googleapis.com/v1/${resourceName}`,
+            params: {
+                maxMembers: 100
+            }
+        }).then(response => {
+            const contactsIds = response.result.memberResourceNames;
+
+            return this.getContactsBatch(contactsIds).then(response1 => {
+                const lst = this._extractBatchPatients(response1.result.responses);
+                return lst;
+            });
         });
     }
 
@@ -75,6 +147,15 @@ export class ContactsService {
         });
     }
 
+    private _extractBatchPatients(results) {
+        const patientList: Patient[] = [];
+        for (const result of results) {
+            const patient = this._extractPersonResponse(result.person);
+            patientList.push(patient);
+        }
+        return patientList;
+    }
+
 
     private _mapPatients(persons: any): Patient[] {
         const patientList: Patient[] = [];
@@ -91,12 +172,12 @@ export class ContactsService {
             name: response.names[0].givenName,
             surname: response.names[0].familyName,
             company: response.organizations[0].name,
-            age: this._getAge(response.birthdays[0].text).toString(),
-            dob: response.birthdays[0].text,
+            age: response.birthdays ? this._getAge(response.birthdays[0].text).toString() : '-',
+            dob: response.birthdays ? response.birthdays[0].text : '-',
             lastConsult: '-',
             imageUrl: response.photos[0].url,
             email: response.emailAddresses[0].value,
-            phoneNumber: response.phoneNumbers[0].value
+            phoneNumber:  response.phoneNumbers ? response.phoneNumbers[0].value : '(000) 000-0000'
         };
 
         return person;
