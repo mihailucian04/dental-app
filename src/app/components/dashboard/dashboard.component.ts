@@ -134,20 +134,32 @@ export class DashboardComponent implements OnInit {
 
           const usedSpace = parseFloat((parseInt(driveResult.storageQuota.usageInDrive, 10) / 1000000).toFixed(2));
           const maxSpace = parseFloat((parseInt(driveResult.storageQuota.limit, 10) / 1000000).toFixed(2));
-          this.doughnutChartData = [[usedSpace * 5000, maxSpace]];
+          this.doughnutChartData = [[usedSpace, maxSpace]];
 
 
           const dashBoardDataString = localStorage.getItem('dashboardData');
           this.dashBoardData = JSON.parse(dashBoardDataString);
 
+          if (!this.dashBoardData) {
+            this.dashBoardData = DEFAULT_MAPPINGS.dashboardData;
+          }
+
           this.lineChartData = this._extractChartValues(this.dashBoardData.lineChartData);
           this.barChartData = this._extractChartValues(this.dashBoardData.barChartData, 'a');
 
           const patientListString = localStorage.getItem('patientsListData');
-          this.registeredPatients = (JSON.parse(patientListString)).length;
+
+          if (patientListString) {
+            this.registeredPatients = (JSON.parse(patientListString)).length;
+          } else {
+            this.registeredPatients = 0;
+          }
 
           const mappingsId = localStorage.getItem('mappingsFileId');
-          this.mappingsFileId = mappingsId.substring(1, mappingsId.length - 1);
+
+          if (mappingsId) {
+            this.mappingsFileId = mappingsId.substring(1, mappingsId.length - 1);
+          }
 
           const minHour = new Date();
           minHour.setHours(8, 0, 0);
