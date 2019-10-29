@@ -1,5 +1,5 @@
 
-FROM node:boron
+FROM node:dubnium
 
 RUN npm install -g firebase-tools
 
