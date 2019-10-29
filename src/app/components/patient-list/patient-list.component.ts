@@ -5,6 +5,7 @@ import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { NewPatientComponent } from './new-patient/new-patient.component';
 import { ContactsService } from 'src/app/services/contacts.service';
+import { EditPatientComponent } from './edit-patient/edit-patient.component';
 
 export interface DialogData {
   animal: string;
@@ -18,10 +19,16 @@ export interface DialogData {
 })
 export class PatientListComponent implements OnInit, AfterViewInit {
 
-  public displayedColumns: string[] = ['avatar', 'surname', 'age', 'lastConsult', 'company', 'phone'];
+  public displayedColumns: string[] = [ 'select', 'avatar', 'surname', 'age', 'lastConsult', 'company', 'phone', 'edit'];
   public dataSource: any;
   public isLoaded = false;
   public newPatient: NewPatient = { firstName: '', lastName: '', phoneNumber: '', emailAddress: '', company: '', jobTitle: 'patient' };
+
+  public masterCheck = false;
+  public masterCheckVisible = false;
+  public masterCheckIndeterminate = false;
+
+  public patients: any;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -32,7 +39,21 @@ export class PatientListComponent implements OnInit, AfterViewInit {
               public dialog: MatDialog) { }
 
   ngOnInit() {
-    this._getPatientList();
+    this.ngZone.runOutsideAngular(() => {
+      this.contactsService.getPatients('contactGroups/129398e00fdd68f5').then((patients) => {
+        this.ngZone.run(() => {
+          this.patients = patients;
+          this.addShowEditProp();
+
+          this.dataSource = new MatTableDataSource<Patient>();
+          this.dataSource.data = this.patients;
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+
+          this.isLoaded = true;
+        });
+      });
+    });
   }
 
   ngAfterViewInit() {
@@ -40,14 +61,12 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
   private _getPatientList() {
     this.ngZone.runOutsideAngular(() => {
-      this.contactsService.getContacts().then((patients: Patient[]) => {
+      this.contactsService.getPatients('contactGroups/129398e00fdd68f5').then((patients) => {
         this.ngZone.run(() => {
           this.dataSource = new MatTableDataSource<Patient>();
-          const patient2: Patient[] = patients;
-          patient2.push(...patients);
-          this.dataSource.data = patient2;
+          this.dataSource.data = patients;
           this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
+
 
           this.isLoaded = true;
         });
@@ -63,6 +82,15 @@ export class PatientListComponent implements OnInit, AfterViewInit {
     this.router.navigate([`/patient-details/${row.resourceName}`]);
   }
 
+  checkRow(e, row) {
+    if (!row.checked) {
+      this.masterCheckVisible = true;
+      this.masterCheckIndeterminate = true;
+    }
+    e.stopPropagation();
+    console.log(row);
+  }
+
   openDialog(): void {
     const dialogRef = this.dialog.open(NewPatientComponent, {
       data: this.newPatient
@@ -70,6 +98,44 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this._getPatientList();
+    });
+  }
+
+  handleMouseOver(row) {
+    const resourceName = row.resourceName;
+    this.patients.map((data: any) => {
+      if (data.resourceName === resourceName) {
+        data.showEdit = true;
+      }
+    });
+  }
+
+  handleMouseLeave(row) {
+    const resourceName = row.resourceName;
+    this.patients.map((data: any) => {
+      if (data.resourceName === resourceName) {
+        data.showEdit = false;
+      }
+    });
+  }
+
+  editPatient(e, row) {
+    const dialogRef = this.dialog.open(EditPatientComponent, {
+      data: row
+    });
+
+    e.stopPropagation();
+  }
+
+  deletePatient(e, row) {
+    alert('Delete clicked');
+    e.stopPropagation();
+  }
+
+  addShowEditProp() {
+    this.patients.map((data: any) => {
+      data.showEdit = false;
+      data.checked = false;
     });
   }
 

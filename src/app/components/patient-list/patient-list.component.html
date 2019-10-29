@@ -1,8 +1,8 @@
-<div *ngIf="!isLoaded" class="spinner">
-    <mat-spinner [diameter]="70"></mat-spinner>
-  </div>
+<div [hidden]="isLoaded" class="spinner">
+  <mat-spinner [diameter]="70"></mat-spinner>
+</div>
 
-<div *ngIf="isLoaded">
+<div [hidden]="!isLoaded">
   <mat-card style="width: 100%;border-radius: 0">
 
     <div style="display:flex;flex-direction:row;align-items: end;">
@@ -15,6 +15,18 @@
 
   <div class="example-container mat-elevation-z2" style="margin-top:10px">
     <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef style="width:40px;padding-left: 15px;">
+          <mat-checkbox [(ngModel)]="masterCheck"
+                        [(indeterminate)]="masterCheckIndeterminate"></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element" style="padding-left: 15px;">
+          <mat-checkbox (click)="checkRow($event, element)" 
+                        [style.opacity]="element.showEdit || element.checked ? 100 : 0"
+                        [(ngModel)]="element.checked"></mat-checkbox>
+        </td>
+      </ng-container>
 
       <ng-container matColumnDef="avatar">
         <th mat-header-cell *matHeaderCellDef style="width:80px;padding-left: 15px;"> </th>
@@ -50,12 +62,41 @@
         <td mat-cell *matCellDef="let element"> {{element.phoneNumber}}</td>
       </ng-container>
 
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div style="display: flex; flex-direction:row;justify-content: flex-end;" [style.opacity]="element.showEdit ? 100 : 0">
+            <div class="edit-action">
+              <fa-icon icon="pencil-alt" [fixedWidth]="true" (click)="editPatient($event, element)"
+                matTooltip="Edit patient details" [matTooltipPosition]="'below'">
+              </fa-icon>
+            </div>
+
+            <div class="edit-action" style="margin-left:15px;">
+              <fa-icon icon="user-alt-slash" [fixedWidth]="true" matTooltip="Remove from cabinet"
+                [matTooltipPosition]="'below'" (click)="deletePatient($event, element)">
+              </fa-icon>
+            </div>
+
+            <div class="edit-action" style="margin-left:15px;">
+              <fa-icon icon="trash-alt" [fixedWidth]="true" matTooltip="Delete patient" [matTooltipPosition]="'below'"
+                (click)="deletePatient($event, element)">
+              </fa-icon>
+            </div>
+
+
+          </div>
+        </td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row" (click)="navigateTo(row)"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row" (click)="navigateTo(row)"
+        (mouseover)="handleMouseOver(row)" (mouseleave)="handleMouseLeave(row)"></tr>
 
     </table>
 
     <mat-paginator class="mat-paginator-sticky" [pageSize]="30" showFirstLastButtons></mat-paginator>
+
   </div>
   <div style="z-index:5;position:fixed;display:flex;align-self:flex-end;bottom:85px;right: 65px;">
     <button mat-fab color="primary" (click)="openDialog()" matTooltip="Add a new patient"

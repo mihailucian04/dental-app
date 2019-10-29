@@ -55,7 +55,8 @@ import { faCoffee,
          faUpload,
          faImages,
          faEllipsisV,
-         faEdit } from '@fortawesome/free-solid-svg-icons';
+         faEdit,
+         faUserAltSlash } from '@fortawesome/free-solid-svg-icons';
 
 import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
 
@@ -93,6 +94,7 @@ import { EmcOptionsComponent } from './components/dashboard/emc-options/emc-opti
 import { PatientFilesComponent } from './components/patient-details/patient-files/patient-files.component';
 import { EditValueComponent } from './components/settings/edit-value/edit-value.component';
 import { HttpClientModule } from '@angular/common/http';
+import { EditPatientComponent } from './components/patient-list/edit-patient/edit-patient.component';
 
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
@@ -123,6 +125,7 @@ export function initGapi(authService: AuthService) {
     EmcOptionsComponent,
     PatientFilesComponent,
     EditValueComponent,
+    EditPatientComponent,
   ],
   imports: [
     BrowserModule,
@@ -180,14 +183,15 @@ export function initGapi(authService: AuthService) {
     NewConsultComponent,
     DeleteXrayComponent,
     EmcOptionsComponent,
-    EditValueComponent
+    EditValueComponent,
+    EditPatientComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
     faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope, faPencilAlt,
-    faClock, faBars, faFolderOpen, faNotesMedical, faUpload, faImages, faEllipsisV, faEdit];
+    faClock, faBars, faFolderOpen, faNotesMedical, faUpload, faImages, faEllipsisV, faEdit, faUserAltSlash];
 
     constructor() {
     library.add(...this.icons);

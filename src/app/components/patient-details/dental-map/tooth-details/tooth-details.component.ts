@@ -9,7 +9,7 @@ import { Tooth } from 'src/app/models/tooth.model';
 })
 export class ToothDetailsComponent {
 
-  private dialogTooth: Tooth;
+  public dialogTooth: Tooth;
   private initialTooth = {} as Tooth;
 
   constructor(public dialogRef: MatDialogRef<ToothDetailsComponent>,

@@ -1,0 +1,24 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+env_variables:
+  API_KEY: AIzaSyAzwvukDgrkhsNrOHrPraDTuxPmnSjjDN4
+
+handlers:
+
+  - url: /
+    static_files: dist/dental-app/index.html
+    upload: dist/dental-app/index.html
+  - url: /
+    static_dir: dist/dental-app
+
+skip_files:
+  - e2e/
+  - node_modules/
+  - src/
+  - ^(.*/)?\..*$
+  - ^(.*/)?.*\.json$
+  - ^(.*/)?.*\.md$
+  - ^(.*/)?.*\.yaml$
+  - ^LICENSE
