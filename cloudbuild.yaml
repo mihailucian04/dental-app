@@ -10,4 +10,4 @@ steps:
 
   # Deploy to google cloud app egnine
   - name: 'gcr.io/dentalappmanagement/firebase'
-    args: [ 'deploy', '-P', 'js-demo-fe-staging', '--token', 'AIzaSyB0hwTmrm40K-kxao32kSDnzmH_UWnL8eI']
+    args: [ 'deploy', '-P', 'js-demo-fe-staging', '--token', 'AIzaSyAzwvukDgrkhsNrOHrPraDTuxPmnSjjDN4']

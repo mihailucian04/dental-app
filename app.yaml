@@ -3,7 +3,7 @@ api_version: 1
 threadsafe: yes
 
 env_variables:
-  API_KEY: AIzaSyB0hwTmrm40K-kxao32kSDnzmH_UWnL8eI
+  API_KEY: AIzaSyAzwvukDgrkhsNrOHrPraDTuxPmnSjjDN4
 
 handlers:
 
