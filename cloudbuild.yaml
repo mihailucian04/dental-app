@@ -9,5 +9,5 @@ steps:
     args: [ 'run', 'build', '--prod' ]
 
   # Deploy to google cloud app egnine
-  - name: 'gcr.io/dentalappmanagement/firebase:latest'
-    args: ['deploy']
+  - name: 'gcr.io/dentalappmanagement/firebase'
+    args: [ 'deploy', '-P', 'js-demo-fe-staging', '--token', 'AIzaSyCXlI7f291LWq47Itgql3ZHUxjSnd31Tk4']
