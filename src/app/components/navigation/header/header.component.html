@@ -1,7 +1,7 @@
 <mat-toolbar color="primary" fullscreen class="mat-elevation-z2">
     <mat-toolbar-row style="font-size: 16px; font-weight: 400;" *ngIf="isLoggedIn$ | async">
             <fa-icon icon="tooth" style="margin-left: 10px; font-size: 18px"></fa-icon>
-            <span style="margin-left:30px">Dental management app ci1</span>
+            <span style="margin-left:30px">Dental management app</span>
             <span class="spacer"></span>
             <span style="margin-right: 20px">{{username$ | async}}</span>
             <span style="margin-right: 20px;cursor: pointer;" (click)="signOut()">Logout</span>
