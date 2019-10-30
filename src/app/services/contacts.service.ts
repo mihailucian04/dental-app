@@ -59,6 +59,23 @@ export class ContactsService {
         });
     }
 
+    public getPatientsContactGroup() {
+        return new Promise((resolve) => {
+            gapi.client.request({
+                method: 'GET',
+                path: 'https://people.googleapis.com/v1/contactGroups'
+            }).then((response) => {
+                const contactGroups = Array.from(response.result.contactGroups);
+
+                contactGroups.map((item: any) => {
+                    if (item.name === 'Patients') {
+                        resolve(item);
+                    }
+                });
+            });
+        });
+    }
+
     public checkIfPatientsGroupExists() {
         return new Promise((resolve) => {
             gapi.client.request({

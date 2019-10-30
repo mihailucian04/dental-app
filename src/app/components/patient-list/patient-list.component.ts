@@ -39,21 +39,7 @@ export class PatientListComponent implements OnInit, AfterViewInit {
               public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.ngZone.runOutsideAngular(() => {
-      this.contactsService.getPatients('contactGroups/129398e00fdd68f5').then((patients) => {
-        this.ngZone.run(() => {
-          this.patients = patients;
-          this.addShowEditProp();
-
-          this.dataSource = new MatTableDataSource<Patient>();
-          this.dataSource.data = this.patients;
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-
-          this.isLoaded = true;
-        });
-      });
-    });
+    this._getPatientList();
   }
 
   ngAfterViewInit() {
@@ -61,14 +47,20 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
   private _getPatientList() {
     this.ngZone.runOutsideAngular(() => {
-      this.contactsService.getPatients('contactGroups/129398e00fdd68f5').then((patients) => {
-        this.ngZone.run(() => {
-          this.dataSource = new MatTableDataSource<Patient>();
-          this.dataSource.data = patients;
-          this.dataSource.sort = this.sort;
+      this.contactsService.getPatientsContactGroup().then((contactGroupResponse: any) => {
+        this.contactsService.getPatients(contactGroupResponse.resourceName).then((patients) => {
+          this.ngZone.run(() => {
+            this.patients = patients;
 
+            this.addShowEditProp();
 
-          this.isLoaded = true;
+            this.dataSource = new MatTableDataSource<Patient>();
+            this.dataSource.data = this.patients;
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+
+            this.isLoaded = true;
+          });
         });
       });
     });
