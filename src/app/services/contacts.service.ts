@@ -44,9 +44,23 @@ export class ContactsService {
             pageSize: 50,
             personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses,relations',
         }).then((response: any) => {
-            console.log(response);
             const connections = response.result.connections;
             const list = ctx._mapPatients(connections);
+
+            return list;
+        });
+    }
+
+    public getPatientsSelection() {
+        const ctx = this;
+
+        return gapi.client.people.people.connections.list({
+            resourceName: 'people/me',
+            pageSize: 50,
+            personFields: 'names,phoneNumbers,photos,birthdays,organizations,emailAddresses,memberships',
+        }).then((response: any) => {
+            const connections = response.result.connections;
+            const list = ctx._mapPatientsForImport(connections);
 
             return list;
         });
@@ -56,6 +70,23 @@ export class ContactsService {
         return gapi.client.request({
             method: 'GET',
             path: 'https://people.googleapis.com/v1/contactGroups'
+        });
+    }
+
+    public getPatientsContactGroup() {
+        return new Promise((resolve) => {
+            gapi.client.request({
+                method: 'GET',
+                path: 'https://people.googleapis.com/v1/contactGroups'
+            }).then((response) => {
+                const contactGroups = Array.from(response.result.contactGroups);
+
+                contactGroups.map((item: any) => {
+                    if (item.name === 'Patients') {
+                        resolve(item);
+                    }
+                });
+            });
         });
     }
 
@@ -100,10 +131,39 @@ export class ContactsService {
         }).then(response => {
             const contactsIds = response.result.memberResourceNames;
 
-            return this.getContactsBatch(contactsIds).then(response1 => {
-                const lst = this._extractBatchPatients(response1.result.responses);
-                return lst;
-            });
+            if (contactsIds) {
+                return this.getContactsBatch(contactsIds).then(response1 => {
+                    const lst = this._extractBatchPatients(response1.result.responses);
+                    return lst;
+                });
+            }
+            return [];
+        });
+    }
+
+    public addPatientToContactGroup(resourceName: string, patientToAdd: string) {
+        return gapi.client.request({
+            method: 'POST',
+            path: `https://people.googleapis.com/v1/${resourceName}/members:modify`,
+            body: {
+                resourceNamesToAdd: [
+                    patientToAdd
+                ],
+                resourceNamesToRemove: []
+            }
+        }).then((response) => {
+            console.log('Add to patient group:', response);
+        });
+    }
+
+    public updatePatientsContactGroup(resourceName: string, patientsToAdd: string[], patientsToRemove: string[]) {
+        return gapi.client.request({
+            method: 'POST',
+            path: `https://people.googleapis.com/v1/${resourceName}/members:modify`,
+            body: {
+                resourceNamesToAdd: patientsToAdd,
+                resourceNamesToRemove: patientsToRemove
+            }
         });
     }
 
@@ -156,6 +216,23 @@ export class ContactsService {
         return patientList;
     }
 
+    private _mapPatientsForImport(results) {
+        const patientList: Patient[] = [];
+        const contactGroupId = localStorage.getItem('patientsContactGroup');
+
+        for (const result of results) {
+            const memberships = result.memberships as [];
+
+            // tslint:disable-next-line: max-line-length
+            const patientGroup = memberships.filter((item: any) => item.contactGroupMembership.contactGroupResourceName === contactGroupId)[0];
+
+            if (!patientGroup) {
+                const patient = this._extractPersonResponse(result);
+                patientList.push(patient);
+            }
+        }
+        return patientList;
+    }
 
     private _mapPatients(persons: any): Patient[] {
         const patientList: Patient[] = [];

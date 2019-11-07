@@ -26,6 +26,7 @@ export interface PatientMap {
     patientFileFolderId?: string;
     blankPatientFileId?: string;
     blankDentalFileId?: string;
+    isRemoved: boolean;
 }
 
 export interface ChartDataModel {

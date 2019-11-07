@@ -1,73 +1,116 @@
 <span mat-dialog-title style="color:#3f51b5">Add a new patient</span>
 <div mat-dialog-content>
-    <div style="display: flex; flex-direction:row">
+
+    <div style="display: flex; flex-direction:row" style="margin-bottom: 15px;">
+        <mat-radio-group aria-label="Select an option" [(ngModel)]="newEntry">
+            <mat-radio-button [value]=true>Create a new entry</mat-radio-button>
+            <mat-radio-button [value]=false style="margin-left:16px">Import from existing contacts</mat-radio-button>
+        </mat-radio-group>
+    </div>
+
+    <div style="display: flex; flex-direction:row" *ngIf="!newEntry">
         <div style="display: flex; flex-direction:column; justify-content: center;">
             <fa-icon icon="user-circle" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
             </fa-icon>
         </div>
-        <div style="display: flex; flex-direction:column;margin-left:10px">
-            <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [(ngModel)]="data.firstName" placeholder="First name">
-            </mat-form-field>
-        </div>
-        <div style="display: flex; flex-direction:column;margin-left:10px">
-            <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [(ngModel)]="data.lastName" placeholder="Last name">
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div style="display: flex; flex-direction:row">
-        <div style="display: flex; flex-direction:column; justify-content: center;">
-            <fa-icon icon="building" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
-            </fa-icon>
-        </div>
         <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
-            <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [(ngModel)]="data.company" placeholder="Company">
-            </mat-form-field>
+            <form class="example-form" style="width: 100%;">
+                <mat-form-field style="width: 100%;">
+                    <input matInput placeholder="Patient" aria-label="Patient" [matAutocomplete]="auto" [(ngModel)]="selectedPatient"
+                        [formControl]="stateCtrl">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredPatients | async" [value]="option.fullName">
+                            <div style="display:flex;flex-direction:row;align-items: center;">
+                                <img class="example-option-img" aria-hidden [src]="option.photo" height="25">
+                                <span style="margin-left: 10px;">{{option.fullName}}</span>
+                            </div>
+
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </form>
         </div>
     </div>
 
-    <div style="display: flex; flex-direction:row">
-        <div style="display: flex; flex-direction:column; justify-content: center;">
-            <fa-icon icon="phone-alt" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
-            </fa-icon>
+    <div *ngIf="newEntry">
+        <div style="display: flex; flex-direction:row;width: 100%;">
+            <div style="display: flex; flex-direction:column; justify-content: center;">
+                <fa-icon icon="user-circle" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+                </fa-icon>
+            </div>
+            <div style="display: flex; flex-direction:column;margin-left:10px">
+                <mat-form-field [style.fontSize]="'14px'">
+                    <input matInput [(ngModel)]="data.firstName" placeholder="First name">
+                </mat-form-field>
+            </div>
+            <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
+                <mat-form-field [style.fontSize]="'14px'">
+                    <input matInput [(ngModel)]="data.lastName" placeholder="Last name">
+                </mat-form-field>
+            </div>
         </div>
-        <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
-            <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [(ngModel)]="data.phoneNumber" placeholder="Phone number">
-            </mat-form-field>
+        <div style="display: flex; flex-direction:row">
+            <div style="display: flex; flex-direction:column; justify-content: center;">
+                <fa-icon icon="building" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+                </fa-icon>
+            </div>
+            <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
+                <mat-form-field [style.fontSize]="'14px'">
+                    <input matInput [(ngModel)]="data.company" placeholder="Company">
+                </mat-form-field>
+            </div>
         </div>
-    </div>
 
-    <div style="display: flex; flex-direction:row">
-        <div style="display: flex; flex-direction:column; justify-content: center;">
-            <fa-icon icon="envelope" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
-            </fa-icon>
+        <div style="display: flex; flex-direction:row">
+            <div style="display: flex; flex-direction:column; justify-content: center;">
+                <fa-icon icon="phone-alt" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+                </fa-icon>
+            </div>
+            <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
+                <mat-form-field [style.fontSize]="'14px'">
+                    <input matInput [(ngModel)]="data.phoneNumber" placeholder="Phone number">
+                </mat-form-field>
+            </div>
         </div>
-        <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
-            <mat-form-field [style.fontSize]="'14px'">
-                <input matInput [(ngModel)]="data.emailAddress" placeholder="Email address">
-            </mat-form-field>
-        </div>
-    </div>
 
-    <div style="display: flex; flex-direction:row">
+        <div style="display: flex; flex-direction:row">
+            <div style="display: flex; flex-direction:column; justify-content: center;">
+                <fa-icon icon="envelope" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+                </fa-icon>
+            </div>
+            <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
+                <mat-form-field [style.fontSize]="'14px'">
+                    <input matInput [(ngModel)]="data.emailAddress" placeholder="Email address">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction:row">
             <div style="display: flex; flex-direction:column; justify-content: center;">
                 <fa-icon icon="calendar-alt" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
                 </fa-icon>
             </div>
             <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
                 <mat-form-field [style.fontSize]="'14px'">
-                        <input matInput [matDatepicker]="picker" placeholder="Choose birthday" autocomplete="off">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                    <input matInput [matDatepicker]="picker" placeholder="Choose birthday" autocomplete="off">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
             </div>
         </div>
+    </div>
+
+
 </div>
-<div mat-dialog-actions style="margin-bottom: 1px;">
-    <button mat-raised-button color="primary" (click)="savePatient()">Save</button>
-    <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+<div mat-dialog-actions style="margin-bottom: 1px;margin-top:10px;">
+    <div *ngIf="!isLoading">
+        <button mat-raised-button color="primary" (click)="savePatient()">Save</button>
+        <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+    </div>
+    <div *ngIf="isLoading" style="display: flex; width: 100%; justify-content: center;">
+        <div  class="spinner">
+            <mat-spinner [diameter]="70"></mat-spinner>
+        </div>
+    </div>
+
 </div>

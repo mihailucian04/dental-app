@@ -6,6 +6,11 @@ import { Router } from '@angular/router';
 import { NewPatientComponent } from './new-patient/new-patient.component';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { EditPatientComponent } from './edit-patient/edit-patient.component';
+import { PatientMap, DriveData } from 'src/app/models/data.model';
+import { DriveService } from 'src/app/services/drive.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { RemoveConfirmationComponent } from './remove-confirmation/remove-confirmation.component';
 
 export interface DialogData {
   animal: string;
@@ -19,7 +24,7 @@ export interface DialogData {
 })
 export class PatientListComponent implements OnInit, AfterViewInit {
 
-  public displayedColumns: string[] = [ 'select', 'avatar', 'surname', 'age', 'lastConsult', 'company', 'phone', 'edit'];
+  public displayedColumns: string[] = ['select', 'avatar', 'surname', 'age', 'lastConsult', 'company', 'phone', 'edit'];
   public dataSource: any;
   public isLoaded = false;
   public newPatient: NewPatient = { firstName: '', lastName: '', phoneNumber: '', emailAddress: '', company: '', jobTitle: 'patient' };
@@ -28,32 +33,23 @@ export class PatientListComponent implements OnInit, AfterViewInit {
   public masterCheckVisible = false;
   public masterCheckIndeterminate = false;
 
+  public selection = new SelectionModel<Patient>(true, []);
+
   public patients: any;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor(private router: Router,
-              private contactsService: ContactsService,
-              private ngZone: NgZone,
-              public dialog: MatDialog) { }
+  constructor(
+    private router: Router,
+    private contactsService: ContactsService,
+    private driveService: DriveService,
+    private snackBarService: SnackBarService,
+    private ngZone: NgZone,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.ngZone.runOutsideAngular(() => {
-      this.contactsService.getPatients('contactGroups/129398e00fdd68f5').then((patients) => {
-        this.ngZone.run(() => {
-          this.patients = patients;
-          this.addShowEditProp();
-
-          this.dataSource = new MatTableDataSource<Patient>();
-          this.dataSource.data = this.patients;
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-
-          this.isLoaded = true;
-        });
-      });
-    });
+    this._getPatientList();
   }
 
   ngAfterViewInit() {
@@ -61,14 +57,20 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
   private _getPatientList() {
     this.ngZone.runOutsideAngular(() => {
-      this.contactsService.getPatients('contactGroups/129398e00fdd68f5').then((patients) => {
-        this.ngZone.run(() => {
-          this.dataSource = new MatTableDataSource<Patient>();
-          this.dataSource.data = patients;
-          this.dataSource.sort = this.sort;
+      this.contactsService.getPatientsContactGroup().then((contactGroupResponse: any) => {
+        this.contactsService.getPatients(contactGroupResponse.resourceName).then((patients) => {
+          this.ngZone.run(() => {
+            this.patients = patients;
 
+            this.addShowEditProp();
 
-          this.isLoaded = true;
+            this.dataSource = new MatTableDataSource<Patient>();
+            this.dataSource.data = this.patients;
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+
+            this.isLoaded = true;
+          });
         });
       });
     });
@@ -91,9 +93,12 @@ export class PatientListComponent implements OnInit, AfterViewInit {
     console.log(row);
   }
 
-  openDialog(): void {
+  addPatientDialog(): void {
     const dialogRef = this.dialog.open(NewPatientComponent, {
-      data: this.newPatient
+      width: '550px',
+      data: this.newPatient,
+      autoFocus: false,
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -127,6 +132,42 @@ export class PatientListComponent implements OnInit, AfterViewInit {
     e.stopPropagation();
   }
 
+  removeFromCabinet(e, row) {
+
+    const dialogRef = this.dialog.open(RemoveConfirmationComponent, {
+      width: '550px',
+      data: row
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.snackBarService.show(`${row.surname} ${row.name} was removed from cabinet!`);
+      this._getPatientList();
+    });
+
+    e.stopPropagation();
+  }
+
+  multipleRemoveFromCabinet(e) {
+    if (this.selection.selected) {
+      const dialogRef = this.dialog.open(RemoveConfirmationComponent, {
+        width: '550px',
+        data: this.selection.selected
+      });
+
+      let removedPatients = '';
+      this.selection.selected.map(item => {
+        removedPatients += `${item.surname} ${item.name}, `;
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.snackBarService.show(`${removedPatients} were removed from cabinet!`);
+        this._getPatientList();
+      });
+    }
+
+    e.stopPropagation();
+  }
+
   deletePatient(e, row) {
     alert('Delete clicked');
     e.stopPropagation();
@@ -135,8 +176,23 @@ export class PatientListComponent implements OnInit, AfterViewInit {
   addShowEditProp() {
     this.patients.map((data: any) => {
       data.showEdit = false;
-      data.checked = false;
     });
+  }
+
+  clearSelection() {
+    this.selection.clear();
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
 }

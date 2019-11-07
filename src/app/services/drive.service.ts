@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DriveData, PatientMap, DEFAULT_MAPPINGS, MymeType, UserInfo } from '../models/data.model';
+import { DriveData, PatientMap, DEFAULT_MAPPINGS, MymeType, UserInfo, DashboardData } from '../models/data.model';
 import { ContactsService } from './contacts.service';
 import { Patient } from '../models/patient.model';
 import { HttpClient } from '@angular/common/http';
@@ -10,8 +10,9 @@ declare var gapi: any;
     providedIn: 'root'
 })
 export class DriveService {
-    constructor(private contactsService: ContactsService,
-                private http: HttpClient) { }
+    constructor(
+        private contactsService: ContactsService,
+        private http: HttpClient) { }
 
     public checkIfDbExists(): Promise<boolean> {
 
@@ -31,25 +32,30 @@ export class DriveService {
             const mappinsResult = mappingsResponse.result.files[0];
 
             return this.exportFileContent(mappinsResult.id).then(contentResponse => {
-                let driveData = {} as DriveData;
-                driveData = JSON.parse(contentResponse.substr(1));
+                return this.contactsService.getPatientsContactGroup().then((contactGroupResponse: any) => {
 
-                localStorage.setItem('mappingsFileId', JSON.stringify(mappinsResult.id));
-                localStorage.setItem('dashboardData', JSON.stringify(driveData.dashboardData));
-                localStorage.setItem('patientsListData', JSON.stringify(driveData.patients));
+                    let driveData = {} as DriveData;
+                    driveData = JSON.parse(contentResponse.substr(1));
 
-                const googleAuth = gapi.auth2.getAuthInstance();
-                const currentUser = googleAuth.currentUser.get().getBasicProfile();
+                    localStorage.setItem('mappingsFileId', JSON.stringify(mappinsResult.id));
+                    localStorage.setItem('dashboardData', JSON.stringify(driveData.dashboardData));
+                    localStorage.setItem('patientsListData', JSON.stringify(driveData.patients));
+                    localStorage.setItem('patientsContactGroup', contactGroupResponse.resourceName);
 
-                const userInfo: UserInfo = {
-                    id: currentUser.getId(),
-                    fullName: currentUser.getName(),
-                    givenName: currentUser.getGivenName(),
-                    familyName: currentUser.getFamilyName(),
-                    imageUrl: currentUser.getImageUrl(),
-                    email: currentUser.getEmail()
-                };
-                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                    const googleAuth = gapi.auth2.getAuthInstance();
+                    const currentUser = googleAuth.currentUser.get().getBasicProfile();
+
+                    const userInfo: UserInfo = {
+                        id: currentUser.getId(),
+                        fullName: currentUser.getName(),
+                        givenName: currentUser.getGivenName(),
+                        familyName: currentUser.getFamilyName(),
+                        imageUrl: currentUser.getImageUrl(),
+                        email: currentUser.getEmail()
+                    };
+                    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                });
+
             });
         });
     }
@@ -63,164 +69,298 @@ export class DriveService {
                 const batchFolder = gapi.client.newBatch();
 
                 const mappedData = DEFAULT_MAPPINGS;
-                return this.contactsService.getContacts().then((patients: Patient[]) => {
-                    if (patients.length !== 0) {
-                        for (const patient of patients) {
-                            const requestFolder = this.createDriveFileBatch(patient.resourceName, folderResult.id, MymeType.folder);
-                            batchFolder.add(requestFolder);
-                        }
+                return this.contactsService.checkIfPatientsGroupExists().then((checkGroupResponse) => {
+                    if (checkGroupResponse) {
 
-                        return batchFolder.then(async batchFolderResponse => {
-                            const batchFolderResult = batchFolderResponse.result;
-                            const batchMappingsFlie = gapi.client.newBatch();
-                            const batchConsultsFile = gapi.client.newBatch();
-                            const batchXRayFolder = gapi.client.newBatch();
-                            const batchPatientFileFolder = gapi.client.newBatch();
+                        return this.contactsService.getPatientsContactGroup().then((contactGroupResponse: any) => {
+                            return this.contactsService.getPatients(contactGroupResponse.resourceName).then((patients) => {
+                                if (patients.length !== 0) {
+                                    for (const patient of patients) {
+                                        const requestFolder =
+                                            this.createDriveFileBatch(patient.resourceName, folderResult.id, MymeType.folder);
 
-                            const mappedPatients: PatientMap[] = [];
+                                        batchFolder.add(requestFolder);
+                                    }
 
-                            Object.keys(batchFolderResult).map(index => {
-                                const folder = batchFolderResult[index].result;
-                                const folderId = folder.id;
+                                    return batchFolder.then(async batchFolderResponse => {
+                                        const batchFolderResult = batchFolderResponse.result;
+                                        const batchMappingsFlie = gapi.client.newBatch();
+                                        const batchConsultsFile = gapi.client.newBatch();
+                                        const batchXRayFolder = gapi.client.newBatch();
+                                        const batchPatientFileFolder = gapi.client.newBatch();
 
-                                const mappedPatient = {
-                                    patientId: folder.title,
-                                    patientFolderId: folder.id
-                                };
+                                        const mappedPatients: PatientMap[] = [];
 
-                                const requestMappingsFile =
-                                    this.createDriveFileBatch('patient.mappings', folderId, MymeType.document);
+                                        Object.keys(batchFolderResult).map(index => {
+                                            const folder = batchFolderResult[index].result;
+                                            const folderId = folder.id;
 
-                                const requestConsultFile =
-                                    this.createDriveFileBatch('consult.mappings', folderId, MymeType.document);
+                                            const mappedPatient = {
+                                                patientId: folder.title,
+                                                patientFolderId: folder.id,
+                                                isRemoved: false
+                                            };
 
-                                const requestXRayFolder = this.createDriveFileBatch('X-Rays', folderId, MymeType.folder);
+                                            const requestMappingsFile =
+                                                this.createDriveFileBatch('patient.mappings', folderId, MymeType.document);
 
-                                const requestPatientFileFolder =
-                                    this.createDriveFileBatch('Patient-Files', folderId, MymeType.folder);
+                                            const requestConsultFile =
+                                                this.createDriveFileBatch('consult.mappings', folderId, MymeType.document);
 
-                                batchConsultsFile.add(requestConsultFile);
-                                batchMappingsFlie.add(requestMappingsFile);
-                                batchXRayFolder.add(requestXRayFolder);
-                                batchPatientFileFolder.add(requestPatientFileFolder);
+                                            const requestXRayFolder = this.createDriveFileBatch('X-Rays', folderId, MymeType.folder);
 
-                                mappedPatients.push(mappedPatient);
-                            });
+                                            const requestPatientFileFolder =
+                                                this.createDriveFileBatch('Patient-Files', folderId, MymeType.folder);
 
-                            await this.sleep(1000);
+                                            batchConsultsFile.add(requestConsultFile);
+                                            batchMappingsFlie.add(requestMappingsFile);
+                                            batchXRayFolder.add(requestXRayFolder);
+                                            batchPatientFileFolder.add(requestPatientFileFolder);
 
-                            return batchMappingsFlie.then(async (batchFileResponse) => {
-                                console.log('BatchFileResponse', batchFileResponse);
-                                const batchFileResult = batchFileResponse.result;
-
-                                Object.keys(batchFileResult).map(index => {
-                                    const patientFile = batchFileResult[index].result;
-                                    const patientFileId = patientFile.id;
-
-                                    const currentMappedPatient = mappedPatients
-                                        .filter(obj => obj.patientFolderId === patientFile.parents[0].id)[0];
-
-                                    const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
-                                    currentMappedPatient.dentalMapFileId = patientFileId;
-
-                                    mappedPatients[currentMappedIndex] = currentMappedPatient;
-                                });
-
-                                mappedData.patients = mappedPatients;
-
-                                await this.sleep(1000);
-
-                                return batchConsultsFile.then(async (batchConsultResponse) => {
-                                    const consultFileResult = batchConsultResponse.result;
-
-                                    Object.keys(consultFileResult).map(index => {
-                                        const consultFile = consultFileResult[index].result;
-                                        const consultFileId = consultFile.id;
-
-                                        const currentMappedPatient = mappedPatients
-                                            .filter(obj => obj.patientFolderId === consultFile.parents[0].id)[0];
-
-                                        const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
-                                        currentMappedPatient.consultFileId = consultFileId;
-
-                                        mappedPatients[currentMappedIndex] = currentMappedPatient;
-                                    });
-
-                                    mappedData.patients = mappedPatients;
-
-                                    await this.sleep(1000);
-
-                                    return batchXRayFolder.then(async (batchXRayFolderResponse) => {
-                                        const xRaysFolderResult = batchXRayFolderResponse.result;
-
-                                        Object.keys(xRaysFolderResult).map(index => {
-                                            const xRayFolder = xRaysFolderResult[index].result;
-                                            const xRayFolderId = xRayFolder.id;
-
-                                            const currentMappedPatient = mappedPatients
-                                                .filter(obj => obj.patientFolderId === xRayFolder.parents[0].id)[0];
-
-                                            const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
-                                            currentMappedPatient.xRayFolderId = xRayFolderId;
-
-                                            mappedPatients[currentMappedIndex] = currentMappedPatient;
+                                            mappedPatients.push(mappedPatient);
                                         });
-
-                                        mappedData.patients = mappedPatients;
 
                                         await this.sleep(1000);
 
-                                        return batchPatientFileFolder.then(async (batchPatientFileFolderResponse) => {
-                                            const patientFileFolderResult = batchPatientFileFolderResponse.result;
+                                        return batchMappingsFlie.then(async (batchFileResponse) => {
+                                            console.log('BatchFileResponse', batchFileResponse);
+                                            const batchFileResult = batchFileResponse.result;
 
-                                            Object.keys(patientFileFolderResult).map(index => {
-                                                const consultFileFolder = patientFileFolderResult[index].result;
-                                                const consultFileFolderId = consultFileFolder.id;
+                                            Object.keys(batchFileResult).map(index => {
+                                                const patientFile = batchFileResult[index].result;
+                                                const patientFileId = patientFile.id;
 
                                                 const currentMappedPatient = mappedPatients
-                                                    .filter(obj =>
-                                                        obj.patientFolderId === consultFileFolder.parents[0].id)[0];
+                                                    .filter(obj => obj.patientFolderId === patientFile.parents[0].id)[0];
 
                                                 const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
-                                                currentMappedPatient.patientFileFolderId = consultFileFolderId;
+                                                currentMappedPatient.dentalMapFileId = patientFileId;
 
                                                 mappedPatients[currentMappedIndex] = currentMappedPatient;
                                             });
 
+                                            mappedData.patients = mappedPatients;
+
                                             await this.sleep(1000);
 
-                                            return this.uploadBlankFile('dental.file.blank', folderResult.id)
-                                                .then(blankFileId => {
-                                                    const dentalFileId = blankFileId;
+                                            return batchConsultsFile.then(async (batchConsultResponse) => {
+                                                const consultFileResult = batchConsultResponse.result;
 
-                                                    return this.uploadBlankFile('patient.file.blank', folderResult.id)
-                                                        .then(blankFileId2 => {
-                                                            const patientFileId = blankFileId2;
+                                                Object.keys(consultFileResult).map(index => {
+                                                    const consultFile = consultFileResult[index].result;
+                                                    const consultFileId = consultFile.id;
 
-                                                            Object.keys(mappedPatients).map(index => {
-                                                                mappedPatients[index].blankDentalFileId = dentalFileId;
-                                                                mappedPatients[index].blankPatientFileId = patientFileId;
-                                                            });
+                                                    const currentMappedPatient = mappedPatients
+                                                        .filter(obj => obj.patientFolderId === consultFile.parents[0].id)[0];
 
-                                                            mappedData.patients = mappedPatients;
+                                                    const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
+                                                    currentMappedPatient.consultFileId = consultFileId;
 
-                                                            return this.updateFileContent(fileResult.id, JSON.stringify(mappedData))
-                                                                .then(() => {
-                                                                    return this.setLocalStorageData().then(() => {
-                                                                        console.log('Data mapings and folder hierarchy created');
-                                                                    });
-                                                                });
-                                                        });
+                                                    mappedPatients[currentMappedIndex] = currentMappedPatient;
                                                 });
+
+                                                mappedData.patients = mappedPatients;
+
+                                                await this.sleep(1000);
+
+                                                return batchXRayFolder.then(async (batchXRayFolderResponse) => {
+                                                    const xRaysFolderResult = batchXRayFolderResponse.result;
+
+                                                    Object.keys(xRaysFolderResult).map(index => {
+                                                        const xRayFolder = xRaysFolderResult[index].result;
+                                                        const xRayFolderId = xRayFolder.id;
+
+                                                        const currentMappedPatient = mappedPatients
+                                                            .filter(obj => obj.patientFolderId === xRayFolder.parents[0].id)[0];
+
+                                                        const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
+                                                        currentMappedPatient.xRayFolderId = xRayFolderId;
+
+                                                        mappedPatients[currentMappedIndex] = currentMappedPatient;
+                                                    });
+
+                                                    mappedData.patients = mappedPatients;
+
+                                                    await this.sleep(1000);
+
+                                                    return batchPatientFileFolder.then(async (batchPatientFileFolderResponse) => {
+                                                        const patientFileFolderResult = batchPatientFileFolderResponse.result;
+
+                                                        Object.keys(patientFileFolderResult).map(index => {
+                                                            const consultFileFolder = patientFileFolderResult[index].result;
+                                                            const consultFileFolderId = consultFileFolder.id;
+
+                                                            const currentMappedPatient = mappedPatients
+                                                                .filter(obj =>
+                                                                    obj.patientFolderId === consultFileFolder.parents[0].id)[0];
+
+                                                            const currentMappedIndex = mappedPatients.indexOf(currentMappedPatient);
+                                                            currentMappedPatient.patientFileFolderId = consultFileFolderId;
+
+                                                            mappedPatients[currentMappedIndex] = currentMappedPatient;
+                                                        });
+
+                                                        await this.sleep(1000);
+
+                                                        return this.uploadBlankFile('dental.file.blank', folderResult.id)
+                                                            .then(blankFileId => {
+                                                                const dentalFileId = blankFileId;
+
+                                                                return this.uploadBlankFile('patient.file.blank', folderResult.id)
+                                                                    .then(blankFileId2 => {
+                                                                        const patientFileId = blankFileId2;
+
+                                                                        Object.keys(mappedPatients).map(index => {
+                                                                            mappedPatients[index].blankDentalFileId = dentalFileId;
+                                                                            mappedPatients[index].blankPatientFileId = patientFileId;
+                                                                        });
+
+                                                                        mappedData.patients = mappedPatients;
+
+                                                                        // tslint:disable-next-line: max-line-length
+                                                                        return this.updateFileContent(fileResult.id, JSON.stringify(mappedData))
+                                                                            .then(() => {
+                                                                                return this.setLocalStorageData().then(() => {
+                                                                                    // tslint:disable-next-line: max-line-length
+                                                                                    console.log('Data mapings and folder hierarchy created');
+                                                                                });
+                                                                            });
+                                                                    });
+                                                            });
+                                                    });
+                                                });
+                                            });
                                         });
                                     });
-                                });
+                                }
+                            });
+                        });
+                    } else {
+                        return this.contactsService.createPatientsGroup().then(() => {
+                            return this.uploadBlankFile('dental.file.blank', folderResult.id)
+                            .then(() => {
+
+                                return this.uploadBlankFile('patient.file.blank', folderResult.id)
+                                    .then(() => {
+
+                                        return this.updateFileContent(fileResult.id, JSON.stringify(mappedData))
+                                            .then(() => {
+                                                return this.setLocalStorageData().then(() => {
+                                                    console.log('Data mapings and folder hierarchy created');
+                                                });
+                                            });
+                                    });
                             });
                         });
                     }
                 });
             });
         });
+    }
+
+    public initDriveDataForPatient(resourceName: string) {
+        return this.listFilesByParam(`name contains '${resourceName}'`).then((patientFolderResponse) => {
+            const patientFolderResult = patientFolderResponse.result.files[0];
+            if (patientFolderResult) {
+
+                const mappingsFileIdString = localStorage.getItem('mappingsFileId');
+                const mappingsFileId = mappingsFileIdString.substring(1, mappingsFileIdString.length - 1);
+
+                const dashboardDataString = localStorage.getItem('dashboardData');
+                const dashboardData = JSON.parse(dashboardDataString) as DashboardData;
+
+                const patientListString = localStorage.getItem('patientsListData');
+                const patients = JSON.parse(patientListString) as PatientMap[];
+
+                const currentPatient = patients.filter(item => item.patientId === resourceName)[0];
+                const currentPatientIndex = patients.indexOf(currentPatient);
+
+                patients[currentPatientIndex].isRemoved = false;
+
+                const newDriveData: DriveData = {
+                    dashboardData,
+                    patients
+                };
+
+                return this.updateFileContent(mappingsFileId, JSON.stringify(newDriveData)).then(() => {
+                    console.log('Patient data mappings updated');
+                });
+            } else {
+                return this.listFilesByParam('name contains \'MedAppDb\'').then(folderResponse => {
+                    const folderResult = folderResponse.result.files[0];
+                    return this.listFilesByParam('name contains \'medapp.mappings\'').then((mappingsResponse) => {
+                        const mappingsResult = mappingsResponse.result.files[0];
+
+                        return this.createDriveFolder(resourceName, folderResult.id).then((newpatientFolderResponse) => {
+                            const newpatientFolderResult = newpatientFolderResponse.result;
+
+                            return this.createDriveFile('patient.mappings', newpatientFolderResult.id).then((patientMappingsResponse) => {
+                                const patientMappingsResult = patientMappingsResponse.result;
+
+                                // tslint:disable-next-line: max-line-length
+                                return this.createDriveFile('consult.mappings', newpatientFolderResult.id).then((consultMappingsResponse) => {
+                                    const consultMappingsResult = consultMappingsResponse.result;
+
+                                    return this.createDriveFolder('X-Rays', newpatientFolderResult.id).then((xraysFolderResponse) => {
+                                        const xraysFolderResult = xraysFolderResponse.result;
+
+                                        // tslint:disable-next-line: max-line-length
+                                        return this.createDriveFolder('Patient-Files', newpatientFolderResult.id).then((patientFilesFolderResponse) => {
+                                            const patientFilesFolderResult = patientFilesFolderResponse.result;
+
+                                            // tslint:disable-next-line: max-line-length
+                                            return this.listFilesByParam('name contains \'dental.file.blank\'').then((blankDentalFileResponse) => {
+                                                const blankDentalFileResult = blankDentalFileResponse.result.files[0];
+
+                                                return this.listFilesByParam('name contains \'patient.file.blank\'').
+                                                    then((blankPatientFileResponse) => {
+                                                        const blankPatientFileResult = blankPatientFileResponse.result.files[0];
+
+                                                        const dashboardDataString = localStorage.getItem('dashboardData');
+                                                        const dashboardData = JSON.parse(dashboardDataString) as DashboardData;
+
+                                                        const patientListString = localStorage.getItem('patientsListData');
+                                                        const patients = JSON.parse(patientListString) as PatientMap[];
+
+                                                        const newPatient: PatientMap = {
+                                                            patientId: resourceName,
+                                                            patientFolderId: newpatientFolderResult.id,
+                                                            xRayFolderId: xraysFolderResult.id,
+                                                            dentalMapFileId: patientMappingsResult.id,
+                                                            consultFileId: consultMappingsResult.id,
+                                                            patientFileFolderId: patientFilesFolderResult.id,
+                                                            blankPatientFileId: blankPatientFileResult.id,
+                                                            blankDentalFileId: blankDentalFileResult.id,
+                                                            isRemoved: false
+                                                        };
+
+                                                        patients.push(newPatient);
+
+                                                        const updatedDriveData: DriveData = {
+                                                            dashboardData,
+                                                            patients
+                                                        };
+
+                                                        return this.updateFileContent(mappingsResult.id, JSON.stringify(updatedDriveData))
+                                                            .then(() => {
+                                                                localStorage.setItem('patientsListData', JSON.stringify(patients));
+                                                                // tslint:disable-next-line: max-line-length
+                                                                console.log(`Data mapings and folder hierarchy for patient ${resourceName} created!`);
+                                                            });
+                                                    });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                        console.log('Folder result: ', folderResult);
+                        console.log('Mappings result: ', mappingsResult);
+                    });
+                });
+            }
+        });
+
     }
 
     public listFiles() {
@@ -354,8 +494,6 @@ export class DriveService {
             path: '/drive/v2/files',
             method: 'POST',
             body
-        }).then(response => {
-            return response;
         });
     }
 
@@ -395,8 +533,6 @@ export class DriveService {
                     }
                 ]
             }
-        }).then(response => {
-            return response;
         });
     }
 
@@ -467,7 +603,7 @@ export class DriveService {
 
                         return this.createPermissions(uploadedFile.id).then(() => {
                             console.log('Blank file uploaded!');
-                            resolve1( uploadedFile.id);
+                            resolve1(uploadedFile.id);
                         });
                     });
                 });
