@@ -25,7 +25,8 @@ import {MatButtonModule,
         MatNativeDateModule,
         MatSelectModule,
         MatCheckboxModule,
-        MatRadioModule} from '@angular/material';
+        MatRadioModule,
+        MatAutocompleteModule} from '@angular/material';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee,
@@ -60,7 +61,7 @@ import { faCoffee,
 
 import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from './services/auth.service';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
@@ -95,6 +96,7 @@ import { PatientFilesComponent } from './components/patient-details/patient-file
 import { EditValueComponent } from './components/settings/edit-value/edit-value.component';
 import { HttpClientModule } from '@angular/common/http';
 import { EditPatientComponent } from './components/patient-list/edit-patient/edit-patient.component';
+import { RemoveConfirmationComponent } from './components/patient-list/remove-confirmation/remove-confirmation.component';
 
 export function initGapi(authService: AuthService) {
   return () => authService.initClient();
@@ -126,6 +128,7 @@ export function initGapi(authService: AuthService) {
     PatientFilesComponent,
     EditValueComponent,
     EditPatientComponent,
+    RemoveConfirmationComponent,
   ],
   imports: [
     BrowserModule,
@@ -154,8 +157,10 @@ export function initGapi(authService: AuthService) {
     MatNativeDateModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
     OverlayModule,
     FlexLayoutModule,
+    ReactiveFormsModule,
     MatRadioModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
@@ -184,7 +189,8 @@ export function initGapi(authService: AuthService) {
     DeleteXrayComponent,
     EmcOptionsComponent,
     EditValueComponent,
-    EditPatientComponent
+    EditPatientComponent,
+    RemoveConfirmationComponent
   ],
   bootstrap: [AppComponent]
 })

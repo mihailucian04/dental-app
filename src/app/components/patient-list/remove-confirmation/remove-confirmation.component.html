@@ -1,0 +1,19 @@
+<span mat-dialog-title class="dialog-title">Remove patient from cabinet</span>
+<div mat-dialog-content>
+    Are you sure you want to remove
+    <span style="font-weight: 500;">{{namesToRemove}}</span>
+    from cabinet? 
+    This action will only remove the patient from the current list. <br><br>
+    All asociated files on drive will be kept on Google Drive. You can always add this patient back from the Add new patient menu.
+</div>
+<div mat-dialog-actions class="dialog-menu" style="margin-bottom: 1px;margin-top: 15px;">
+    <div *ngIf="!isLoading">
+        <button mat-raised-button color="primary" style="border-radius: 0px;" (click)="removePatients()">Yes</button>
+        <button mat-raised-button color="primary" style="border-radius: 0px;" (click)="closeDialog()">Cancel</button>
+    </div>
+    <div *ngIf="isLoading" style="display: flex; width: 100%; justify-content: center;">
+        <div class="spinner">
+            <mat-spinner [diameter]="70"></mat-spinner>
+        </div>
+    </div>
+</div>

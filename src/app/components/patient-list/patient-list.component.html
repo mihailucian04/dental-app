@@ -3,7 +3,7 @@
 </div>
 
 <div [hidden]="!isLoaded">
-  <mat-card style="width: 100%;border-radius: 0">
+  <!-- <mat-card style="width: 100%;border-radius: 0">
 
     <div style="display:flex;flex-direction:row;align-items: end;">
       <mat-form-field style="width: 100%" [style.fontSize]="'14px'">
@@ -11,20 +11,46 @@
           placeholder="Search by patient's name, age, company...">
       </mat-form-field>
     </div>
-  </mat-card>
+  </mat-card> -->
 
-  <div class="example-container mat-elevation-z2" style="margin-top:10px">
+  <div class="example-container mat-elevation-z2">
+    <div
+      style="display: flex; flex-direction: row;padding: 15px;background-color: #fff;border-bottom: 1px solid rgba(0,0,0,.15); align-items: center;">
+      <button mat-raised-button style="border-radius: 0;" color="primary" (click)="addPatientDialog()"
+        *ngIf="!selection.hasValue()">Add new
+        patient</button>
+
+      <span style="font-size:12px;color: rgba(0,0,0,.54);"
+        *ngIf="selection.hasValue()">{{selection.selected.length}} selected</span>
+      <span style="margin-left:15px;font-size:12px;color:#3f51b5;text-decoration: underline;cursor: pointer;"
+        (click)="clearSelection()" *ngIf="selection.hasValue()">clear selection</span>
+
+      <button mat-raised-button style="border-radius: 0;margin-left:15px;" (click)="multipleRemoveFromCabinet($event)"
+        *ngIf="selection.hasValue()">Remove from
+        cabinet</button>
+      <button mat-raised-button style="border-radius: 0;margin-left:15px;" (click)="addPatientDialog()"
+        *ngIf="selection.hasValue()" color="warn">Delete patients</button>
+
+        <div style="flex-grow: 1;"></div>
+
+      <mat-form-field [style.fontSize]="'14px'" style="width: 300px;">
+            <input matInput (keyup)="applyFilter($event.target.value)"
+              placeholder="Search by patient's name, age, company...">
+          </mat-form-field>
+    </div>
+
     <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef style="width:40px;padding-left: 15px;">
-          <mat-checkbox [(ngModel)]="masterCheck"
-                        [(indeterminate)]="masterCheckIndeterminate"></mat-checkbox>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
         </th>
         <td mat-cell *matCellDef="let element" style="padding-left: 15px;">
-          <mat-checkbox (click)="checkRow($event, element)" 
-                        [style.opacity]="element.showEdit || element.checked ? 100 : 0"
-                        [(ngModel)]="element.checked"></mat-checkbox>
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(element) : null"
+            [checked]="selection.isSelected(element)">
+          </mat-checkbox>
         </td>
       </ng-container>
 
@@ -65,7 +91,8 @@
       <ng-container matColumnDef="edit">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <div style="display: flex; flex-direction:row;justify-content: flex-end;" [style.opacity]="element.showEdit ? 100 : 0">
+          <div style="display: flex; flex-direction:row;justify-content: flex-end;"
+            [style.opacity]="element.showEdit ? 100 : 0">
             <div class="edit-action">
               <fa-icon icon="pencil-alt" [fixedWidth]="true" (click)="editPatient($event, element)"
                 matTooltip="Edit patient details" [matTooltipPosition]="'below'">
@@ -74,7 +101,7 @@
 
             <div class="edit-action" style="margin-left:15px;">
               <fa-icon icon="user-alt-slash" [fixedWidth]="true" matTooltip="Remove from cabinet"
-                [matTooltipPosition]="'below'" (click)="deletePatient($event, element)">
+                [matTooltipPosition]="'below'" (click)="removeFromCabinet($event, element)">
               </fa-icon>
             </div>
 
@@ -94,15 +121,14 @@
         (mouseover)="handleMouseOver(row)" (mouseleave)="handleMouseLeave(row)"></tr>
 
     </table>
-
     <mat-paginator class="mat-paginator-sticky" [pageSize]="30" showFirstLastButtons></mat-paginator>
 
   </div>
-  <div style="z-index:5;position:fixed;display:flex;align-self:flex-end;bottom:85px;right: 65px;">
+  <!-- <div style="z-index:5;position:fixed;display:flex;align-self:flex-end;bottom:85px;right: 65px;">
     <button mat-fab color="primary" (click)="openDialog()" matTooltip="Add a new patient"
       [matTooltipPosition]="'before'" aria-label="Add new patient button">
       <fa-icon icon="plus" [styles]="{ 'color': '#fff'}" [fixedWidth]="true">
       </fa-icon>
     </button>
-  </div>
+  </div> -->
 </div>

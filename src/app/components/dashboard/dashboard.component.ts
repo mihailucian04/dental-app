@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
-import { DriveData, DashboardData, ChartDataModel, MONTH_NAMES, DEFAULT_MAPPINGS } from 'src/app/models/data.model';
+import { DriveData, DashboardData, ChartDataModel, MONTH_NAMES, DEFAULT_MAPPINGS, PatientMap } from 'src/app/models/data.model';
 import { DriveService } from 'src/app/services/drive.service';
 import { Label, MultiDataSet, Color, BaseChartDirective } from 'ng2-charts';
 import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
@@ -150,7 +150,8 @@ export class DashboardComponent implements OnInit {
           const patientListString = localStorage.getItem('patientsListData');
 
           if (patientListString) {
-            this.registeredPatients = (JSON.parse(patientListString)).length;
+            const patients = JSON.parse(patientListString) as PatientMap[];
+            this.registeredPatients = patients.filter(item => !item.isRemoved).length;
           } else {
             this.registeredPatients = 0;
           }
