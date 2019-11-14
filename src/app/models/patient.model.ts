@@ -18,4 +18,5 @@ export interface NewPatient {
     jobTitle: string;
     phoneNumber: string;
     emailAddress: string;
+    dob: string;
 }
