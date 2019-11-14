@@ -151,7 +151,8 @@ export class DashboardComponent implements OnInit {
 
           if (patientListString) {
             const patients = JSON.parse(patientListString) as PatientMap[];
-            this.registeredPatients = patients.filter(item => !item.isRemoved).length;
+            const filteredPatients = patients.filter(item => !item.isRemoved);
+            this.registeredPatients = filteredPatients.length;
           } else {
             this.registeredPatients = 0;
           }
