@@ -168,6 +168,8 @@ export class ContactsService {
     }
 
     public addNewPatient(patient: NewPatient) {
+        const dob = new Date(patient.dob);
+
         return gapi.client.request({
             method: 'POST',
             path: 'https://people.googleapis.com/v1/people:createContact',
@@ -192,9 +194,9 @@ export class ContactsService {
                 birthdays: [
                     {
                         date: {
-                            day: 11,
-                            month: 7,
-                            year: 1990
+                            day: dob.getDay(),
+                            month: dob.getMonth(),
+                            year: dob.getFullYear()
                         }
                     }
                 ],
@@ -249,7 +251,9 @@ export class ContactsService {
             name: response.names[0].givenName,
             surname: response.names[0].familyName,
             company: response.organizations[0].name,
-            age: response.birthdays ? this._getAge(response.birthdays[0].text).toString() : '-',
+            age: response.birthdays ?
+                // tslint:disable-next-line: max-line-length
+                this._getAge(response.birthdays[0].date.day, response.birthdays[0].date.month, response.birthdays[0].date.year).toString() : '-',
             dob: response.birthdays ? response.birthdays[0].text : '-',
             lastConsult: '-',
             imageUrl: response.photos[0].url,
@@ -260,14 +264,20 @@ export class ContactsService {
         return person;
     }
 
-    private _getAge(dob: string): number {
+    private _getAge(day: number, month: number, year: number) {
         const today = new Date();
-        const birthDate = new Date(Date.parse(dob));
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+
+        let age = today.getFullYear() - year;
+        const m = today.getMonth() - month;
+
+        if (m < 0 || (m === 0 && today.getDate() < day)) {
             age--;
         }
+
+        if (Number.isNaN(age)) {
+            return '-';
+        }
+
         return age;
     }
 }

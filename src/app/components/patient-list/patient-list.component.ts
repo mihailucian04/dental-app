@@ -27,7 +27,8 @@ export class PatientListComponent implements OnInit, AfterViewInit {
   public displayedColumns: string[] = ['select', 'avatar', 'surname', 'age', 'lastConsult', 'company', 'phone', 'edit'];
   public dataSource: any;
   public isLoaded = false;
-  public newPatient: NewPatient = { firstName: '', lastName: '', phoneNumber: '', emailAddress: '', company: '', jobTitle: 'patient' };
+  public newPatient: NewPatient = { firstName: '', lastName: '', phoneNumber: '',
+                                    emailAddress: '', company: '', jobTitle: 'patient', dob: '' };
 
   public masterCheck = false;
   public masterCheckVisible = false;

@@ -70,11 +70,21 @@ export class NewPatientComponent implements OnChanges {
     this.isLoading = true;
     if (this.newEntry) {
       this.ngZone.runOutsideAngular(() => {
-        this.contactsService.addNewPatient(this.data).then(() => {
-          this.ngZone.run(() => {
-            this.isLoading = false;
-            this.snackBarService.show('Patient successfully added!');
-            this.dialogRef.close();
+        this.contactsService.addNewPatient(this.data).then((addResponse) => {
+          const addPatientResult = addResponse.result;
+          const resourceName = addPatientResult.resourceName.split('/')[1];
+
+          this.driveService.initDriveDataForPatient(resourceName).then(() => {
+            this.contactsService.getPatientsContactGroup().then((contactGroupResult: any) => {
+              const contactGroupResourceName = contactGroupResult.resourceName;
+              this.contactsService.addPatientToContactGroup(contactGroupResourceName, `people/${resourceName}`).then(() => {
+                this.ngZone.run(() => {
+                  this.isLoading = false;
+                  this.snackBarService.show('Patient successfully added!');
+                  this.dialogRef.close();
+                });
+              });
+             });
           });
         });
       });
