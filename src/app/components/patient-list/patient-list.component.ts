@@ -133,15 +133,25 @@ export class PatientListComponent implements OnInit, AfterViewInit {
   }
 
   removeFromCabinet(e, row) {
+    let dataToDelete: any = {};
+
+    if (this.selection.selected.length > 0) {
+      dataToDelete = this.selection.selected;
+    } else {
+      dataToDelete = row;
+    }
 
     const dialogRef = this.dialog.open(RemoveConfirmationComponent, {
       width: '550px',
-      data: row
+      data: dataToDelete
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.snackBarService.show(`${row.surname} ${row.name} was removed from cabinet!`);
-      this._getPatientList();
+    dialogRef.afterClosed().subscribe((response) => {
+      if (response === 'removed') {
+        this.selection.clear();
+        this.snackBarService.show(`${row.surname} ${row.name} was removed from cabinet!`);
+        this._getPatientList();
+       }
     });
 
     e.stopPropagation();
@@ -159,9 +169,12 @@ export class PatientListComponent implements OnInit, AfterViewInit {
         removedPatients += `${item.surname} ${item.name}, `;
       });
 
-      dialogRef.afterClosed().subscribe(() => {
-        this.snackBarService.show(`${removedPatients} were removed from cabinet!`);
-        this._getPatientList();
+      dialogRef.afterClosed().subscribe((response) => {
+        if (response === 'removed') {
+          this.snackBarService.show(`${removedPatients} were removed from cabinet!`);
+          this.selection.clear();
+          this._getPatientList();
+        }
       });
     }
 

@@ -283,6 +283,7 @@ export class DriveService {
                 };
 
                 return this.updateFileContent(mappingsFileId, JSON.stringify(newDriveData)).then(() => {
+                    localStorage.setItem('patientsListData', JSON.stringify(patients));
                     console.log('Patient data mappings updated');
                 });
             } else {
@@ -354,13 +355,10 @@ export class DriveService {
                                 });
                             });
                         });
-                        console.log('Folder result: ', folderResult);
-                        console.log('Mappings result: ', mappingsResult);
                     });
                 });
             }
         });
-
     }
 
     public listFiles() {

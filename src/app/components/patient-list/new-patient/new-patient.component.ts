@@ -1,10 +1,10 @@
-import { Component, Inject, NgZone } from '@angular/core';
+import { Component, Inject, NgZone, OnChanges, SimpleChanges, SimpleChange, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NewPatient } from 'src/app/models/patient.model';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { ContactsService } from 'src/app/services/contacts.service';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { DriveService } from 'src/app/services/drive.service';
 
@@ -19,7 +19,7 @@ export class PatientOption {
   templateUrl: './new-patient.component.html',
   styleUrls: ['./new-patient.component.scss']
 })
-export class NewPatientComponent {
+export class NewPatientComponent implements OnChanges {
 
   public patientsOptions: PatientOption[] = [];
   public stateCtrl = new FormControl();
@@ -28,6 +28,8 @@ export class NewPatientComponent {
 
   public isLoading = false;
   public newEntry = false;
+
+  public inputChange = new Subject();
 
   constructor(
     public dialogRef: MatDialogRef<NewPatientComponent>,
@@ -93,6 +95,21 @@ export class NewPatientComponent {
         });
       });
     }
+  }
+
+  onChange(e) {
+    this.inputChange.next(e);
+    console.log(this.inputChange);
+    console.log('ddd');
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    const name: SimpleChange = changes.name;
+    console.log(name);
+  }
+
+  public changedModel(e) {
+    console.log(e.target.data);
   }
 
   public closeDialog() {

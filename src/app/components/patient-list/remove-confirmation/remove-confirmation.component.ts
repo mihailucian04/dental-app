@@ -72,7 +72,7 @@ export class RemoveConfirmationComponent {
             this.ngZone.run(() => {
               localStorage.setItem('patientsListData', JSON.stringify(patients));
               this.isLoading = false;
-              this.dialogRef.close();
+              this.dialogRef.close('removed');
             });
           });
         });

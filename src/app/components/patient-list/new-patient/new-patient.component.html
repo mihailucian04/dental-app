@@ -10,14 +10,19 @@
 
     <div style="display: flex; flex-direction:row" *ngIf="!newEntry">
         <div style="display: flex; flex-direction:column; justify-content: center;">
-            <fa-icon icon="user-circle" [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" [fixedWidth]="true">
+            <fa-icon icon="user-circle" 
+                     [styles]="{ 'color': '#e6dddc', 'font-size': '30px'}" 
+                     [fixedWidth]="true">
             </fa-icon>
         </div>
         <div style="display: flex; flex-direction:column;margin-left:10px;width: 100%;">
             <form class="example-form" style="width: 100%;">
                 <mat-form-field style="width: 100%;">
-                    <input matInput placeholder="Patient" aria-label="Patient" [matAutocomplete]="auto" [(ngModel)]="selectedPatient"
-                        [formControl]="stateCtrl">
+                    <input matInput placeholder="Patient" aria-label="Patient" [matAutocomplete]="auto"
+                        [(ngModel)]="selectedPatient" [formControl]="stateCtrl" (change)="onChange($event.target.value)">
+                    <button mat-button *ngIf="selectedPatient" matSuffix mat-icon-button aria-label="Clear" (click)="selectedPatient=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let option of filteredPatients | async" [value]="option.fullName">
                             <div style="display:flex;flex-direction:row;align-items: center;">
@@ -108,7 +113,7 @@
         <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
     </div>
     <div *ngIf="isLoading" style="display: flex; width: 100%; justify-content: center;">
-        <div  class="spinner">
+        <div class="spinner">
             <mat-spinner [diameter]="70"></mat-spinner>
         </div>
     </div>
