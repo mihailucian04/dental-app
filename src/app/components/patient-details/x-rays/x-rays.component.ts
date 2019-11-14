@@ -184,7 +184,7 @@ export class XRaysComponent implements OnInit {
 
                   this.xrays.push(xray);
                 });
-                this.dataSourceXRays.data = this.xrays;
+                this.dataSourceXRays.data = this.xrays.length > 0 ? this.xrays : new MatTableDataSource<XRay>();
               });
             }
           });
