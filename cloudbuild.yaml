@@ -6,7 +6,7 @@ steps:
 
   # Build productive files
   - name: 'gcr.io/cloud-builders/npm:node-10.10.0'
-    args: [ 'run', 'build --prod']
+    args: [ 'run', 'build', ' --prod']
 
   # Deploy to google cloud app egnine
   - name: 'gcr.io/dentalappmanagement/firebase'
