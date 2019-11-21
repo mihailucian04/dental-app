@@ -57,7 +57,9 @@ import { faCoffee,
          faImages,
          faEllipsisV,
          faEdit,
-         faUserAltSlash } from '@fortawesome/free-solid-svg-icons';
+         faUserAltSlash,
+         faChevronUp,
+         faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
 
@@ -197,7 +199,7 @@ export function initGapi(authService: AuthService) {
 export class AppModule {
   private icons = [faCoffee, faTachometerAlt, faUsers, faCalendarAlt, faCog, faAngleRight, faAngleLeft, faTooth, faUserCircle,
     faCalendarCheck, faIdCard, faFileImage, faEye, faDownload, faTrashAlt, faPlus, faBuilding, faPhoneAlt, faEnvelope, faPencilAlt,
-    faClock, faBars, faFolderOpen, faNotesMedical, faUpload, faImages, faEllipsisV, faEdit, faUserAltSlash];
+    faClock, faBars, faFolderOpen, faNotesMedical, faUpload, faImages, faEllipsisV, faEdit, faUserAltSlash, faChevronUp, faChevronDown];
 
     constructor() {
     library.add(...this.icons);

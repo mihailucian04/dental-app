@@ -1,31 +1,31 @@
-<div style="height: 100%">
-    <table mat-table [dataSource]="dataSourceConsults" matSort style="width: 100%" *ngIf="consults.length > 0">
-        <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-            <td mat-cell *matCellDef="let element"> {{element.date}} </td>
-        </ng-container>
-        <ng-container matColumnDef="details">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Details </th>
-            <td mat-cell *matCellDef="let element"> {{element.details}} </td>
-        </ng-container>
-    
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsConsults; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsConsults;" class="element-row"
-            (click)="navigateTo(row)"></tr>
-    </table>
-
-    <div *ngIf="consults.length === 0" fxLayout="column wrap" fxLayoutAlign="center center" style="padding-top:160px;color:#d0d2d6;">
-            <fa-icon icon="folder-open" [styles]="{'font-size': '100px'}" [fixedWidth]="true">
-            </fa-icon>
-        <span style="font-size:30px;font-weight:100">No records found</span>
-        <span style="font-size:22px;font-weight:100">Press the + button to add a new consult</span>
+<div style="height: 100%;display: flex; flex-flow: column;">
+    <div style="padding-top: 15px;padding-left:15px;">
+        <button mat-raised-button color="primary" (click)="openDialog()"
+            style="border-radius: 0;margin-left: 10px;">
+            Add a new consult</button>
     </div>
-    
-    <div style="z-index:5;position:fixed;display:flex;align-self:flex-end;bottom:65px;right: 65px;">
-        <button mat-fab color="primary" (click)="openDialog()" matTooltip="Add new consult"
-          [matTooltipPosition]="'before'" aria-label="Add new consult">
-          <fa-icon icon="plus" [styles]="{ 'color': '#fff'}" [fixedWidth]="true">
-          </fa-icon>
-        </button>
-      </div>
+    <div style="flex-grow: 1;">
+        <table mat-table [dataSource]="dataSourceConsults" matSort style="width: 100%" *ngIf="consults.length > 0">
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+            </ng-container>
+            <ng-container matColumnDef="details">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Details </th>
+                <td mat-cell *matCellDef="let element"> {{element.details}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsConsults; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsConsults;" class="element-row"
+                (click)="navigateTo(row)"></tr>
+        </table>
+
+        <div *ngIf="consults.length === 0" fxLayout="column wrap" fxLayoutAlign="center center"
+            style="color: #5c5c5c;height: 100%;">
+            <fa-icon icon="folder-open" [styles]="{'font-size': '90px'}" [fixedWidth]="true">
+            </fa-icon>
+            <span style="font-size:24px;">No records found</span>
+            <span style="font-size:16px;margin-top:5px">Press the + button to add a new consult</span>
+        </div>
+    </div>
 </div>

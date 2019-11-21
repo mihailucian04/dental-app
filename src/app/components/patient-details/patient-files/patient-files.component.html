@@ -1,11 +1,13 @@
-<div style="height:100%">
-    <div style="margin-top: 15px;margin-left:15px;">
-        <button mat-raised-button color="primary" (click)="printBlankPatientFile()" style="border-radius: 0">Print a
-            blank
-            patient file</button>
+<div style="height: 100%;display: flex;flex-direction: column;">
+    <div style="padding-top: 15px;padding-left:15px;">
+        <button mat-raised-button color="primary" (click)="printBlankPatientFile()" style="border-radius: 0">
+            Print a blank patient file</button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()" style="border-radius: 0;margin-left: 10px;">
+            Upload patient file</button>
+            <input hidden (change)="handleFileInput($event.target.files)" #fileInput type="file" id="file">
     </div>
 
-    <div style="height: 100%">
+    <div style="flex-grow: 1;">
         <table mat-table [dataSource]="dataSourcePatientFiles" matSort style="width: 100%"
             *ngIf="patientFiles.length > 0">
             <ng-container matColumnDef="name">
@@ -63,22 +65,16 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumnsPatientFiles;" class="element-row"></tr>
         </table>
 
-        <div *ngIf="patientFiles.length === 0" fxLayout="column wrap" fxLayoutAlign="center center"
-            style="padding-top:160px;color:#d0d2d6;">
-            <fa-icon icon="folder-open" [styles]="{'font-size': '100px'}" [fixedWidth]="true">
+        <div *ngIf="patientFiles.length === 0 && !isLoading" fxLayout="column wrap" fxLayoutAlign="center center" style="color: #5c5c5c;height: 100%;">
+            <fa-icon icon="folder-open" [styles]="{'font-size': '90px'}" [fixedWidth]="true">
             </fa-icon>
-            <span style="font-size:30px;font-weight:100">No files found</span>
-            <span style="font-size:22px;font-weight:100">Press the upload button to upload a new patient file or download a blank one</span>
+            <div style="margin-top:10px;display: flex;flex-direction: column;align-items: center;">
+                <span style="font-size:24px;">No files found</span>
+                <span style="font-size:16px;margin-top:5px">Press the upload button to upload a new patient file or download a blank one</span>
+            </div>
         </div>
 
-        <div style="z-index:5;position:fixed;display:flex;align-self:flex-end;bottom:65px;right: 65px;">
-            <button mat-fab color="primary" (click)="fileInput.click()" matTooltip="Upload a new x-ray" type="file"
-                [matTooltipPosition]="'before'" aria-label="Upload a new x-ray">
-                <fa-icon icon="upload" [styles]="{ 'color': '#fff'}" [fixedWidth]="true">
-                </fa-icon>
-            </button>
-            <input hidden (change)="handleFileInput($event.target.files)" #fileInput type="file" id="file">
-        </div>
+
 
         <div style="z-index:10;">
                 <div [hidden]="!isLoading" style="text-align: -webkit-center;margin-top:5vh;height: 200px">

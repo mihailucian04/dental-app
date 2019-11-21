@@ -150,6 +150,8 @@ export class XRaysComponent implements OnInit {
       const patientListString = localStorage.getItem('patientsListData');
       const patientList = JSON.parse(patientListString) as PatientMap[];
 
+      this.dataSourceXRays = new MatTableDataSource<XRay>();
+
       const patient = patientList.filter(obj => obj.patientId === this.resourceName)[0];
       this.xRaysFolderId = patient.xRayFolderId;
 
@@ -169,7 +171,6 @@ export class XRaysComponent implements OnInit {
               }
               xrayRequestBatch.then(xrayBatchResponse => {
                 const xrayBatchResult = xrayBatchResponse.result;
-                this.dataSourceXRays = new MatTableDataSource<XRay>();
 
                 Object.keys(xrayBatchResult).map(index => {
 
@@ -184,7 +185,7 @@ export class XRaysComponent implements OnInit {
 
                   this.xrays.push(xray);
                 });
-                this.dataSourceXRays.data = this.xrays.length > 0 ? this.xrays : new MatTableDataSource<XRay>();
+                this.dataSourceXRays.data = this.xrays;
               });
             }
           });
