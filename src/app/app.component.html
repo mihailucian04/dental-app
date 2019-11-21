@@ -8,7 +8,7 @@
             [ngStyle]="{ 'width.em': sidenavWidth, 'transition':'all 0.5s'}" opened="true">
                 <app-side-nav></app-side-nav>
         </mat-sidenav>
-        <mat-sidenav-content [@onMainContentChange]="onSideNavChange ? 'open': 'close'" style="padding: 12px 12px;">
+        <mat-sidenav-content [@onMainContentChange]="onSideNavChange ? 'open': 'close'" >
             <router-outlet></router-outlet>
         </mat-sidenav-content>
     </mat-sidenav-container>

@@ -13,6 +13,8 @@ export class PatientDetailsComponent implements OnInit {
   public patient = {} as Patient;
   public blanPatientFile: any;
 
+  public showPatientDetails = true;
+
   constructor(
     private route: ActivatedRoute,
     private contactsService: ContactsService,
@@ -93,6 +95,10 @@ export class PatientDetailsComponent implements OnInit {
         });
       });
     });
+  }
+
+  public togglePatientDetails() {
+    this.showPatientDetails = !this.showPatientDetails;
   }
 
   private _getLatestConsult(consults) {
