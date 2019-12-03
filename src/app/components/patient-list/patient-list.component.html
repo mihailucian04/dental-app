@@ -3,15 +3,7 @@
 </div>
 
 <div [hidden]="!isLoaded">
-  <!-- <mat-card style="width: 100%;border-radius: 0">
 
-    <div style="display:flex;flex-direction:row;align-items: end;">
-      <mat-form-field style="width: 100%" [style.fontSize]="'14px'">
-        <input matInput (keyup)="applyFilter($event.target.value)"
-          placeholder="Search by patient's name, age, company...">
-      </mat-form-field>
-    </div>
-  </mat-card> -->
 
   <div class="example-container mat-elevation-z2">
     <div
@@ -50,16 +42,6 @@
                    (click)="clearSearchFilter()">
           </fa-icon>
         </div>
-
-        <!-- <input (keyup)="applyFilter($event.target.value)" style="height: 36px; width: 350px;"
-        placeholder="Search by patient's name, age, company..."> -->
-
-        
-
-      <!-- <mat-form-field [style.fontSize]="'14px'" style="width: 300px;">
-            <input matInput (keyup)="applyFilter($event.target.value)"
-              placeholder="Search by patient's name, age, company...">
-          </mat-form-field> -->
     </div>
 
     <table mat-table [dataSource]="dataSource" matSort>
@@ -133,8 +115,6 @@
                 (click)="deletePatient($event, element)">
               </fa-icon>
             </div>
-
-
           </div>
         </td>
       </ng-container>
@@ -147,11 +127,4 @@
     <mat-paginator class="mat-paginator-sticky" [pageSize]="30" showFirstLastButtons></mat-paginator>
 
   </div>
-  <!-- <div style="z-index:5;position:fixed;display:flex;align-self:flex-end;bottom:85px;right: 65px;">
-    <button mat-fab color="primary" (click)="openDialog()" matTooltip="Add a new patient"
-      [matTooltipPosition]="'before'" aria-label="Add new patient button">
-      <fa-icon icon="plus" [styles]="{ 'color': '#fff'}" [fixedWidth]="true">
-      </fa-icon>
-    </button>
-  </div> -->
 </div>
