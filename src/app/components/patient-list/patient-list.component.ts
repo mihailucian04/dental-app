@@ -38,6 +38,8 @@ export class PatientListComponent implements OnInit, AfterViewInit {
 
   public patients: any;
 
+  public searchFilter = '';
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -209,4 +211,16 @@ export class PatientListComponent implements OnInit, AfterViewInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
+  inputFocus() {
+    document.getElementById('input-wrapper').style.outline = '1px solid #5cc2ff';
+  }
+
+  inputFocusOut() {
+    document.getElementById('input-wrapper').style.outline = 'none';
+  }
+
+  clearSearchFilter() {
+    this.dataSource.filter = '';
+    this.searchFilter = '';
+  }
 }
