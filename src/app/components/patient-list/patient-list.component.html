@@ -3,15 +3,7 @@
 </div>
 
 <div [hidden]="!isLoaded">
-  <!-- <mat-card style="width: 100%;border-radius: 0">
 
-    <div style="display:flex;flex-direction:row;align-items: end;">
-      <mat-form-field style="width: 100%" [style.fontSize]="'14px'">
-        <input matInput (keyup)="applyFilter($event.target.value)"
-          placeholder="Search by patient's name, age, company...">
-      </mat-form-field>
-    </div>
-  </mat-card> -->
 
   <div class="example-container mat-elevation-z2">
     <div
@@ -33,10 +25,23 @@
 
         <div style="flex-grow: 1;"></div>
 
-      <mat-form-field [style.fontSize]="'14px'" style="width: 300px;">
-            <input matInput (keyup)="applyFilter($event.target.value)"
-              placeholder="Search by patient's name, age, company...">
-          </mat-form-field>
+        <div class="input-wrapper" id="input-wrapper" >
+          <fa-icon icon="search" [fixedWidth]="true" [styles]="{'margin-left':'5px','color':'#b3b3b3'}">
+          </fa-icon>
+          <input on-focus="inputFocus()" 
+                 on-focusout="inputFocusOut()" 
+                 class="hide-input" 
+                 style="border:none;flex-grow: 1;margin-left: 5px;" 
+                 placeholder="Search by patient's name, age, company..."
+                 [(ngModel)]="searchFilter"
+                 (keyup)="applyFilter($event.target.value)">
+          <fa-icon *ngIf="searchFilter.length > 0" 
+                   icon="times" 
+                   [fixedWidth]="true" 
+                   [styles]="{'margin-right':'5px', 'color':'#b3b3b3', 'cursor':'pointer'}"
+                   (click)="clearSearchFilter()">
+          </fa-icon>
+        </div>
     </div>
 
     <table mat-table [dataSource]="dataSource" matSort>
@@ -47,7 +52,7 @@
             [indeterminate]="selection.hasValue() && !isAllSelected()">
           </mat-checkbox>
         </th>
-        <td mat-cell *matCellDef="let element" style="padding-left: 15px;">
+        <td mat-cell *matCellDef="let element" style="padding-left: 15px;" (click)="$event.stopPropagation()">
           <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(element) : null"
             [checked]="selection.isSelected(element)">
           </mat-checkbox>
@@ -110,8 +115,6 @@
                 (click)="deletePatient($event, element)">
               </fa-icon>
             </div>
-
-
           </div>
         </td>
       </ng-container>
@@ -124,11 +127,4 @@
     <mat-paginator class="mat-paginator-sticky" [pageSize]="30" showFirstLastButtons></mat-paginator>
 
   </div>
-  <!-- <div style="z-index:5;position:fixed;display:flex;align-self:flex-end;bottom:85px;right: 65px;">
-    <button mat-fab color="primary" (click)="openDialog()" matTooltip="Add a new patient"
-      [matTooltipPosition]="'before'" aria-label="Add new patient button">
-      <fa-icon icon="plus" [styles]="{ 'color': '#fff'}" [fixedWidth]="true">
-      </fa-icon>
-    </button>
-  </div> -->
 </div>

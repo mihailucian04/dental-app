@@ -41,9 +41,27 @@ table {
   color: #4d4d4d;
 }
 
+.input-wrapper {
+  display: flex;
+  flex-direction: row;
+  min-width: 330px;
+  border:1px solid;
+  height:36px;
+  align-items: center;
+  border-color:#c7c7c7
+}
+
+.input-wrapper:focus {
+  outline: #007ac3;
+}
+
 .spinner {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+.hide-input:focus {
+  outline: none;
 }
